@@ -78,6 +78,10 @@ section{padding:34px 0}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .dot{width:10px;height:10px;border-radius:3px;flex:none}
 svg{width:100%;height:auto;display:block;overflow:visible}
+.chart-h{fill:var(--ink);font-size:15.5px;font-weight:720;letter-spacing:-.01em}
+.chart-sub{fill:var(--muted);font-size:11.5px}
+.lgnd{fill:var(--ink-2);font-size:11.5px;font-weight:550}
+.wm{fill:var(--muted);font-size:11.5px;font-weight:750;opacity:.5;letter-spacing:.02em}
 .axis-lbl{fill:var(--muted);font-size:11px}
 .val-lbl{fill:var(--ink);font-size:11px;font-weight:600}
 .tip{position:fixed;pointer-events:none;z-index:50;background:var(--surface-2);
@@ -131,9 +135,9 @@ footer a{color:var(--accent)}
     <h3 class="sec-h">The six-season story</h3>
     <p class="sec-sub">Clean sheets per game, goals per game, and "both teams to score" rate across every completed season. The attacking spike of 2023/24 has unwound &mdash; 2025/26 is the meanest season for goals since the pandemic-era 2020/21.</p>
     <div class="grid3">
-      <div class="card"><p class="ctitle">Clean sheets per game</p><p class="csub">League-wide, both teams counted</p><div id="c_cs"></div></div>
-      <div class="card"><p class="ctitle">Goals per game</p><p class="csub">Total goals &divide; matches</p><div id="c_goals"></div></div>
-      <div class="card"><p class="ctitle">Both teams to score</p><p class="csub">Share of matches with BTTS</p><div id="c_btts"></div></div>
+      <div class="card"><div id="c_cs"></div></div>
+      <div class="card"><div id="c_goals"></div></div>
+      <div class="card"><div id="c_btts"></div></div>
     </div>
   </section>
 
@@ -142,24 +146,15 @@ footer a{color:var(--accent)}
       <div>
         <h3 class="sec-h">Who to trust at the back &mdash; 2025/26</h3>
         <p class="sec-sub">Clean-sheet rate per team this season, split home vs away. The gap between the elite two and the rest is stark.</p>
-        <div class="card"><div class="legend" style="margin:0 0 14px">
-          <span><i class="dot" style="background:var(--s1)"></i>Home CS rate</span>
-          <span><i class="dot" style="background:var(--s3)"></i>Away CS rate</span>
-        </div><div id="c_teams"></div></div>
+        <div class="card"><div id="c_teams"></div></div>
       </div>
       <div>
         <h3 class="sec-h">Home advantage is back</h3>
         <p class="sec-sub">Home and away clean-sheet rates by season. The pandemic collapsed home advantage; it has since recovered.</p>
-        <div class="card"><div class="legend" style="margin:0 0 8px">
-          <span><i class="dot" style="background:var(--s1)"></i>Home CS rate</span>
-          <span><i class="dot" style="background:var(--s2)"></i>Away CS rate</span>
-        </div><div id="c_ha"></div></div>
+        <div class="card"><div id="c_ha"></div></div>
         <h3 class="sec-h" style="margin-top:26px">When clean sheets come</h3>
         <p class="sec-sub">Average clean sheets per game by third of the season.</p>
-        <div class="card"><div class="legend" style="margin:0 0 8px">
-          <span><i class="dot" style="background:var(--s4)"></i>All six seasons</span>
-          <span><i class="dot" style="background:var(--s1)"></i>2025/26</span>
-        </div><div id="c_thirds"></div></div>
+        <div class="card"><div id="c_thirds"></div></div>
       </div>
     </div>
   </section>
@@ -168,8 +163,8 @@ footer a{color:var(--accent)}
     <h3 class="sec-h">Momentum: who tightened up, who fell apart</h3>
     <p class="sec-sub">Change in goals conceded per game, 2025/26 vs 2024/25. Left/green = conceding fewer (defence improving); right/red = leaking more. Only teams present in both seasons.</p>
     <div class="grid2">
-      <div class="card"><p class="ctitle">Biggest improvers</p><p class="csub">Fewer goals conceded per game</p><div id="c_risers"></div></div>
-      <div class="card"><p class="ctitle">Biggest declines</p><p class="csub">More goals conceded per game</p><div id="c_fallers"></div></div>
+      <div class="card"><div id="c_risers"></div></div>
+      <div class="card"><div id="c_fallers"></div></div>
     </div>
   </section>
 
@@ -194,19 +189,11 @@ footer a{color:var(--accent)}
 
     <div class="grid2" style="margin-top:20px">
       <div>
-        <div class="card"><p class="ctitle">DefCon points banked &mdash; top 15</p>
-          <p class="csub">Matches hitting the threshold &times; 2 pts</p>
-          <div class="legend" style="margin:0 0 12px">
-            <span><i class="dot" style="background:var(--s1)"></i>Defender</span>
-            <span><i class="dot" style="background:var(--s2)"></i>Midfielder</span>
-            <span><i class="dot" style="background:var(--s3)"></i>Forward</span>
-          </div><div id="c_dcpts"></div></div>
+        <div class="card"><div id="c_dcpts"></div></div>
       </div>
       <div>
-        <div class="card"><p class="ctitle">Where DefCon points come from</p>
-          <p class="csub">Total points banked by position (2025/26)</p><div id="c_dcpos"></div></div>
-        <div class="card" style="margin-top:18px"><p class="ctitle">Hardest-working defensive clubs</p>
-          <p class="csub">Total DefCon points across each club's squad</p><div id="c_dcteam"></div></div>
+        <div class="card"><div id="c_dcpos"></div></div>
+        <div class="card" style="margin-top:18px"><div id="c_dcteam"></div></div>
       </div>
     </div>
 
@@ -257,20 +244,30 @@ $("#kpis").innerHTML=
   kpi(pct(last.btts_rate),`Both teams to score`,`lowest since ${DATA.meta.latest==='2025/26'?'2022/23':''}`,'up')+
   kpi(topTeam.team,`Meanest defence`,`${pct(topTeam.cs_rate)} CS &middot; ${fmt1(topTeam.conceded_pg)} conceded/gm`,'up');
 
+// ---------- shared chart chrome: headline + watermark (+ optional legend) ----------
+function banner(svg,W,H,title,sub,legend){
+  if(title){const t=el("text",{x:14,y:22,class:"chart-h"});t.textContent=title;svg.appendChild(t);}
+  if(sub){const s=el("text",{x:14,y:39,class:"chart-sub"});s.textContent=sub;svg.appendChild(s);}
+  const wm=el("text",{x:W-8,y:H-8,"text-anchor":"end",class:"wm"});wm.textContent="@omerfin7";svg.appendChild(wm);
+  if(legend){let x=W-10;[...legend].reverse().forEach(it=>{
+    const tt=el("text",{x:x,y:22,"text-anchor":"end",class:"lgnd"});tt.textContent=it.label;svg.appendChild(tt);
+    x-=it.label.length*6.2+6;
+    svg.appendChild(el("rect",{x:x-9,y:13,width:9,height:9,rx:2,fill:it.color}));
+    x-=16;});}
+}
 // ---------- line chart ----------
-function lineChart(sel,pts,{color,fmt=fmt1,pad=0.12}){
-  const W=360,H=190,mL=38,mR=14,mT=14,mB=30;
+function lineChart(sel,pts,{color,fmt=fmt1,pad=0.14,title,sub}){
+  const W=440,H=250,mL=44,mR=18,mT=58,mB=40;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img"});
-  const xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);
+  const ys=pts.map(p=>p.y);
   let lo=Math.min(...ys),hi=Math.max(...ys);const sp=(hi-lo)||1;lo-=sp*pad;hi+=sp*pad;
   const X=i=>mL+(W-mL-mR)*i/(pts.length-1);
   const Y=v=>mT+(H-mT-mB)*(1-(v-lo)/(hi-lo));
   for(let g=0;g<=3;g++){const v=lo+(hi-lo)*g/3;const y=Y(v);
     svg.appendChild(el("line",{x1:mL,x2:W-mR,y1:y,y2:y,stroke:cv('--grid'),"stroke-width":1}));
     const t=el("text",{x:mL-6,y:y+3,"text-anchor":"end",class:"axis-lbl"});t.textContent=fmt(v);svg.appendChild(t);}
-  pts.forEach((p,i)=>{const t=el("text",{x:X(i),y:H-9,"text-anchor":"middle",class:"axis-lbl"});
+  pts.forEach((p,i)=>{const t=el("text",{x:X(i),y:H-22,"text-anchor":"middle",class:"axis-lbl"});
     t.textContent=p.lab;svg.appendChild(t);});
-  // area
   let d=`M ${X(0)} ${Y(ys[0])}`; pts.forEach((p,i)=>d+=` L ${X(i)} ${Y(p.y)}`);
   const area=d+` L ${X(pts.length-1)} ${Y(lo)} L ${X(0)} ${Y(lo)} Z`;
   const gid="g"+sel.replace(/\W/g,'');
@@ -279,23 +276,22 @@ function lineChart(sel,pts,{color,fmt=fmt1,pad=0.12}){
   lg.appendChild(el("stop",{offset:"100%","stop-color":color,"stop-opacity":0}));
   defs.appendChild(lg);svg.appendChild(defs);
   svg.appendChild(el("path",{d:area,fill:`url(#${gid})`}));
-  svg.appendChild(el("path",{d,fill:"none",stroke:color,"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"}));
+  svg.appendChild(el("path",{d,fill:"none",stroke:color,"stroke-width":2.4,"stroke-linejoin":"round","stroke-linecap":"round"}));
   pts.forEach((p,i)=>{
-    svg.appendChild(el("circle",{cx:X(i),cy:Y(p.y),r:3.5,fill:cv('--surface'),stroke:color,"stroke-width":2}));
-    const hit=el("rect",{x:X(i)-16,y:mT,width:32,height:H-mT-mB,fill:"transparent"});
+    svg.appendChild(el("circle",{cx:X(i),cy:Y(p.y),r:3.6,fill:cv('--surface'),stroke:color,"stroke-width":2}));
+    const vt=el("text",{x:X(i),y:Y(p.y)-9,"text-anchor":"middle",class:"val-lbl"});vt.textContent=fmt(p.y);svg.appendChild(vt);
+    const hit=el("rect",{x:X(i)-18,y:mT,width:36,height:H-mT-mB,fill:"transparent"});
     hit.addEventListener("mousemove",e=>showTip(`<b>${p.full}</b><div class="row"><span>${p.name}</span><b>${fmt(p.y)}</b></div>`,e));
     hit.addEventListener("mouseleave",hideTip);svg.appendChild(hit);});
+  banner(svg,W,H,title,sub);
   $(sel).appendChild(svg);
 }
-const seasons=L.map(r=>r.season), slab=s=>s.replace('20','').replace('/','/');
+const seasons=L.map(r=>r.season);
 function mk(key,name,f=fmt1){return L.map(r=>({x:r.season,y:r[key],lab:r.season.slice(2),full:r.season,name}));}
-lineChart("#c_cs",mk('cs_per_game','Clean sheets/gm'),{color:cv('--s1')});
-lineChart("#c_goals",mk('goals_per_game','Goals/gm'),{color:cv('--s2')});
-lineChart("#c_btts",L.map(r=>({y:r.btts_rate,lab:r.season.slice(2),full:r.season,name:'BTTS'})),{color:cv('--s3'),fmt:pct});
 
 // ---------- horizontal team bars (home/away CS) ----------
-function teamBars(sel,rows){
-  const W=560,rowH=26,mT=6,mL=104,mR=40,H=mT+rows.length*rowH+6;
+function teamBars(sel,rows,title,sub){
+  const W=560,rowH=24,mT=56,mL=104,mR=44,H=mT+rows.length*rowH+22;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const max=Math.max(...rows.map(r=>Math.max(r.home_cs_rate,r.away_cs_rate)))*1.08;
   const X=v=>mL+(W-mL-mR)*v/max;
@@ -307,45 +303,42 @@ function teamBars(sel,rows){
       const rect=el("rect",{x:mL,y:y+off,width:w,height:h,rx:3,fill:col});
       rect.addEventListener("mousemove",e=>showTip(`<b>${r.team}</b><div class="row"><span>Overall CS</span><b>${pct(r.cs_rate)}</b></div><div class="row"><span>Home CS</span><b>${pct(r.home_cs_rate)}</b></div><div class="row"><span>Away CS</span><b>${pct(r.away_cs_rate)}</b></div><div class="row"><span>Conceded/gm</span><b>${fmt1(r.conceded_pg)}</b></div>`,e));
       rect.addEventListener("mouseleave",hideTip);svg.appendChild(rect);};
-    mkbar(r.home_cs_rate,cv('--s1'),4,7);
-    mkbar(r.away_cs_rate,cv('--s3'),14,7);
+    mkbar(r.home_cs_rate,cv('--s1'),3,7);
+    mkbar(r.away_cs_rate,cv('--s3'),13,7);
     const vl=el("text",{x:X(Math.max(r.home_cs_rate,r.away_cs_rate))+6,y:y+rowH/2+1,class:"axis-lbl"});
     vl.textContent=pct(r.cs_rate);svg.appendChild(vl);
   });
+  banner(svg,W,H,title,sub,[{label:'Home',color:cv('--s1')},{label:'Away',color:cv('--s3')}]);
   $(sel).appendChild(svg);
 }
-teamBars("#c_teams",DATA.latest_table);
 
 // ---------- home advantage: two lines same scale ----------
-function multiLine(sel,series,fmt=pct){
-  const W=520,H=230,mL=40,mR=16,mT=14,mB=30;
+function multiLine(sel,series,fmt=pct,title,sub,legend){
+  const W=520,H=280,mL=44,mR=18,mT=58,mB=40;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const all=series.flatMap(s=>s.data.map(d=>d.y));
-  let lo=Math.min(...all),hi=Math.max(...all);const sp=(hi-lo)||1;lo-=sp*.15;hi+=sp*.15;
+  let lo=Math.min(...all),hi=Math.max(...all);const sp=(hi-lo)||1;lo-=sp*.18;hi+=sp*.18;
   const n=series[0].data.length;
   const X=i=>mL+(W-mL-mR)*i/(n-1), Y=v=>mT+(H-mT-mB)*(1-(v-lo)/(hi-lo));
   for(let g=0;g<=3;g++){const v=lo+(hi-lo)*g/3,y=Y(v);
     svg.appendChild(el("line",{x1:mL,x2:W-mR,y1:y,y2:y,stroke:cv('--grid')}));
     const t=el("text",{x:mL-6,y:y+3,"text-anchor":"end",class:"axis-lbl"});t.textContent=fmt(v);svg.appendChild(t);}
-  series[0].data.forEach((d,i)=>{const t=el("text",{x:X(i),y:H-9,"text-anchor":"middle",class:"axis-lbl"});t.textContent=d.lab;svg.appendChild(t);});
+  series[0].data.forEach((d,i)=>{const t=el("text",{x:X(i),y:H-22,"text-anchor":"middle",class:"axis-lbl"});t.textContent=d.lab;svg.appendChild(t);});
   series.forEach(s=>{let d=`M ${X(0)} ${Y(s.data[0].y)}`;s.data.forEach((p,i)=>d+=` L ${X(i)} ${Y(p.y)}`);
-    svg.appendChild(el("path",{d,fill:"none",stroke:s.color,"stroke-width":2,"stroke-linejoin":"round"}));
-    s.data.forEach((p,i)=>svg.appendChild(el("circle",{cx:X(i),cy:Y(p.y),r:3.2,fill:cv('--surface'),stroke:s.color,"stroke-width":2})));});
+    svg.appendChild(el("path",{d,fill:"none",stroke:s.color,"stroke-width":2.4,"stroke-linejoin":"round"}));
+    s.data.forEach((p,i)=>svg.appendChild(el("circle",{cx:X(i),cy:Y(p.y),r:3.4,fill:cv('--surface'),stroke:s.color,"stroke-width":2})));});
   series[0].data.forEach((_,i)=>{const hit=el("rect",{x:X(i)-16,y:mT,width:32,height:H-mT-mB,fill:"transparent"});
     hit.addEventListener("mousemove",e=>{const rows=series.map(s=>`<div class="row"><span>${s.name}</span><b>${fmt(s.data[i].y)}</b></div>`).join('');
       showTip(`<b>${series[0].data[i].full}</b>${rows}`,e);});
     hit.addEventListener("mouseleave",hideTip);svg.appendChild(hit);});
+  banner(svg,W,H,title,sub,legend);
   $(sel).appendChild(svg);
 }
-multiLine("#c_ha",[
-  {name:"Home CS rate",color:cv('--s1'),data:L.map(r=>({y:r.home_cs_rate,lab:r.season.slice(2),full:r.season}))},
-  {name:"Away CS rate",color:cv('--s2'),data:L.map(r=>({y:r.away_cs_rate,lab:r.season.slice(2),full:r.season}))},
-]);
 
 // ---------- season thirds grouped bars ----------
-function thirdsChart(sel){
+function thirdsChart(sel,title,sub,legend){
   const keys=Object.keys(DATA.thirds.all_seasons);
-  const W=520,H=210,mL=40,mR=16,mT=14,mB=42,gw=(W-mL-mR)/keys.length;
+  const W=520,H=280,mL=44,mR=18,mT=58,mB=54,gw=(W-mL-mR)/keys.length;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const vals=keys.flatMap(k=>[DATA.thirds.all_seasons[k],DATA.thirds[DATA.meta.latest][k]]);
   const hi=Math.max(...vals)*1.15;const Y=v=>mT+(H-mT-mB)*(1-v/hi);
@@ -353,41 +346,41 @@ function thirdsChart(sel){
     svg.appendChild(el("line",{x1:mL,x2:W-mR,y1:y,y2:y,stroke:cv('--grid')}));
     const t=el("text",{x:mL-6,y:y+3,"text-anchor":"end",class:"axis-lbl"});t.textContent=v.toFixed(2);svg.appendChild(t);}
   keys.forEach((k,i)=>{
-    const cx=mL+gw*i+gw/2, bw=gw*0.28;
+    const cx=mL+gw*i+gw/2, bw=gw*0.26;
     const a=DATA.thirds.all_seasons[k], b=DATA.thirds[DATA.meta.latest][k];
     const mkbar=(v,col,dx,lbl)=>{const h=(H-mT-mB)-(Y(v)-mT);
       const rc=el("rect",{x:cx+dx,y:Y(v),width:bw,height:Math.max(1,h),rx:3,fill:col});
       rc.addEventListener("mousemove",e=>showTip(`<b>${k}</b><div class="row"><span>${lbl}</span><b>${v.toFixed(2)} CS/gm</b></div>`,e));
-      rc.addEventListener("mouseleave",hideTip);svg.appendChild(rc);};
+      rc.addEventListener("mouseleave",hideTip);svg.appendChild(rc);
+      const vt=el("text",{x:cx+dx+bw/2,y:Y(v)-5,"text-anchor":"middle",class:"val-lbl"});vt.textContent=v.toFixed(2);svg.appendChild(vt);};
     mkbar(a,cv('--s4'),-bw-2,"All seasons");
     mkbar(b,cv('--s1'),2,DATA.meta.latest);
-    const t=el("text",{x:cx,y:H-24,"text-anchor":"middle",class:"axis-lbl"});t.textContent=k.split(' ')[0];svg.appendChild(t);
-    const t2=el("text",{x:cx,y:H-11,"text-anchor":"middle",class:"axis-lbl"});t2.textContent=k.match(/\((.*)\)/)[1];svg.appendChild(t2);
+    const t=el("text",{x:cx,y:H-32,"text-anchor":"middle",class:"axis-lbl"});t.textContent=k.split(' ')[0];svg.appendChild(t);
+    const t2=el("text",{x:cx,y:H-20,"text-anchor":"middle",class:"axis-lbl"});t2.textContent=k.match(/\((.*)\)/)[1];svg.appendChild(t2);
   });
+  banner(svg,W,H,title,sub,legend);
   $(sel).appendChild(svg);
 }
-thirdsChart("#c_thirds");
 
 // ---------- diverging movers ----------
-function movers(sel,rows,improving){
-  const W=520,rowH=30,mT=6,mL=104,mR=54,H=mT+rows.length*rowH+6;
+function movers(sel,rows,improving,title,sub){
+  const W=520,rowH=30,mT=56,mL=104,mR=58,H=mT+rows.length*rowH+22;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
-  const max=Math.max(...rows.map(r=>Math.abs(r.delta)))*1.1;
+  const max=Math.max(...rows.map(r=>Math.abs(r.delta)))*1.12;
   const X=v=>mL+(W-mL-mR)*Math.abs(v)/max;
   const col=improving?cv('--good'):cv('--crit');
   rows.forEach((r,i)=>{
     const y=mT+i*rowH;
     const t=el("text",{x:mL-8,y:y+rowH/2+1,"text-anchor":"end",class:"val-lbl"});t.textContent=r.team;svg.appendChild(t);
     const w=Math.max(2,X(r.delta)-mL);
-    const rc=el("rect",{x:mL,y:y+7,width:w,height:12,rx:3,fill:col});
+    const rc=el("rect",{x:mL,y:y+8,width:w,height:12,rx:3,fill:col});
     rc.addEventListener("mousemove",e=>showTip(`<b>${r.team}</b><div class="row"><span>${DATA.league[DATA.league.length-2].season}</span><b>${fmt1(r.prev)}</b></div><div class="row"><span>${DATA.meta.latest}</span><b>${fmt1(r.cur)}</b></div><div class="row"><span>Change</span><b>${r.delta>0?'+':''}${fmt1(r.delta)}/gm</b></div>`,e));
     rc.addEventListener("mouseleave",hideTip);svg.appendChild(rc);
     const vl=el("text",{x:mL+w+6,y:y+rowH/2+1,class:"axis-lbl"});vl.textContent=`${r.delta>0?'+':''}${r.delta.toFixed(2)}`;svg.appendChild(vl);
   });
+  banner(svg,W,H,title,sub);
   $(sel).appendChild(svg);
 }
-movers("#c_risers",DATA.risers,true);
-movers("#c_fallers",DATA.fallers,false);
 
 // ---------- promoted ----------
 $("#promo").innerHTML=DATA.promoted.map(r=>
@@ -420,8 +413,8 @@ renderTable();
 
 // ---------- DefCon (player-level, 2025/26) ----------
 const POSCOL={DEF:'--s1',MID:'--s2',FWD:'--s3'};
-function hbars(sel,rows,{value,label,color,valfmt=(v)=>v,rowH=26,mL=118,mR=48,tip}){
-  const W=560,mT=6,H=mT+rows.length*rowH+6;
+function hbars(sel,rows,{value,label,color,valfmt=(v)=>v,rowH=26,mL=118,mR=48,tip,title,sub,legend}){
+  const W=560,mT=56,H=mT+rows.length*rowH+22;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const max=Math.max(...rows.map(r=>value(r)))*1.06||1;
   const X=v=>mL+(W-mL-mR)*v/max;
@@ -434,6 +427,7 @@ function hbars(sel,rows,{value,label,color,valfmt=(v)=>v,rowH=26,mL=118,mR=48,ti
     svg.appendChild(rc);
     const vl=el("text",{x:mL+w+6,y:y+rowH/2+1,class:"axis-lbl"});vl.textContent=valfmt(v);svg.appendChild(vl);
   });
+  banner(svg,W,H,title,sub,legend);
   $(sel).appendChild(svg);
 }
 function dcTip(r){return `<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>DefCon points</span><b>${r.defcon_points}</b></div><div class="row"><span>Threshold hits</span><b>${r.dc_matches} matches</b></div><div class="row"><span>Per 90</span><b>${r.dc90.toFixed(1)}</b></div><div class="row"><span>Price</span><b>&pound;${r.cost}m</b></div>`;}
@@ -449,14 +443,19 @@ function renderDefcon(){
     `<div class="kpi"><div class="v">${defP.total_points}</div><div class="l">Points banked by defenders</div><div class="d up">${defP.returning_players} returning</div></div>`+
     `<div class="kpi"><div class="v">${midP.total_points}</div><div class="l">Points banked by midfielders</div><div class="d up">${midP.returning_players} returning</div></div>`;
   hbars("#c_dcpts",tp,{value:r=>r.defcon_points,label:r=>`${r.name} (${r.team_short})`,
-    color:r=>cv(POSCOL[r.pos]),tip:dcTip});
+    color:r=>cv(POSCOL[r.pos]),tip:dcTip,
+    title:"DefCon points banked — top 15",sub:"2025/26 · threshold hits × 2 pts",
+    legend:[{label:'DEF',color:cv('--s1')},{label:'MID',color:cv('--s2')},{label:'FWD',color:cv('--s3')}]});
   hbars("#c_dcpos",ps,{value:r=>r.total_points,label:r=>r.pos,
-    color:r=>cv(POSCOL[r.pos]),rowH:34,mL:56,
+    color:r=>cv(POSCOL[r.pos]),rowH:38,mL:56,
+    title:"Where DefCon points come from",sub:"Total points banked by position, 2025/26",
     tip:r=>`<b>${r.pos}</b><div class="row"><span>Total points</span><b>${r.total_points}</b></div><div class="row"><span>Returning players</span><b>${r.returning_players}</b></div><div class="row"><span>Avg / returner</span><b>${r.avg_points_returning}</b></div>`});
   hbars("#c_dcteam",DEFCON.team_defcon.slice(0,12),{value:r=>r.points,label:r=>r.team,
-    color:cv('--s1'),rowH:22,mL:56,tip:r=>`<b>${r.team}</b><div class="row"><span>DefCon points</span><b>${r.points}</b></div>`});
+    color:cv('--s1'),rowH:22,mL:56,title:"Hardest-working defensive clubs",sub:"Total DefCon points across each squad",
+    tip:r=>`<b>${r.team}</b><div class="row"><span>DefCon points</span><b>${r.points}</b></div>`});
   hbars("#c_dcvalue",DEFCON.best_value,{value:r=>r.pts_per_m,label:r=>`${r.name} (${r.team_short})`,
     color:cv('--s3'),valfmt:v=>v.toFixed(1),
+    title:"Best budget DefCon value",sub:"DefCon points per £m · enablers ≤ £5.5m",
     tip:r=>`<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>Points / &pound;m</span><b>${r.pts_per_m.toFixed(1)}</b></div><div class="row"><span>DefCon points</span><b>${r.defcon_points}</b></div><div class="row"><span>Price</span><b>&pound;${r.cost}m</b></div>`});
   // table
   const dcols=[["name","Player"],["team_short","Team"],["pos","Pos"],["minutes","Min"],
@@ -479,6 +478,19 @@ function renderDefcon(){
   }
   draw();
 }
+
+// ---------- draw everything (also used to re-theme) ----------
+function renderMain(){
+  lineChart("#c_cs",mk('cs_per_game','Clean sheets / game'),{color:cv('--s1'),title:"Clean sheets per game",sub:"Premier League — 2020/21 to 2025/26"});
+  lineChart("#c_goals",mk('goals_per_game','Goals / game'),{color:cv('--s2'),title:"Goals per game",sub:"Total goals ÷ matches, by season"});
+  lineChart("#c_btts",L.map(r=>({y:r.btts_rate,lab:r.season.slice(2),full:r.season,name:'BTTS'})),{color:cv('--s3'),fmt:pct,title:"Both teams to score",sub:"Share of PL matches, by season"});
+  teamBars("#c_teams",DATA.latest_table,"Who to trust at the back — 2025/26","Clean-sheet rate per team, home vs away");
+  multiLine("#c_ha",[{name:"Home CS rate",color:cv('--s1'),data:L.map(r=>({y:r.home_cs_rate,lab:r.season.slice(2),full:r.season}))},{name:"Away CS rate",color:cv('--s2'),data:L.map(r=>({y:r.away_cs_rate,lab:r.season.slice(2),full:r.season}))}],pct,"Home advantage is back","Clean-sheet rate by season",[{label:'Home',color:cv('--s1')},{label:'Away',color:cv('--s2')}]);
+  thirdsChart("#c_thirds","When clean sheets come","Avg clean sheets/game by third of season",[{label:'All seasons',color:cv('--s4')},{label:'2025/26',color:cv('--s1')}]);
+  movers("#c_risers",DATA.risers,true,"Biggest improvers — 2025/26","Fewer goals conceded/gm vs 2024/25");
+  movers("#c_fallers",DATA.fallers,false,"Biggest declines — 2025/26","More goals conceded/gm vs 2024/25");
+}
+renderMain();
 renderDefcon();
 
 // ---------- theme toggle ----------
@@ -486,17 +498,8 @@ $("#themeBtn").onclick=()=>{
   const cur=document.documentElement.getAttribute("data-theme");
   const dark=cur?cur==="dark":matchMedia("(prefers-color-scheme:dark)").matches;
   document.documentElement.setAttribute("data-theme",dark?"light":"dark");
-  document.querySelectorAll("svg").forEach(s=>s.remove());
   document.querySelectorAll("[id^=c_]").forEach(n=>n.innerHTML="");
-  // rebuild charts with new theme colors
-  lineChart("#c_cs",mk('cs_per_game','Clean sheets/gm'),{color:cv('--s1')});
-  lineChart("#c_goals",mk('goals_per_game','Goals/gm'),{color:cv('--s2')});
-  lineChart("#c_btts",L.map(r=>({y:r.btts_rate,lab:r.season.slice(2),full:r.season,name:'BTTS'})),{color:cv('--s3'),fmt:pct});
-  teamBars("#c_teams",DATA.latest_table);
-  multiLine("#c_ha",[{name:"Home CS rate",color:cv('--s1'),data:L.map(r=>({y:r.home_cs_rate,lab:r.season.slice(2),full:r.season}))},{name:"Away CS rate",color:cv('--s2'),data:L.map(r=>({y:r.away_cs_rate,lab:r.season.slice(2),full:r.season}))}]);
-  thirdsChart("#c_thirds");
-  movers("#c_risers",DATA.risers,true);
-  movers("#c_fallers",DATA.fallers,false);
+  renderMain();
   renderDefcon();
 };
 </script>

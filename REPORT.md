@@ -111,7 +111,23 @@ The corner-winning leaders are the possession/attacking sides. On **net** corner
 
 **Notable set-piece takers** (designated for *both* corners and direct free kicks in 2025/26): **Rice (Arsenal)**, **Ward-Prowse (Burnley)**, **Reece James (Chelsea)**, **Wilson (Fulham)**, **Stach (Leeds)**, **Bruno Fernandes (Man Utd)**, **Xhaka (Sunderland)**, **Bowen (West Ham)**. These dual-duty takers are a club's set-piece hubs — useful FPL context, since concentrated set-piece responsibility drives assist potential.
 
-**Set-piece goals (scored & conceded) + efficiency.** Goals-by-situation come from **[Understat](https://understat.com)** via [`fetch_setpiece_goals.py`](fetch_setpiece_goals.py): set-piece goals for & against per team (corners + set pieces + direct free kicks, penalties excluded), plus **efficiency = set-piece shots per goal** (how many set-piece attempts a team needs to score, and to concede). Understat blocks automated requests from datacenter/flagged IPs (as do FBref/Sofascore/FotMob and every proxy tried), so this one pull must run from a normal network; the dashboard shows the block once `docs/setpieces_goals.json` is generated. The numbers are Understat's — nothing is estimated.
+**Set-piece goals scored & conceded, 2025/26 (source: [Understat](https://understat.com)).** Goals from corners + set pieces + direct free kicks (penalties excluded):
+
+| # | Most goals SCORED | GF | SP shots | Shots/goal | | Most goals CONCEDED | GA |
+|---|---|:---:|:---:|:---:|---|---|:---:|
+| 1 | **Arsenal** | **23** | 158 | **6.9** | | **Bournemouth** | **18** |
+| 2 | Man Utd | 20 | 142 | 7.1 | | West Ham | 16 |
+| 3 | Spurs | 18 | 135 | 7.5 | | Leeds | 15 |
+| 4 | Aston Villa | 17 | 134 | 7.9 | | Crystal Palace | 15 |
+| 5 | Liverpool | 15 | 126 | 8.4 | | Liverpool | 14 |
+
+League-wide: **243 set-piece goals from 2,481 set-piece shots** (~10.2 shots per goal on average).
+
+**Arsenal are both the most prolific AND the most clinical** set-piece side by a wide margin — 23 goals at just 6.9 shots per goal, far ahead of the pack (next-best efficiency is Man Utd at 7.1). At the other end, **Brentford and Burnley manage only 4 set-piece goals each**, needing 24–26 shots per goal — roughly **3.5× less efficient** than Arsenal. That gap is a bigger differentiator than raw volume: Newcastle and Man City generate plenty of set-piece shots (158 and 141) but convert poorly (12.2 and 12.8 shots/goal), suggesting service/delivery quality matters more than quantity.
+
+On the defensive side, **Bournemouth's 18 conceded** stands out as a genuine defensive-set-piece weakness — worth cross-referencing against their overall clean-sheet numbers in §2. **Arsenal also concede the fewest (7)** — the same side dominates both ends of the set-piece game, consistent with their overall defensive standing this season (§2).
+
+*Reliability note: Understat blocks automated/datacenter requests (as do FBref, Sofascore and FotMob), so this pull required running the fetch client-side from a browser session rather than a server script — see [`fetch_setpiece_goals.py`](fetch_setpiece_goals.py) and the README for the mechanism. The numbers themselves are Understat's; nothing is estimated.*
 
 ---
 

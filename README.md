@@ -29,6 +29,10 @@ A few charts from the dashboard (each is a self-contained, shareable image). The
 
 ![Corners won vs conceded per game](docs/examples/set-pieces-corners.png)
 
+**Set-piece goals scored — 2025/26 (corners + set pieces + direct free kicks, no penalties)**
+
+![Set-piece goals scored, 2025/26](docs/examples/set-piece-goals-scored.png)
+
 ---
 
 ## Headline findings (2025/26)
@@ -40,6 +44,7 @@ A few charts from the dashboard (each is a self-contained, shareable image). The
 - **Promoted-side watch.** **Sunderland** were a genuine defensive surprise (29% CS, 1.26 conceded/gm); Leeds (21%) held up moderately; Burnley struggled (11% CS, 1.97 conceded/gm).
 - **DefCon points (new 2025/26 scoring metric).** **Elliot Anderson (NFO)** and **Marcos Senesi (BOU)** tied on a league-leading **52 DefCon points** (26 threshold-hit matches each). Defenders banked **1,642** DefCon points to midfielders' **1,174**; forwards essentially none. The hardest-working defensive squads were **Everton, Bournemouth and Burnley** — often the busier, deeper-defending sides. Best budget value: **Maxime Estève (BUR, £3.8m)** and **Senesi** at ~10 DefCon points per £m.
 - **Set pieces (corners & free kicks, penalties excluded).** **Man City** won the most corners (6.5/game); **West Ham** faced the most (6.11/game). League-wide corners have held steady (~10 per match across six seasons). Designated set-piece specialists doing *both* corners and direct free kicks include **Rice (Arsenal)**, **Ward-Prowse (Burnley)**, **Reece James (Chelsea)**, **Bruno Fernandes (Man Utd)** and **Bowen (West Ham)**.
+- **Set-piece goals (2025/26, via Understat).** **Arsenal have scored 23 goals from set pieces** (corners + set pieces + direct free kicks, no penalties) — comfortably the league's most, and the most *clinical* too at just **6.9 set-piece shots per goal**. **Bournemouth have conceded the most (18)**. Brentford and Burnley are the least dangerous at set pieces (4 goals each, 24–26 shots needed per goal — roughly 3–4× less efficient than Arsenal).
 
 Full numbers and charts are in the dashboard ([`docs/index.html`](docs/index.html)) and [REPORT.md](REPORT.md).
 
@@ -79,11 +84,11 @@ python fetch_setpiece_goals.py   # set-piece GOALS from Understat -> docs/setpie
 python build_dashboard.py  # rebuilds docs/index.html from the JSONs
 ```
 
-### Set-piece goals (2025/26) — one extra step
+### Set-piece goals (2025/26) — refreshing it later
 
-The **"who scores / concedes most from set pieces"** block is powered by [`fetch_setpiece_goals.py`](fetch_setpiece_goals.py), which pulls goals-by-situation (corners + set pieces + direct free kicks, **penalties excluded**) from **[Understat](https://understat.com)** — the reliable free source for it. It also computes **efficiency** = set-piece shots per set-piece goal (attacking and defensive).
+The **"who scores / concedes most from set pieces"** block uses `docs/setpieces_goals.json` (already committed with real 2025/26 numbers), which pulls goals-by-situation (corners + set pieces + direct free kicks, **penalties excluded**) plus **efficiency** = set-piece shots per goal, from **[Understat](https://understat.com)**.
 
-⚠️ **Run it from a normal home/office network.** Understat (and FBref / Sofascore / FotMob / every public proxy tried) blocks automated requests from datacenter/flagged IPs, serving a data-less page — so it can't be fetched from all CI/sandbox environments. From an ordinary connection it just works (~20 requests). Once `docs/setpieces_goals.json` exists, re-run `build_dashboard.py` and the set-piece-goals block appears automatically. Until then that one block is hidden; everything else (corners volume, takers, DefCon, six-season trends) is already populated.
+⚠️ **To refresh it for a future gameweek/season:** [`fetch_setpiece_goals.py`](fetch_setpiece_goals.py) automates this but Understat blocks server/datacenter IPs (as do FBref/Sofascore/FotMob and every public proxy tried) — including the sandbox this project was built in. The reliable workaround, confirmed working: open any `understat.com` page in a normal browser and run the fetch **client-side from the Console** (loads each club via a hidden `<iframe>`, which Understat serves in full), then save the downloaded JSON into `docs/`. Ask an AI assistant for the Console snippet if you need it regenerated, or adapt `fetch_setpiece_goals.py`'s logic. Once `docs/setpieces_goals.json` is updated, re-run `build_dashboard.py`.
 
 Open `docs/index.html` in any browser — it is fully self-contained (data embedded inline, **zero external requests**, works offline and on GitHub Pages).
 

@@ -10,6 +10,21 @@ A six-season study of **defensive performance in the English Premier League**, b
 
 ---
 
+## Sample visuals
+
+A few charts from the dashboard (each is a self-contained, shareable image). The full set is interactive — with tooltips, a light/dark toggle and sortable tables — in the [dashboard](https://omerfinzi.github.io/PL_defensive-_trends/).
+
+| | |
+|---|---|
+| ![Clean sheets per game](docs/examples/clean-sheets-per-game.png) | ![Both teams to score](docs/examples/both-teams-to-score.png) |
+| ![Who to trust at the back 2025/26](docs/examples/who-to-trust-2025-26.png) | ![Home advantage](docs/examples/home-advantage.png) |
+
+**DefCon points banked — 2025/26 (new player-level metric)**
+
+![DefCon points banked, top 15](docs/examples/defcon-top15.png)
+
+---
+
 ## Headline findings (2025/26)
 
 - **Defences are recovering.** After the record goal-glut of 2023/24 (3.28 goals/game, 62% both-teams-to-score), scoring has fallen two seasons running. **2025/26 is the meanest season for goals since 2020/21** — 2.75 goals/game and clean sheets back up to 0.51 per game.

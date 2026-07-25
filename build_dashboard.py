@@ -97,6 +97,14 @@ svg{width:100%;height:auto;display:block;overflow:visible}
 .wm{fill:var(--muted);font-size:11.5px;font-weight:750;opacity:.5;letter-spacing:.02em}
 .axis-lbl{fill:var(--muted);font-size:11px}
 .val-lbl{fill:var(--ink);font-size:11px;font-weight:600}
+.chart-card{position:relative}
+.chart-actions{position:absolute;top:12px;right:12px;display:flex;gap:6px;opacity:.55;transition:opacity .15s}
+.chart-card:hover .chart-actions,.chart-actions:focus-within{opacity:1}
+.icon-btn{width:29px;height:29px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);
+  color:var(--ink-2);display:grid;place-items:center;cursor:pointer;box-shadow:var(--shadow);padding:0}
+.icon-btn:hover{color:var(--ink)}
+.icon-btn:disabled{cursor:default;color:var(--good)}
+.icon-btn svg{width:14px;height:14px;display:block}
 .tip{position:fixed;pointer-events:none;z-index:50;background:var(--surface-2);
   border:1px solid var(--border);border-radius:10px;padding:8px 11px;font-size:12.5px;
   box-shadow:var(--shadow);opacity:0;transition:opacity .1s;max-width:240px}
@@ -297,11 +305,16 @@ function banner(svg,W,H,title,sub,legend){
   if(title){const t=el("text",{x:14,y:22,class:"chart-h"});t.textContent=title;svg.appendChild(t);}
   if(sub){const s=el("text",{x:14,y:39,class:"chart-sub"});s.textContent=sub;svg.appendChild(s);}
   const wm=el("text",{x:W-8,y:H-8,"text-anchor":"end",class:"wm"});wm.textContent="@omerfin7";svg.appendChild(wm);
-  if(legend){let x=W-10;[...legend].reverse().forEach(it=>{
-    const tt=el("text",{x:x,y:22,"text-anchor":"end",class:"lgnd"});tt.textContent=it.label;svg.appendChild(tt);
-    x-=it.label.length*6.2+6;
-    svg.appendChild(el("rect",{x:x-9,y:13,width:9,height:9,rx:2,fill:it.color}));
-    x-=16;});}
+  if(legend){
+    // own row, left-aligned below the subtitle — keeps the top-right corner
+    // clear for the HTML save/copy button overlay (see addChartActions)
+    const ly=sub?57:40; let x=14;
+    legend.forEach(it=>{
+      svg.appendChild(el("rect",{x,y:ly-9,width:9,height:9,rx:2,fill:it.color}));
+      const tt=el("text",{x:x+14,y:ly,class:"lgnd"});tt.textContent=it.label;svg.appendChild(tt);
+      x+=14+it.label.length*6.4+18;
+    });
+  }
 }
 // ---------- line chart ----------
 function lineChart(sel,pts,{color,fmt=fmt1,pad=0.14,title,sub}){
@@ -339,7 +352,7 @@ function mk(key,name,f=fmt1){return L.map(r=>({x:r.season,y:r[key],lab:r.season.
 
 // ---------- horizontal team bars (home/away CS) ----------
 function teamBars(sel,rows,title,sub){
-  const W=560,rowH=24,mT=56,mL=104,mR=44,H=mT+rows.length*rowH+22;
+  const W=560,rowH=24,mT=74,mL=104,mR=44,H=mT+rows.length*rowH+22;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const max=Math.max(...rows.map(r=>Math.max(r.home_cs_rate,r.away_cs_rate)))*1.08;
   const X=v=>mL+(W-mL-mR)*v/max;
@@ -362,7 +375,7 @@ function teamBars(sel,rows,title,sub){
 
 // ---------- home advantage: two lines same scale ----------
 function multiLine(sel,series,fmt=pct,title,sub,legend){
-  const W=520,H=280,mL=44,mR=18,mT=58,mB=40;
+  const W=520,H=298,mL=44,mR=18,mT=76,mB=40;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const all=series.flatMap(s=>s.data.map(d=>d.y));
   let lo=Math.min(...all),hi=Math.max(...all);const sp=(hi-lo)||1;lo-=sp*.18;hi+=sp*.18;
@@ -386,7 +399,7 @@ function multiLine(sel,series,fmt=pct,title,sub,legend){
 // ---------- season thirds grouped bars ----------
 function thirdsChart(sel,title,sub,legend){
   const keys=Object.keys(DATA.thirds.all_seasons);
-  const W=520,H=280,mL=44,mR=18,mT=58,mB=54,gw=(W-mL-mR)/keys.length;
+  const W=520,H=298,mL=44,mR=18,mT=76,mB=54,gw=(W-mL-mR)/keys.length;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const vals=keys.flatMap(k=>[DATA.thirds.all_seasons[k],DATA.thirds[DATA.meta.latest][k]]);
   const hi=Math.max(...vals)*1.15;const Y=v=>mT+(H-mT-mB)*(1-v/hi);
@@ -462,7 +475,7 @@ renderTable();
 // ---------- DefCon (player-level, 2025/26) ----------
 const POSCOL={DEF:'--s1',MID:'--s2',FWD:'--s3'};
 function hbars(sel,rows,{value,label,color,valfmt=(v)=>v,rowH=26,mL=118,mR=48,tip,title,sub,legend}){
-  const W=560,mT=56,H=mT+rows.length*rowH+22;
+  const W=560,mT=legend?74:56,H=mT+rows.length*rowH+22;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const max=Math.max(...rows.map(r=>value(r)))*1.06||1;
   const X=v=>mL+(W-mL-mR)*v/max;
@@ -540,7 +553,7 @@ function renderMain(){
 }
 // ---------- Set pieces (corners + free kicks, penalties excluded) ----------
 function spBars(sel,rows,title,sub){
-  const W=560,rowH=25,mT=56,mL=104,mR=52,H=mT+rows.length*rowH+22;
+  const W=560,rowH=25,mT=74,mL=104,mR=52,H=mT+rows.length*rowH+22;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const max=Math.max(...rows.map(r=>Math.max(r.for_pg,r.against_pg)))*1.08;
   const X=v=>mL+(W-mL-mR)*v/max;
@@ -605,10 +618,78 @@ function renderSPG(){
     tip:r=>`<b>${r.team}</b><div class="row"><span>Conceded (set pieces)</span><b>${r.ga}</b></div><div class="row"><span>Set-piece shots faced</span><b>${r.sa}</b></div><div class="row"><span>Shots per goal conceded</span><b>${r.shots_per_goal_against}</b></div><div class="row"><span>Set-piece xG against</span><b>${r.xga}</b></div>`});
 }
 
+// ---------- per-chart save / copy ----------
+const ICON_DL="<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M12 3v12'/><path d='M7 10l5 5 5-5'/><path d='M5 21h14'/></svg>";
+const ICON_COPY="<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='9' y='9' width='11' height='11' rx='2'/><path d='M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1'/></svg>";
+const ICON_CHECK="<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'><path d='M4 12l5 5L20 6'/></svg>";
+function chartName(svg){
+  const t=svg.querySelector('.chart-h')?.textContent||'chart';
+  return t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'')+'.png';
+}
+function svgToCanvas(svg,scale=3){
+  return new Promise((resolve,reject)=>{
+    const vb=svg.viewBox.baseVal;
+    const w=(vb&&vb.width)||svg.clientWidth||600, h=(vb&&vb.height)||svg.clientHeight||300;
+    const clone=svg.cloneNode(true);
+    clone.setAttribute('xmlns','http://www.w3.org/2000/svg');
+    clone.setAttribute('width',w); clone.setAttribute('height',h);
+    const xml=new XMLSerializer().serializeToString(clone);
+    const img=new Image();
+    img.onload=()=>{
+      const canvas=document.createElement('canvas');
+      canvas.width=w*scale; canvas.height=h*scale;
+      const ctx=canvas.getContext('2d');
+      ctx.fillStyle=cv('--surface'); ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.scale(scale,scale); ctx.drawImage(img,0,0,w,h);
+      resolve(canvas);
+    };
+    img.onerror=reject;
+    img.src='data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(xml)));
+  });
+}
+function flashBtn(btn,html){
+  const orig=btn.innerHTML; btn.innerHTML=html; btn.disabled=true;
+  setTimeout(()=>{btn.innerHTML=orig; btn.disabled=false;},1300);
+}
+async function downloadSVG(svg){
+  const canvas=await svgToCanvas(svg);
+  canvas.toBlob(blob=>{
+    const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob); a.download=chartName(svg); a.click();
+  });
+}
+async function copySVG(svg,btn){
+  try{
+    if(!navigator.clipboard||!window.ClipboardItem) throw new Error('no clipboard api');
+    const canvas=await svgToCanvas(svg);
+    await new Promise((res,rej)=>canvas.toBlob(async blob=>{
+      try{ await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]); res(); }
+      catch(e){ rej(e); }
+    },'image/png'));
+    flashBtn(btn,ICON_CHECK);
+  }catch(e){ await downloadSVG(svg); flashBtn(btn,ICON_DL); }
+}
+function addChartActions(){
+  document.querySelectorAll('[id^="c_"]').forEach(div=>{
+    const card=div.closest('.card');
+    if(!card||card.querySelector('.chart-actions'))return;
+    card.classList.add('chart-card');
+    const bar=document.createElement('div');
+    bar.className='chart-actions';
+    bar.innerHTML=`<button class="icon-btn" type="button" title="Copy image" aria-label="Copy chart image">${ICON_COPY}</button>`+
+                  `<button class="icon-btn" type="button" title="Download PNG" aria-label="Download chart as PNG">${ICON_DL}</button>`;
+    card.insertBefore(bar,card.firstChild);
+    const [copyBtn,dlBtn]=bar.querySelectorAll('button');
+    copyBtn.addEventListener('click',()=>{const svg=div.querySelector('svg'); if(svg)copySVG(svg,copyBtn);});
+    dlBtn.addEventListener('click',()=>{const svg=div.querySelector('svg'); if(svg)downloadSVG(svg);});
+  });
+}
+
 renderMain();
 renderDefcon();
 renderSP();
 renderSPG();
+addChartActions();
 
 // ---------- theme toggle ----------
 $("#themeBtn").onclick=()=>{
@@ -620,6 +701,7 @@ $("#themeBtn").onclick=()=>{
   renderDefcon();
   renderSP();
   renderSPG();
+  addChartActions();
 };
 </script>
 </body>

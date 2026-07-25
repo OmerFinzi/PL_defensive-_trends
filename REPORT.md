@@ -111,7 +111,7 @@ The corner-winning leaders are the possession/attacking sides. On **net** corner
 
 **Notable set-piece takers** (designated for *both* corners and direct free kicks in 2025/26): **Rice (Arsenal)**, **Ward-Prowse (Burnley)**, **Reece James (Chelsea)**, **Wilson (Fulham)**, **Stach (Leeds)**, **Bruno Fernandes (Man Utd)**, **Xhaka (Sunderland)**, **Bowen (West Ham)**. These dual-duty takers are a club's set-piece hubs — useful FPL context, since concentrated set-piece responsibility drives assist potential.
 
-**On set-piece scorers:** a verified list of *who scores from set pieces* (excluding penalties) needs shot-level event data (Opta/StatsBomb), which was not reliably accessible for this build. Rather than guess, it is omitted; the designated takers above are reported as takers, not confirmed scorers.
+**Set-piece goals (scored & conceded) + efficiency.** Goals-by-situation come from **[Understat](https://understat.com)** via [`fetch_setpiece_goals.py`](fetch_setpiece_goals.py): set-piece goals for & against per team (corners + set pieces + direct free kicks, penalties excluded), plus **efficiency = set-piece shots per goal** (how many set-piece attempts a team needs to score, and to concede). Understat blocks automated requests from datacenter/flagged IPs (as do FBref/Sofascore/FotMob and every proxy tried), so this one pull must run from a normal network; the dashboard shows the block once `docs/setpieces_goals.json` is generated. The numbers are Understat's — nothing is estimated.
 
 ---
 

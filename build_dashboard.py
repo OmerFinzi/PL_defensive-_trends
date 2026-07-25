@@ -8,6 +8,8 @@ defcon_path = os.path.join(DOCS, "defcon.json")
 defcon = json.load(open(defcon_path, encoding="utf-8")) if os.path.exists(defcon_path) else None
 sp_path = os.path.join(DOCS, "setpieces.json")
 setpieces = json.load(open(sp_path, encoding="utf-8")) if os.path.exists(sp_path) else None
+spg_path = os.path.join(DOCS, "setpieces_goals.json")
+spgoals = json.load(open(spg_path, encoding="utf-8")) if os.path.exists(spg_path) else None
 
 HTML = r"""<!doctype html>
 <html lang="en">
@@ -238,6 +240,16 @@ footer a{color:var(--accent)}
     <h3 class="sec-h" style="margin-top:34px">Designated takers by club &mdash; 2025/26</h3>
     <p class="sec-sub">Primary corner and direct-free-kick takers per club (official FPL set-piece orders). Penalty takers are excluded. These are designated takers, not confirmed scorers.</p>
     <div class="card" style="padding:6px 10px"><div style="overflow-x:auto"><table id="sp_takers"></table></div></div>
+
+    <div id="spgBlock" style="display:none">
+      <h3 class="sec-h" style="margin-top:34px">Set-piece goals &mdash; who scores &amp; concedes most</h3>
+      <p class="sec-sub" id="spgIntro"></p>
+      <div class="kpis" id="spgKpis" style="margin-top:18px"></div>
+      <div class="grid2" style="margin-top:20px">
+        <div class="card"><div id="c_spgfor"></div></div>
+        <div class="card"><div id="c_spgagainst"></div></div>
+      </div>
+    </div>
   </section>
 
   <footer><div class="wrap">
@@ -251,6 +263,7 @@ footer a{color:var(--accent)}
 const DATA = __DATA_JSON__;
 const DEFCON = __DEFCON_JSON__;
 const SP = __SP_JSON__;
+const SPG = __SPG_JSON__;
 const $=(s,r=document)=>r.querySelector(s);
 const tip=$("#tip");
 const cv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -569,9 +582,33 @@ function renderSP(){
   $("#sp_takers").innerHTML=h+"</tbody>";
 }
 
+function renderSPG(){
+  if(!SPG){ $("#spgBlock").style.display="none"; return; }
+  $("#spgBlock").style.display="";
+  const T=SPG.teams;
+  const topFor=[...T].sort((a,b)=>b.gf-a.gf)[0];
+  const topAg=[...T].sort((a,b)=>b.ga-a.ga)[0];
+  const eff=T.filter(r=>r.gf>=5&&r.shots_per_goal_for!=null).sort((a,b)=>a.shots_per_goal_for-b.shots_per_goal_for)[0];
+  $("#spgIntro").innerHTML=`Goals scored and conceded from set pieces (<b>corners + set pieces + direct free kicks</b>; penalties excluded), ${SPG.meta.season}. Source: ${SPG.meta.source}. "Per goal" = set-piece shots taken per set-piece goal &mdash; a lower number means more clinical. ${SPG.meta.note}`;
+  $("#spgKpis").innerHTML=
+    `<div class="kpi"><div class="v">${topFor.gf}</div><div class="l">Most set-piece goals &middot; ${topFor.team}</div><div class="d up">${topFor.shots_per_goal_for} SP shots per goal</div></div>`+
+    `<div class="kpi"><div class="v">${topAg.ga}</div><div class="l">Most conceded &middot; ${topAg.team}</div><div class="d down">from set pieces</div></div>`+
+    (eff?`<div class="kpi"><div class="v">${eff.shots_per_goal_for}</div><div class="l">Most clinical &middot; ${eff.team}</div><div class="d up">SP shots per goal</div></div>`:``)+
+    `<div class="kpi"><div class="v">${SPG.league.sp_goals}</div><div class="l">Set-piece goals, league-wide</div><div class="d up">from ${SPG.league.sp_shots} SP shots</div></div>`;
+  const forRows=[...T].sort((a,b)=>b.gf-a.gf);
+  const agRows=[...T].sort((a,b)=>b.ga-a.ga);
+  hbars("#c_spgfor",forRows,{value:r=>r.gf,label:r=>r.team,color:cv('--s3'),
+    title:"Set-piece goals SCORED — "+SPG.meta.season,sub:"Corners + set pieces + direct free kicks (no penalties)",
+    tip:r=>`<b>${r.team}</b><div class="row"><span>Set-piece goals</span><b>${r.gf}</b></div><div class="row"><span>Set-piece shots</span><b>${r.sf}</b></div><div class="row"><span>Shots per goal</span><b>${r.shots_per_goal_for}</b></div><div class="row"><span>Set-piece xG</span><b>${r.xgf}</b></div>`});
+  hbars("#c_spgagainst",agRows,{value:r=>r.ga,label:r=>r.team,color:cv('--s2'),
+    title:"Set-piece goals CONCEDED — "+SPG.meta.season,sub:"Defensive set-piece exposure (no penalties)",
+    tip:r=>`<b>${r.team}</b><div class="row"><span>Conceded (set pieces)</span><b>${r.ga}</b></div><div class="row"><span>Set-piece shots faced</span><b>${r.sa}</b></div><div class="row"><span>Shots per goal conceded</span><b>${r.shots_per_goal_against}</b></div><div class="row"><span>Set-piece xG against</span><b>${r.xga}</b></div>`});
+}
+
 renderMain();
 renderDefcon();
 renderSP();
+renderSPG();
 
 // ---------- theme toggle ----------
 $("#themeBtn").onclick=()=>{
@@ -582,6 +619,7 @@ $("#themeBtn").onclick=()=>{
   renderMain();
   renderDefcon();
   renderSP();
+  renderSPG();
 };
 </script>
 </body>
@@ -591,6 +629,7 @@ $("#themeBtn").onclick=()=>{
 out = HTML.replace("__DATA_JSON__", json.dumps(data))
 out = out.replace("__DEFCON_JSON__", json.dumps(defcon))
 out = out.replace("__SP_JSON__", json.dumps(setpieces))
+out = out.replace("__SPG_JSON__", json.dumps(spgoals))
 with open(os.path.join(DOCS, "index.html"), "w", encoding="utf-8") as f:
     f.write(out)
 print("Wrote docs/index.html (", len(out), "bytes )")

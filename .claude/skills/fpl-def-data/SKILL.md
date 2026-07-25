@@ -42,7 +42,10 @@ The Set Pieces section (`setpieces.py` -> `docs/setpieces.json`) uses two things
 - **Corners for/against** per team and league (attacking vs defensive set-piece volume) from **football-data.co.uk** — `https://www.football-data.co.uk/mmz4281/<code>/E0.csv` (season code: `2526` = 2025/26, `2021` = 2020/21, etc.; needs a browser UA). Columns `HC`/`AC` are home/away corners. Staged under `data/football_data/E0_<startyear>.csv`. Team names differ slightly — map `Man United`->`Man Utd`, `Tottenham`->`Spurs`.
 - **Set-piece takers** (corners + direct free kicks, NOT penalties) from the official FPL orders already in `players_raw.csv` (`corners_and_indirect_freekicks_order`, `direct_freekicks_order`; order==1 is the primary taker).
 
-Gotcha: **FBref (403) and Understat (stripped pages) were not reliably fetchable** in this environment, so shot-level "goals from set pieces" and set-piece SCORER lists are NOT available and must not be fabricated — report takers as takers, not scorers.
+### Set-piece GOALS (scored/conceded) — `fetch_setpiece_goals.py`
+Goals-by-situation (from corner / set piece / direct free kick) come from **Understat**, the reliable free source. `fetch_setpiece_goals.py` scrapes the 20 club pages, sums the three set-piece situations (penalties excluded) for & against, and writes `docs/setpieces_goals.json` (goals, set-piece shots, xG, and efficiency = SP shots per goal). The dashboard shows a "Set-piece goals" block **only when that JSON exists**.
+
+**Hard gotcha — the build environment is IP-blocked.** Understat serves a data-stripped page (no `statisticsData`) to datacenter/flagged IPs, and FBref (403), Sofascore (403), FotMob, and every public proxy/reader tried (jina, allorigins, codetabs, corsproxy) are blocked too. The worldfootballR GitHub mirror is stale (Understat complete only to 2023/24). So this script **must be run from a normal home/office network** — then it works (it detects the stripped page and errors clearly otherwise). Do NOT fabricate set-piece goals when it can't fetch; the data is simply pending a run from an unblocked network.
 
 ## Still out of scope (be honest — do not fabricate)
 Other player metrics not in any source here: xG/xGA, ownership %, expected defensive stats, and goal-level set-piece breakdowns. Don't invent them.

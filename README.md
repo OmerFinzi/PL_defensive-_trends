@@ -54,11 +54,13 @@ data/football_data/    football-data.co.uk CSVs (corners, six seasons)
 analyze.py            match-results pipeline → docs/data.json + outputs/
 defcon.py             2025/26 DefCon (player-level) pipeline → docs/defcon.json
 setpieces.py          set-piece pipeline (corners + takers) → docs/setpieces.json
+fetch_setpiece_goals.py  set-piece GOALS from Understat → docs/setpieces_goals.json (run locally, see below)
 build_dashboard.py    builds the self-contained docs/index.html from the JSONs
 docs/index.html       the interactive dashboard (GitHub Pages entry point)
 docs/data.json        league/team metrics consumed by the dashboard
 docs/defcon.json      player-level DefCon metrics
 docs/setpieces.json   set-piece corners + takers
+docs/setpieces_goals.json  set-piece goals for/against + efficiency (created by fetch_setpiece_goals.py)
 outputs/              team_season_defence.csv (tidy per-team-per-season table)
 REPORT.md             written findings report
 .claude/skills/       project skill describing the data sources
@@ -73,8 +75,15 @@ pip install pandas numpy
 python analyze.py          # league/team trends   -> docs/data.json + outputs/
 python defcon.py           # 2025/26 player DefCon -> docs/defcon.json
 python setpieces.py        # set pieces (corners+takers) -> docs/setpieces.json
+python fetch_setpiece_goals.py   # set-piece GOALS from Understat -> docs/setpieces_goals.json  (run from a normal network — see note)
 python build_dashboard.py  # rebuilds docs/index.html from the JSONs
 ```
+
+### Set-piece goals (2025/26) — one extra step
+
+The **"who scores / concedes most from set pieces"** block is powered by [`fetch_setpiece_goals.py`](fetch_setpiece_goals.py), which pulls goals-by-situation (corners + set pieces + direct free kicks, **penalties excluded**) from **[Understat](https://understat.com)** — the reliable free source for it. It also computes **efficiency** = set-piece shots per set-piece goal (attacking and defensive).
+
+⚠️ **Run it from a normal home/office network.** Understat (and FBref / Sofascore / FotMob / every public proxy tried) blocks automated requests from datacenter/flagged IPs, serving a data-less page — so it can't be fetched from all CI/sandbox environments. From an ordinary connection it just works (~20 requests). Once `docs/setpieces_goals.json` exists, re-run `build_dashboard.py` and the set-piece-goals block appears automatically. Until then that one block is hidden; everything else (corners volume, takers, DefCon, six-season trends) is already populated.
 
 Open `docs/index.html` in any browser — it is fully self-contained (data embedded inline, **zero external requests**, works offline and on GitHub Pages).
 

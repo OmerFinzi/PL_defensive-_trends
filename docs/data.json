@@ -1,0 +1,450 @@
+{
+  "meta": {
+    "seasons": [
+      "2020/21",
+      "2021/22",
+      "2022/23",
+      "2023/24",
+      "2024/25",
+      "2025/26"
+    ],
+    "latest": "2025/26",
+    "source": "fixturedownload.com (English Premier League results)",
+    "generated_seasons": 6,
+    "total_matches": 2280
+  },
+  "league": [
+    {
+      "season": "2020/21",
+      "start_year": 2020,
+      "matches": 380,
+      "goals_per_game": 2.695,
+      "home_goals_pg": 1.353,
+      "away_goals_pg": 1.342,
+      "clean_sheets": 224,
+      "cs_per_game": 0.589,
+      "home_cs_rate": 0.297,
+      "away_cs_rate": 0.292,
+      "btts_rate": 0.489,
+      "home_win_rate": 0.379,
+      "away_win_rate": 0.403,
+      "draw_rate": 0.218,
+      "home_ppg": 1.355,
+      "away_ppg": 1.426
+    },
+    {
+      "season": "2021/22",
+      "start_year": 2021,
+      "matches": 380,
+      "goals_per_game": 2.818,
+      "home_goals_pg": 1.513,
+      "away_goals_pg": 1.305,
+      "clean_sheets": 212,
+      "cs_per_game": 0.558,
+      "home_cs_rate": 0.313,
+      "away_cs_rate": 0.245,
+      "btts_rate": 0.5,
+      "home_win_rate": 0.429,
+      "away_win_rate": 0.339,
+      "draw_rate": 0.232,
+      "home_ppg": 1.518,
+      "away_ppg": 1.25
+    },
+    {
+      "season": "2022/23",
+      "start_year": 2022,
+      "matches": 380,
+      "goals_per_game": 2.853,
+      "home_goals_pg": 1.634,
+      "away_goals_pg": 1.218,
+      "clean_sheets": 207,
+      "cs_per_game": 0.545,
+      "home_cs_rate": 0.329,
+      "away_cs_rate": 0.216,
+      "btts_rate": 0.516,
+      "home_win_rate": 0.484,
+      "away_win_rate": 0.287,
+      "draw_rate": 0.229,
+      "home_ppg": 1.682,
+      "away_ppg": 1.089
+    },
+    {
+      "season": "2023/24",
+      "start_year": 2023,
+      "matches": 380,
+      "goals_per_game": 3.279,
+      "home_goals_pg": 1.8,
+      "away_goals_pg": 1.479,
+      "clean_sheets": 157,
+      "cs_per_game": 0.413,
+      "home_cs_rate": 0.234,
+      "away_cs_rate": 0.179,
+      "btts_rate": 0.616,
+      "home_win_rate": 0.461,
+      "away_win_rate": 0.324,
+      "draw_rate": 0.216,
+      "home_ppg": 1.597,
+      "away_ppg": 1.187
+    },
+    {
+      "season": "2024/25",
+      "start_year": 2024,
+      "matches": 380,
+      "goals_per_game": 2.934,
+      "home_goals_pg": 1.513,
+      "away_goals_pg": 1.421,
+      "clean_sheets": 178,
+      "cs_per_game": 0.468,
+      "home_cs_rate": 0.229,
+      "away_cs_rate": 0.239,
+      "btts_rate": 0.574,
+      "home_win_rate": 0.408,
+      "away_win_rate": 0.347,
+      "draw_rate": 0.245,
+      "home_ppg": 1.468,
+      "away_ppg": 1.287
+    },
+    {
+      "season": "2025/26",
+      "start_year": 2025,
+      "matches": 380,
+      "goals_per_game": 2.75,
+      "home_goals_pg": 1.526,
+      "away_goals_pg": 1.224,
+      "clean_sheets": 194,
+      "cs_per_game": 0.511,
+      "home_cs_rate": 0.284,
+      "away_cs_rate": 0.226,
+      "btts_rate": 0.561,
+      "home_win_rate": 0.426,
+      "away_win_rate": 0.3,
+      "draw_rate": 0.274,
+      "home_ppg": 1.553,
+      "away_ppg": 1.174
+    }
+  ],
+  "latest_table": [
+    {
+      "team": "Arsenal",
+      "games": 38,
+      "clean_sheets": 19,
+      "cs_rate": 0.5,
+      "conceded": 27,
+      "conceded_pg": 0.711,
+      "home_cs_rate": 0.579,
+      "away_cs_rate": 0.421
+    },
+    {
+      "team": "Man City",
+      "games": 38,
+      "clean_sheets": 16,
+      "cs_rate": 0.421,
+      "conceded": 35,
+      "conceded_pg": 0.921,
+      "home_cs_rate": 0.474,
+      "away_cs_rate": 0.368
+    },
+    {
+      "team": "Crystal Palace",
+      "games": 38,
+      "clean_sheets": 12,
+      "cs_rate": 0.316,
+      "conceded": 51,
+      "conceded_pg": 1.342,
+      "home_cs_rate": 0.368,
+      "away_cs_rate": 0.263
+    },
+    {
+      "team": "Bournemouth",
+      "games": 38,
+      "clean_sheets": 11,
+      "cs_rate": 0.289,
+      "conceded": 54,
+      "conceded_pg": 1.421,
+      "home_cs_rate": 0.316,
+      "away_cs_rate": 0.263
+    },
+    {
+      "team": "Sunderland",
+      "games": 38,
+      "clean_sheets": 11,
+      "cs_rate": 0.289,
+      "conceded": 48,
+      "conceded_pg": 1.263,
+      "home_cs_rate": 0.368,
+      "away_cs_rate": 0.211
+    },
+    {
+      "team": "Everton",
+      "games": 38,
+      "clean_sheets": 11,
+      "cs_rate": 0.289,
+      "conceded": 50,
+      "conceded_pg": 1.316,
+      "home_cs_rate": 0.316,
+      "away_cs_rate": 0.263
+    },
+    {
+      "team": "Liverpool",
+      "games": 38,
+      "clean_sheets": 10,
+      "cs_rate": 0.263,
+      "conceded": 53,
+      "conceded_pg": 1.395,
+      "home_cs_rate": 0.263,
+      "away_cs_rate": 0.263
+    },
+    {
+      "team": "Brentford",
+      "games": 38,
+      "clean_sheets": 10,
+      "cs_rate": 0.263,
+      "conceded": 52,
+      "conceded_pg": 1.368,
+      "home_cs_rate": 0.263,
+      "away_cs_rate": 0.263
+    },
+    {
+      "team": "Brighton",
+      "games": 38,
+      "clean_sheets": 10,
+      "cs_rate": 0.263,
+      "conceded": 46,
+      "conceded_pg": 1.211,
+      "home_cs_rate": 0.263,
+      "away_cs_rate": 0.263
+    },
+    {
+      "team": "Aston Villa",
+      "games": 38,
+      "clean_sheets": 9,
+      "cs_rate": 0.237,
+      "conceded": 49,
+      "conceded_pg": 1.289,
+      "home_cs_rate": 0.316,
+      "away_cs_rate": 0.158
+    },
+    {
+      "team": "Fulham",
+      "games": 38,
+      "clean_sheets": 9,
+      "cs_rate": 0.237,
+      "conceded": 51,
+      "conceded_pg": 1.342,
+      "home_cs_rate": 0.316,
+      "away_cs_rate": 0.158
+    },
+    {
+      "team": "Chelsea",
+      "games": 38,
+      "clean_sheets": 9,
+      "cs_rate": 0.237,
+      "conceded": 52,
+      "conceded_pg": 1.368,
+      "home_cs_rate": 0.263,
+      "away_cs_rate": 0.211
+    },
+    {
+      "team": "Spurs",
+      "games": 38,
+      "clean_sheets": 9,
+      "cs_rate": 0.237,
+      "conceded": 57,
+      "conceded_pg": 1.5,
+      "home_cs_rate": 0.158,
+      "away_cs_rate": 0.316
+    },
+    {
+      "team": "Nott'm Forest",
+      "games": 38,
+      "clean_sheets": 9,
+      "cs_rate": 0.237,
+      "conceded": 51,
+      "conceded_pg": 1.342,
+      "home_cs_rate": 0.211,
+      "away_cs_rate": 0.263
+    },
+    {
+      "team": "Newcastle",
+      "games": 38,
+      "clean_sheets": 8,
+      "cs_rate": 0.211,
+      "conceded": 55,
+      "conceded_pg": 1.447,
+      "home_cs_rate": 0.158,
+      "away_cs_rate": 0.263
+    },
+    {
+      "team": "Leeds",
+      "games": 38,
+      "clean_sheets": 8,
+      "cs_rate": 0.211,
+      "conceded": 56,
+      "conceded_pg": 1.474,
+      "home_cs_rate": 0.316,
+      "away_cs_rate": 0.105
+    },
+    {
+      "team": "Man Utd",
+      "games": 38,
+      "clean_sheets": 8,
+      "cs_rate": 0.211,
+      "conceded": 50,
+      "conceded_pg": 1.316,
+      "home_cs_rate": 0.211,
+      "away_cs_rate": 0.211
+    },
+    {
+      "team": "West Ham",
+      "games": 38,
+      "clean_sheets": 7,
+      "cs_rate": 0.184,
+      "conceded": 65,
+      "conceded_pg": 1.711,
+      "home_cs_rate": 0.158,
+      "away_cs_rate": 0.211
+    },
+    {
+      "team": "Burnley",
+      "games": 38,
+      "clean_sheets": 4,
+      "cs_rate": 0.105,
+      "conceded": 75,
+      "conceded_pg": 1.974,
+      "home_cs_rate": 0.211,
+      "away_cs_rate": 0.0
+    },
+    {
+      "team": "Wolves",
+      "games": 38,
+      "clean_sheets": 4,
+      "cs_rate": 0.105,
+      "conceded": 68,
+      "conceded_pg": 1.789,
+      "home_cs_rate": 0.158,
+      "away_cs_rate": 0.053
+    }
+  ],
+  "trends": {
+    "cs_per_game_slope": -0.0226,
+    "goals_per_game_slope": 0.03,
+    "btts_slope": 0.0195,
+    "home_advantage_ppg": [
+      -0.071,
+      0.268,
+      0.593,
+      0.41,
+      0.181,
+      0.379
+    ],
+    "home_advantage_slope": 0.0516
+  },
+  "thirds": {
+    "all_seasons": {
+      "Early (GW1-12)": 0.515,
+      "Mid (GW13-26)": 0.535,
+      "Late (GW27-38)": 0.489
+    },
+    "2025/26": {
+      "Early (GW1-12)": 0.55,
+      "Mid (GW13-26)": 0.479,
+      "Late (GW27-38)": 0.508
+    }
+  },
+  "risers": [
+    {
+      "team": "Brighton",
+      "cur": 1.211,
+      "prev": 1.553,
+      "delta": -0.342
+    },
+    {
+      "team": "Man City",
+      "cur": 0.921,
+      "prev": 1.158,
+      "delta": -0.237
+    },
+    {
+      "team": "Spurs",
+      "cur": 1.5,
+      "prev": 1.711,
+      "delta": -0.211
+    },
+    {
+      "team": "Arsenal",
+      "cur": 0.711,
+      "prev": 0.895,
+      "delta": -0.184
+    },
+    {
+      "team": "Brentford",
+      "cur": 1.368,
+      "prev": 1.5,
+      "delta": -0.132
+    }
+  ],
+  "fallers": [
+    {
+      "team": "Liverpool",
+      "cur": 1.395,
+      "prev": 1.079,
+      "delta": 0.316
+    },
+    {
+      "team": "Chelsea",
+      "cur": 1.368,
+      "prev": 1.132,
+      "delta": 0.237
+    },
+    {
+      "team": "Newcastle",
+      "cur": 1.447,
+      "prev": 1.237,
+      "delta": 0.211
+    },
+    {
+      "team": "Bournemouth",
+      "cur": 1.421,
+      "prev": 1.211,
+      "delta": 0.211
+    },
+    {
+      "team": "Everton",
+      "cur": 1.316,
+      "prev": 1.158,
+      "delta": 0.158
+    }
+  ],
+  "promoted": [
+    {
+      "team": "Sunderland",
+      "games": 38,
+      "clean_sheets": 11,
+      "cs_rate": 0.289,
+      "conceded": 48,
+      "conceded_pg": 1.263,
+      "home_cs_rate": 0.368,
+      "away_cs_rate": 0.211
+    },
+    {
+      "team": "Leeds",
+      "games": 38,
+      "clean_sheets": 8,
+      "cs_rate": 0.211,
+      "conceded": 56,
+      "conceded_pg": 1.474,
+      "home_cs_rate": 0.316,
+      "away_cs_rate": 0.105
+    },
+    {
+      "team": "Burnley",
+      "games": 38,
+      "clean_sheets": 4,
+      "cs_rate": 0.105,
+      "conceded": 75,
+      "conceded_pg": 1.974,
+      "home_cs_rate": 0.211,
+      "away_cs_rate": 0.0
+    }
+  ]
+}

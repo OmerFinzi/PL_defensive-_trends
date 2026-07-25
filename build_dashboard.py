@@ -1,0 +1,419 @@
+"""Build docs/index.html — a self-contained dashboard with data.json embedded inline.
+Run after analyze.py. Output has zero external requests (GitHub Pages + offline safe)."""
+import json, os
+ROOT = os.path.dirname(os.path.abspath(__file__))
+DOCS = os.path.join(ROOT, "docs")
+data = json.load(open(os.path.join(DOCS, "data.json"), encoding="utf-8"))
+
+HTML = r"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Premier League Defensive Trends 2020/21 - 2025/26</title>
+<style>
+:root{
+  color-scheme:light;
+  --plane:#f9f9f7; --surface:#fcfcfb; --surface-2:#ffffff;
+  --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s2:#eb6834; --s3:#1baf7a; --s4:#eda100; --s5:#e87ba4;
+  --good:#0ca30c; --crit:#d03b3b; --accent:#1baf7a;
+  --shadow:0 1px 2px rgba(11,11,11,.04),0 8px 24px rgba(11,11,11,.06);
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --plane:#0d0d0d; --surface:#1a1a19; --surface-2:#222220;
+  --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+  --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+  --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+  --good:#0ca30c; --crit:#d03b3b; --accent:#199e70;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.5);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;
+    --plane:#0d0d0d; --surface:#1a1a19; --surface-2:#222220;
+    --ink:#fff; --ink-2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926; --s3:#199e70; --s4:#c98500; --s5:#d55181;
+    --accent:#199e70;
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--plane);color:var(--ink);
+  font-family:system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+header.top{position:sticky;top:0;z-index:20;backdrop-filter:blur(10px);
+  background:color-mix(in srgb,var(--plane) 82%,transparent);
+  border-bottom:1px solid var(--border)}
+.top .wrap{display:flex;align-items:center;gap:14px;padding-top:14px;padding-bottom:14px}
+.badge{width:38px;height:38px;border-radius:11px;flex:none;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--accent),var(--s1));color:#fff;font-size:20px;
+  box-shadow:var(--shadow)}
+.top h1{font-size:16px;margin:0;font-weight:650;letter-spacing:-.01em}
+.top p{margin:0;font-size:12.5px;color:var(--ink-2)}
+.grow{flex:1}
+.toggle{border:1px solid var(--border);background:var(--surface);color:var(--ink-2);
+  border-radius:10px;padding:8px 12px;font-size:13px;cursor:pointer;font-weight:550}
+.toggle:hover{color:var(--ink)}
+.hero{padding:52px 0 26px}
+.eyebrow{font-size:12px;font-weight:650;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 12px}
+.hero h2{font-size:clamp(26px,4.4vw,44px);line-height:1.08;margin:0 0 14px;
+  font-weight:720;letter-spacing:-.02em;max-width:20ch}
+.hero .lede{font-size:16.5px;color:var(--ink-2);max-width:64ch;margin:0}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:30px 0 8px}
+.kpi{background:var(--surface);border:1px solid var(--border);border-radius:15px;
+  padding:18px 18px 16px;box-shadow:var(--shadow)}
+.kpi .v{font-size:30px;font-weight:720;letter-spacing:-.02em}
+.kpi .l{font-size:12.5px;color:var(--ink-2);margin-top:3px}
+.kpi .d{font-size:12px;font-weight:600;margin-top:9px;display:inline-flex;align-items:center;gap:5px}
+.up{color:var(--good)} .down{color:var(--crit)}
+section{padding:34px 0}
+.sec-h{margin:0 0 4px;font-size:21px;font-weight:670;letter-spacing:-.01em}
+.sec-sub{margin:0 0 20px;color:var(--ink-2);font-size:14.5px;max-width:76ch}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  padding:22px 22px 16px;box-shadow:var(--shadow)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.ctitle{font-size:14.5px;font-weight:620;margin:0 0 2px}
+.csub{font-size:12.5px;color:var(--muted);margin:0 0 14px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;margin:12px 2px 0;font-size:12.5px;color:var(--ink-2)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:10px;height:10px;border-radius:3px;flex:none}
+svg{width:100%;height:auto;display:block;overflow:visible}
+.axis-lbl{fill:var(--muted);font-size:11px}
+.val-lbl{fill:var(--ink);font-size:11px;font-weight:600}
+.tip{position:fixed;pointer-events:none;z-index:50;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:10px;padding:8px 11px;font-size:12.5px;
+  box-shadow:var(--shadow);opacity:0;transition:opacity .1s;max-width:240px}
+.tip b{font-weight:650}
+.tip .row{display:flex;justify-content:space-between;gap:14px;color:var(--ink-2)}
+.tip .row b{color:var(--ink)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--border);
+  font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);
+  font-weight:600;cursor:pointer;user-select:none;white-space:nowrap}
+th:hover{color:var(--ink)}
+tbody tr:hover{background:color-mix(in srgb,var(--accent) 7%,transparent)}
+.rk{color:var(--muted);width:26px}
+.bar-cell{position:relative}
+.mini{height:7px;border-radius:4px;background:var(--s1);display:inline-block;vertical-align:middle}
+.chip{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600;
+  background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent)}
+.notes{font-size:13px;color:var(--ink-2)}
+.notes li{margin:6px 0}
+footer{padding:34px 0 56px;color:var(--muted);font-size:12.5px;border-top:1px solid var(--border);margin-top:20px}
+footer a{color:var(--accent)}
+.pill-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.promo{background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:14px 16px;
+  box-shadow:var(--shadow);flex:1;min-width:150px}
+.promo .n{font-weight:650;font-size:15px}
+.promo .s{font-size:12.5px;color:var(--ink-2);margin-top:4px}
+@media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <div class="badge">&#128737;</div>
+  <div><h1>Premier League Defensive Trends</h1><p>Six seasons of clean sheets &amp; goals conceded &middot; 2020/21 &rarr; 2025/26</p></div>
+  <div class="grow"></div>
+  <button class="toggle" id="themeBtn">&#9789; Theme</button>
+</div></header>
+
+<main class="wrap">
+  <div class="hero">
+    <p class="eyebrow">FPL Defensive Analysis &middot; Updated for 2025/26</p>
+    <h2 id="heroHead"></h2>
+    <p class="lede" id="heroLede"></p>
+    <div class="kpis" id="kpis"></div>
+  </div>
+
+  <section>
+    <h3 class="sec-h">The six-season story</h3>
+    <p class="sec-sub">Clean sheets per game, goals per game, and "both teams to score" rate across every completed season. The attacking spike of 2023/24 has unwound &mdash; 2025/26 is the meanest season for goals since the pandemic-era 2020/21.</p>
+    <div class="grid3">
+      <div class="card"><p class="ctitle">Clean sheets per game</p><p class="csub">League-wide, both teams counted</p><div id="c_cs"></div></div>
+      <div class="card"><p class="ctitle">Goals per game</p><p class="csub">Total goals &divide; matches</p><div id="c_goals"></div></div>
+      <div class="card"><p class="ctitle">Both teams to score</p><p class="csub">Share of matches with BTTS</p><div id="c_btts"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="grid2">
+      <div>
+        <h3 class="sec-h">Who to trust at the back &mdash; 2025/26</h3>
+        <p class="sec-sub">Clean-sheet rate per team this season, split home vs away. The gap between the elite two and the rest is stark.</p>
+        <div class="card"><div class="legend" style="margin:0 0 14px">
+          <span><i class="dot" style="background:var(--s1)"></i>Home CS rate</span>
+          <span><i class="dot" style="background:var(--s3)"></i>Away CS rate</span>
+        </div><div id="c_teams"></div></div>
+      </div>
+      <div>
+        <h3 class="sec-h">Home advantage is back</h3>
+        <p class="sec-sub">Home and away clean-sheet rates by season. The pandemic collapsed home advantage; it has since recovered.</p>
+        <div class="card"><div class="legend" style="margin:0 0 8px">
+          <span><i class="dot" style="background:var(--s1)"></i>Home CS rate</span>
+          <span><i class="dot" style="background:var(--s2)"></i>Away CS rate</span>
+        </div><div id="c_ha"></div></div>
+        <h3 class="sec-h" style="margin-top:26px">When clean sheets come</h3>
+        <p class="sec-sub">Average clean sheets per game by third of the season.</p>
+        <div class="card"><div class="legend" style="margin:0 0 8px">
+          <span><i class="dot" style="background:var(--s4)"></i>All six seasons</span>
+          <span><i class="dot" style="background:var(--s1)"></i>2025/26</span>
+        </div><div id="c_thirds"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h3 class="sec-h">Momentum: who tightened up, who fell apart</h3>
+    <p class="sec-sub">Change in goals conceded per game, 2025/26 vs 2024/25. Left/green = conceding fewer (defence improving); right/red = leaking more. Only teams present in both seasons.</p>
+    <div class="grid2">
+      <div class="card"><p class="ctitle">Biggest improvers</p><p class="csub">Fewer goals conceded per game</p><div id="c_risers"></div></div>
+      <div class="card"><p class="ctitle">Biggest declines</p><p class="csub">More goals conceded per game</p><div id="c_fallers"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <h3 class="sec-h">Promoted sides &mdash; 2025/26 defensive record</h3>
+    <p class="sec-sub">How the three newcomers held up defensively in their season back in the top flight.</p>
+    <div class="pill-row" id="promo"></div>
+  </section>
+
+  <section>
+    <h3 class="sec-h">Full 2025/26 defensive table</h3>
+    <p class="sec-sub">Every team, sortable. Click a column header to re-sort.</p>
+    <div class="card" style="padding:6px 10px"><div style="overflow-x:auto"><table id="tbl"></table></div></div>
+  </section>
+</main>
+
+<footer><div class="wrap">
+  <p><b>Data</b> &middot; <span id="fsrc"></span>. Match results only &mdash; player-level FPL metrics (defensive contributions, xGA, minutes, prices) are out of scope and are not shown.<br>
+  <b>Method</b> &middot; A clean sheet is credited to a team that concedes zero in a match. "CS rate" = clean sheets &divide; matches. Built with a reproducible Python pipeline; this page embeds its output and makes no external requests.<br>
+  Analysis by <b>@omerfin7</b> &middot; refreshed for the 2025/26 season.</p>
+</div></footer>
+
+<div class="tip" id="tip"></div>
+<script>
+const DATA = __DATA_JSON__;
+const $=(s,r=document)=>r.querySelector(s);
+const tip=$("#tip");
+const cv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+function showTip(html,e){tip.innerHTML=html;tip.style.opacity=1;
+  const p=12,w=tip.offsetWidth,h=tip.offsetHeight;
+  let x=e.clientX+p,y=e.clientY+p;
+  if(x+w>innerWidth)x=e.clientX-w-p; if(y+h>innerHeight)y=e.clientY-h-p;
+  tip.style.left=x+"px";tip.style.top=y+"px";}
+function hideTip(){tip.style.opacity=0;}
+const NS="http://www.w3.org/2000/svg";
+function el(t,a={}){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
+const fmt1=v=>v.toFixed(2), pct=v=>Math.round(v*100)+"%";
+
+// ---------- hero + KPIs ----------
+const L=DATA.league, last=L[L.length-1], prev=L[L.length-2];
+const topTeam=DATA.latest_table[0];
+$("#heroHead").textContent=`Defences are winning back the Premier League in ${DATA.meta.latest}.`;
+$("#heroLede").innerHTML=`After the record-breaking goal glut of 2023/24, scoring has fallen for two straight seasons. In ${DATA.meta.latest} clubs are conceding less, keeping more clean sheets, and <b>${topTeam.team}</b> lead the way with a ${pct(topTeam.cs_rate)} clean-sheet rate &mdash; the single best defensive return across the six seasons studied.`;
+$("#fsrc").textContent=DATA.meta.source;
+function kpi(v,l,d,dir){return `<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div>`+
+  (d?`<div class="d ${dir}">${dir==='up'?'&#9650;':'&#9660;'} ${d}</div>`:``)+`</div>`;}
+const csD=(last.cs_per_game-prev.cs_per_game), gD=(last.goals_per_game-prev.goals_per_game);
+$("#kpis").innerHTML=
+  kpi(fmt1(last.cs_per_game),`Clean sheets / game (${DATA.meta.latest})`,`${csD>=0?'+':''}${csD.toFixed(2)} vs ${prev.season}`,csD>=0?'up':'down')+
+  kpi(fmt1(last.goals_per_game),`Goals / game (${DATA.meta.latest})`,`${gD>=0?'+':''}${gD.toFixed(2)} vs ${prev.season}`,gD<=0?'up':'down')+
+  kpi(pct(last.btts_rate),`Both teams to score`,`lowest since ${DATA.meta.latest==='2025/26'?'2022/23':''}`,'up')+
+  kpi(topTeam.team,`Meanest defence`,`${pct(topTeam.cs_rate)} CS &middot; ${fmt1(topTeam.conceded_pg)} conceded/gm`,'up');
+
+// ---------- line chart ----------
+function lineChart(sel,pts,{color,fmt=fmt1,pad=0.12}){
+  const W=360,H=190,mL=38,mR=14,mT=14,mB=30;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img"});
+  const xs=pts.map(p=>p.x), ys=pts.map(p=>p.y);
+  let lo=Math.min(...ys),hi=Math.max(...ys);const sp=(hi-lo)||1;lo-=sp*pad;hi+=sp*pad;
+  const X=i=>mL+(W-mL-mR)*i/(pts.length-1);
+  const Y=v=>mT+(H-mT-mB)*(1-(v-lo)/(hi-lo));
+  for(let g=0;g<=3;g++){const v=lo+(hi-lo)*g/3;const y=Y(v);
+    svg.appendChild(el("line",{x1:mL,x2:W-mR,y1:y,y2:y,stroke:cv('--grid'),"stroke-width":1}));
+    const t=el("text",{x:mL-6,y:y+3,"text-anchor":"end",class:"axis-lbl"});t.textContent=fmt(v);svg.appendChild(t);}
+  pts.forEach((p,i)=>{const t=el("text",{x:X(i),y:H-9,"text-anchor":"middle",class:"axis-lbl"});
+    t.textContent=p.lab;svg.appendChild(t);});
+  // area
+  let d=`M ${X(0)} ${Y(ys[0])}`; pts.forEach((p,i)=>d+=` L ${X(i)} ${Y(p.y)}`);
+  const area=d+` L ${X(pts.length-1)} ${Y(lo)} L ${X(0)} ${Y(lo)} Z`;
+  const gid="g"+sel.replace(/\W/g,'');
+  const defs=el("defs");const lg=el("linearGradient",{id:gid,x1:0,y1:0,x2:0,y2:1});
+  lg.appendChild(el("stop",{offset:"0%","stop-color":color,"stop-opacity":.20}));
+  lg.appendChild(el("stop",{offset:"100%","stop-color":color,"stop-opacity":0}));
+  defs.appendChild(lg);svg.appendChild(defs);
+  svg.appendChild(el("path",{d:area,fill:`url(#${gid})`}));
+  svg.appendChild(el("path",{d,fill:"none",stroke:color,"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"}));
+  pts.forEach((p,i)=>{
+    svg.appendChild(el("circle",{cx:X(i),cy:Y(p.y),r:3.5,fill:cv('--surface'),stroke:color,"stroke-width":2}));
+    const hit=el("rect",{x:X(i)-16,y:mT,width:32,height:H-mT-mB,fill:"transparent"});
+    hit.addEventListener("mousemove",e=>showTip(`<b>${p.full}</b><div class="row"><span>${p.name}</span><b>${fmt(p.y)}</b></div>`,e));
+    hit.addEventListener("mouseleave",hideTip);svg.appendChild(hit);});
+  $(sel).appendChild(svg);
+}
+const seasons=L.map(r=>r.season), slab=s=>s.replace('20','').replace('/','/');
+function mk(key,name,f=fmt1){return L.map(r=>({x:r.season,y:r[key],lab:r.season.slice(2),full:r.season,name}));}
+lineChart("#c_cs",mk('cs_per_game','Clean sheets/gm'),{color:cv('--s1')});
+lineChart("#c_goals",mk('goals_per_game','Goals/gm'),{color:cv('--s2')});
+lineChart("#c_btts",L.map(r=>({y:r.btts_rate,lab:r.season.slice(2),full:r.season,name:'BTTS'})),{color:cv('--s3'),fmt:pct});
+
+// ---------- horizontal team bars (home/away CS) ----------
+function teamBars(sel,rows){
+  const W=560,rowH=26,mT=6,mL=104,mR=40,H=mT+rows.length*rowH+6;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
+  const max=Math.max(...rows.map(r=>Math.max(r.home_cs_rate,r.away_cs_rate)))*1.08;
+  const X=v=>mL+(W-mL-mR)*v/max;
+  rows.forEach((r,i)=>{
+    const y=mT+i*rowH;
+    const t=el("text",{x:mL-8,y:y+rowH/2+1,"text-anchor":"end",class:"val-lbl"});t.textContent=r.team;svg.appendChild(t);
+    const mkbar=(val,col,off,h)=>{
+      const w=Math.max(2,X(val)-mL);
+      const rect=el("rect",{x:mL,y:y+off,width:w,height:h,rx:3,fill:col});
+      rect.addEventListener("mousemove",e=>showTip(`<b>${r.team}</b><div class="row"><span>Overall CS</span><b>${pct(r.cs_rate)}</b></div><div class="row"><span>Home CS</span><b>${pct(r.home_cs_rate)}</b></div><div class="row"><span>Away CS</span><b>${pct(r.away_cs_rate)}</b></div><div class="row"><span>Conceded/gm</span><b>${fmt1(r.conceded_pg)}</b></div>`,e));
+      rect.addEventListener("mouseleave",hideTip);svg.appendChild(rect);};
+    mkbar(r.home_cs_rate,cv('--s1'),4,7);
+    mkbar(r.away_cs_rate,cv('--s3'),14,7);
+    const vl=el("text",{x:X(Math.max(r.home_cs_rate,r.away_cs_rate))+6,y:y+rowH/2+1,class:"axis-lbl"});
+    vl.textContent=pct(r.cs_rate);svg.appendChild(vl);
+  });
+  $(sel).appendChild(svg);
+}
+teamBars("#c_teams",DATA.latest_table);
+
+// ---------- home advantage: two lines same scale ----------
+function multiLine(sel,series,fmt=pct){
+  const W=520,H=230,mL=40,mR=16,mT=14,mB=30;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
+  const all=series.flatMap(s=>s.data.map(d=>d.y));
+  let lo=Math.min(...all),hi=Math.max(...all);const sp=(hi-lo)||1;lo-=sp*.15;hi+=sp*.15;
+  const n=series[0].data.length;
+  const X=i=>mL+(W-mL-mR)*i/(n-1), Y=v=>mT+(H-mT-mB)*(1-(v-lo)/(hi-lo));
+  for(let g=0;g<=3;g++){const v=lo+(hi-lo)*g/3,y=Y(v);
+    svg.appendChild(el("line",{x1:mL,x2:W-mR,y1:y,y2:y,stroke:cv('--grid')}));
+    const t=el("text",{x:mL-6,y:y+3,"text-anchor":"end",class:"axis-lbl"});t.textContent=fmt(v);svg.appendChild(t);}
+  series[0].data.forEach((d,i)=>{const t=el("text",{x:X(i),y:H-9,"text-anchor":"middle",class:"axis-lbl"});t.textContent=d.lab;svg.appendChild(t);});
+  series.forEach(s=>{let d=`M ${X(0)} ${Y(s.data[0].y)}`;s.data.forEach((p,i)=>d+=` L ${X(i)} ${Y(p.y)}`);
+    svg.appendChild(el("path",{d,fill:"none",stroke:s.color,"stroke-width":2,"stroke-linejoin":"round"}));
+    s.data.forEach((p,i)=>svg.appendChild(el("circle",{cx:X(i),cy:Y(p.y),r:3.2,fill:cv('--surface'),stroke:s.color,"stroke-width":2})));});
+  series[0].data.forEach((_,i)=>{const hit=el("rect",{x:X(i)-16,y:mT,width:32,height:H-mT-mB,fill:"transparent"});
+    hit.addEventListener("mousemove",e=>{const rows=series.map(s=>`<div class="row"><span>${s.name}</span><b>${fmt(s.data[i].y)}</b></div>`).join('');
+      showTip(`<b>${series[0].data[i].full}</b>${rows}`,e);});
+    hit.addEventListener("mouseleave",hideTip);svg.appendChild(hit);});
+  $(sel).appendChild(svg);
+}
+multiLine("#c_ha",[
+  {name:"Home CS rate",color:cv('--s1'),data:L.map(r=>({y:r.home_cs_rate,lab:r.season.slice(2),full:r.season}))},
+  {name:"Away CS rate",color:cv('--s2'),data:L.map(r=>({y:r.away_cs_rate,lab:r.season.slice(2),full:r.season}))},
+]);
+
+// ---------- season thirds grouped bars ----------
+function thirdsChart(sel){
+  const keys=Object.keys(DATA.thirds.all_seasons);
+  const W=520,H=210,mL=40,mR=16,mT=14,mB=42,gw=(W-mL-mR)/keys.length;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
+  const vals=keys.flatMap(k=>[DATA.thirds.all_seasons[k],DATA.thirds[DATA.meta.latest][k]]);
+  const hi=Math.max(...vals)*1.15;const Y=v=>mT+(H-mT-mB)*(1-v/hi);
+  for(let g=0;g<=3;g++){const v=hi*g/3,y=Y(v);
+    svg.appendChild(el("line",{x1:mL,x2:W-mR,y1:y,y2:y,stroke:cv('--grid')}));
+    const t=el("text",{x:mL-6,y:y+3,"text-anchor":"end",class:"axis-lbl"});t.textContent=v.toFixed(2);svg.appendChild(t);}
+  keys.forEach((k,i)=>{
+    const cx=mL+gw*i+gw/2, bw=gw*0.28;
+    const a=DATA.thirds.all_seasons[k], b=DATA.thirds[DATA.meta.latest][k];
+    const mkbar=(v,col,dx,lbl)=>{const h=(H-mT-mB)-(Y(v)-mT);
+      const rc=el("rect",{x:cx+dx,y:Y(v),width:bw,height:Math.max(1,h),rx:3,fill:col});
+      rc.addEventListener("mousemove",e=>showTip(`<b>${k}</b><div class="row"><span>${lbl}</span><b>${v.toFixed(2)} CS/gm</b></div>`,e));
+      rc.addEventListener("mouseleave",hideTip);svg.appendChild(rc);};
+    mkbar(a,cv('--s4'),-bw-2,"All seasons");
+    mkbar(b,cv('--s1'),2,DATA.meta.latest);
+    const t=el("text",{x:cx,y:H-24,"text-anchor":"middle",class:"axis-lbl"});t.textContent=k.split(' ')[0];svg.appendChild(t);
+    const t2=el("text",{x:cx,y:H-11,"text-anchor":"middle",class:"axis-lbl"});t2.textContent=k.match(/\((.*)\)/)[1];svg.appendChild(t2);
+  });
+  $(sel).appendChild(svg);
+}
+thirdsChart("#c_thirds");
+
+// ---------- diverging movers ----------
+function movers(sel,rows,improving){
+  const W=520,rowH=30,mT=6,mL=104,mR=54,H=mT+rows.length*rowH+6;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
+  const max=Math.max(...rows.map(r=>Math.abs(r.delta)))*1.1;
+  const X=v=>mL+(W-mL-mR)*Math.abs(v)/max;
+  const col=improving?cv('--good'):cv('--crit');
+  rows.forEach((r,i)=>{
+    const y=mT+i*rowH;
+    const t=el("text",{x:mL-8,y:y+rowH/2+1,"text-anchor":"end",class:"val-lbl"});t.textContent=r.team;svg.appendChild(t);
+    const w=Math.max(2,X(r.delta)-mL);
+    const rc=el("rect",{x:mL,y:y+7,width:w,height:12,rx:3,fill:col});
+    rc.addEventListener("mousemove",e=>showTip(`<b>${r.team}</b><div class="row"><span>${DATA.league[DATA.league.length-2].season}</span><b>${fmt1(r.prev)}</b></div><div class="row"><span>${DATA.meta.latest}</span><b>${fmt1(r.cur)}</b></div><div class="row"><span>Change</span><b>${r.delta>0?'+':''}${fmt1(r.delta)}/gm</b></div>`,e));
+    rc.addEventListener("mouseleave",hideTip);svg.appendChild(rc);
+    const vl=el("text",{x:mL+w+6,y:y+rowH/2+1,class:"axis-lbl"});vl.textContent=`${r.delta>0?'+':''}${r.delta.toFixed(2)}`;svg.appendChild(vl);
+  });
+  $(sel).appendChild(svg);
+}
+movers("#c_risers",DATA.risers,true);
+movers("#c_fallers",DATA.fallers,false);
+
+// ---------- promoted ----------
+$("#promo").innerHTML=DATA.promoted.map(r=>
+  `<div class="promo"><div class="n">${r.team} <span class="chip">promoted</span></div>
+   <div class="s">${pct(r.cs_rate)} clean-sheet rate &middot; ${fmt1(r.conceded_pg)} conceded/game<br>${r.clean_sheets} clean sheets in ${r.games} games</div></div>`).join('');
+
+// ---------- table ----------
+const cols=[["team","Team"],["games","P"],["clean_sheets","CS"],["cs_rate","CS %"],
+  ["conceded","GC"],["conceded_pg","GC/gm"],["home_cs_rate","Home CS%"],["away_cs_rate","Away CS%"]];
+let sortKey="cs_rate",sortDir=-1;
+function renderTable(){
+  const rows=[...DATA.latest_table].sort((a,b)=>(a[sortKey]>b[sortKey]?1:-1)*sortDir);
+  const maxCS=Math.max(...rows.map(r=>r.cs_rate));
+  let h="<thead><tr><th class='rk'>#</th>"+cols.map(c=>`<th data-k="${c[0]}">${c[1]}</th>`).join('')+"</tr></thead><tbody>";
+  rows.forEach((r,i)=>{
+    h+=`<tr><td class="rk">${i+1}</td>`+cols.map(c=>{
+      const v=r[c[0]];
+      if(c[0]==="team")return `<td><b>${v}</b></td>`;
+      if(c[0]==="cs_rate")return `<td class="bar-cell">${pct(v)} <span class="mini" style="width:${28*v/maxCS+4}px"></span></td>`;
+      if(c[0].includes("rate"))return `<td>${pct(v)}</td>`;
+      if(c[0]==="conceded_pg")return `<td>${fmt1(v)}</td>`;
+      return `<td>${v}</td>`;
+    }).join('')+"</tr>";
+  });
+  $("#tbl").innerHTML=h+"</tbody>";
+  $("#tbl").querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{
+    const k=th.dataset.k; if(k===sortKey)sortDir*=-1;else{sortKey=k;sortDir=(k==="team")?1:-1;}renderTable();});
+}
+renderTable();
+
+// ---------- theme toggle ----------
+$("#themeBtn").onclick=()=>{
+  const cur=document.documentElement.getAttribute("data-theme");
+  const dark=cur?cur==="dark":matchMedia("(prefers-color-scheme:dark)").matches;
+  document.documentElement.setAttribute("data-theme",dark?"light":"dark");
+  document.querySelectorAll("svg").forEach(s=>s.remove());
+  document.querySelectorAll("[id^=c_]").forEach(n=>n.innerHTML="");
+  // rebuild charts with new theme colors
+  lineChart("#c_cs",mk('cs_per_game','Clean sheets/gm'),{color:cv('--s1')});
+  lineChart("#c_goals",mk('goals_per_game','Goals/gm'),{color:cv('--s2')});
+  lineChart("#c_btts",L.map(r=>({y:r.btts_rate,lab:r.season.slice(2),full:r.season,name:'BTTS'})),{color:cv('--s3'),fmt:pct});
+  teamBars("#c_teams",DATA.latest_table);
+  multiLine("#c_ha",[{name:"Home CS rate",color:cv('--s1'),data:L.map(r=>({y:r.home_cs_rate,lab:r.season.slice(2),full:r.season}))},{name:"Away CS rate",color:cv('--s2'),data:L.map(r=>({y:r.away_cs_rate,lab:r.season.slice(2),full:r.season}))}]);
+  thirdsChart("#c_thirds");
+  movers("#c_risers",DATA.risers,true);
+  movers("#c_fallers",DATA.fallers,false);
+};
+</script>
+</body>
+</html>
+"""
+
+out = HTML.replace("__DATA_JSON__", json.dumps(data))
+with open(os.path.join(DOCS, "index.html"), "w", encoding="utf-8") as f:
+    f.write(out)
+print("Wrote docs/index.html (", len(out), "bytes )")

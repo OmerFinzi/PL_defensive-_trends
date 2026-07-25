@@ -1,7 +1,7 @@
 # Premier League Defensive Trends — Findings Report
 
 **Window:** 2020/21 → 2025/26 (six completed seasons, 2,280 matches)
-**Sources:** [fixturedownload.com](https://fixturedownload.com) EPL results (§1–6) · official FPL stats via the [vaastav archive](https://github.com/vaastav/Fantasy-Premier-League) for 2025/26 DefCon (§7)
+**Sources:** [fixturedownload.com](https://fixturedownload.com) EPL results (§1–6) · official FPL stats via the [vaastav archive](https://github.com/vaastav/Fantasy-Premier-League) for 2025/26 DefCon (§7) · [football-data.co.uk](https://www.football-data.co.uk) corners + official FPL set-piece orders (§8)
 **Updated:** for the 2025/26 season
 
 ---
@@ -89,10 +89,34 @@ Averaging clean sheets per game by third of the season (Early GW1–12, Mid GW13
 
 **FPL takeaway:** DefCon rewards a distinct player profile from clean sheets. The elite-defence pick (Arsenal/City assets) chases clean-sheet points; the DefCon pick chases *volume of defensive actions*, which favours ball-winning defenders and holding midfielders at busy, deeper-defending clubs — often much cheaper. A balanced squad can target both.
 
+## 8. Set pieces — corners & free kicks (penalties excluded)
+
+*Source note: corner counts (for & against) come from [football-data.co.uk](https://www.football-data.co.uk) match data; designated set-piece takers come from the official FPL set-piece orders. **Penalties are excluded** at the user's request. Corners are used as the reliable, open-play set-piece **volume** measure.*
+
+**League-wide corners have been remarkably stable** — around 10 per match across all six seasons (10.2 in 2020/21, a 10.8 peak in 2023/24, back to 10.0 in 2025/26). Set-piece *volume* isn't where the league has changed; the defensive shifts in §1 are about conversion and clean sheets, not corner counts.
+
+**Attacking set-piece volume — most corners won per game (2025/26):**
+
+| Team | Won/gm | Conceded/gm | Net/gm |
+|------|:---:|:---:|:---:|
+| Man City | 6.5 | 3.8 | **+2.7** |
+| Liverpool | 6.1 | 4.4 | +1.7 |
+| Chelsea | 6.1 | 4.3 | +1.8 |
+| Newcastle | 6.1 | 4.9 | +1.2 |
+| Arsenal | 5.7 | 3.4 | **+2.3** |
+
+The corner-winning leaders are the possession/attacking sides. On **net** corners (won − conceded), **Man City (+2.7)** and **Arsenal (+2.3)** dominate — they generate set-piece pressure *and* concede little of it.
+
+**Defensive set-piece exposure — most corners conceded per game:** **West Ham (6.1)**, **Burnley (6.0)**, **Wolves (6.0)** — the sides camped in their own third, defending the most set pieces.
+
+**Notable set-piece takers** (designated for *both* corners and direct free kicks in 2025/26): **Rice (Arsenal)**, **Ward-Prowse (Burnley)**, **Reece James (Chelsea)**, **Wilson (Fulham)**, **Stach (Leeds)**, **Bruno Fernandes (Man Utd)**, **Xhaka (Sunderland)**, **Bowen (West Ham)**. These dual-duty takers are a club's set-piece hubs — useful FPL context, since concentrated set-piece responsibility drives assist potential.
+
+**On set-piece scorers:** a verified list of *who scores from set pieces* (excluding penalties) needs shot-level event data (Opta/StatsBomb), which was not reliably accessible for this build. Rather than guess, it is omitted; the designated takers above are reported as takers, not confirmed scorers.
+
 ---
 
 ## Scope & honesty
 
-Sections 1–6 are built **only** from match results (`analyze.py`). Section 7 (DefCon) is **player-level** and uses a **separate, clearly-labelled source** — official FPL season-end stats via the vaastav archive (`defcon.py`). The live FPL API cannot supply a completed season's DefCon (it resets each summer), so the archive is used. Every number in this report is computed directly from those files; nothing is estimated or imported from third-party projections. Other player metrics (xG/xGA, ownership) remain out of scope.
+Sections 1–6 are built **only** from match results (`analyze.py`). Section 7 (DefCon) is **player-level** from the official-FPL vaastav archive (`defcon.py`); the live FPL API can't supply a completed season's DefCon (it resets each summer), so the archive is used. Section 8 (set pieces) uses football-data.co.uk corners and official FPL set-piece orders (`setpieces.py`), with **penalties excluded**. Every number is computed directly from those files; nothing is estimated or imported from third-party projections. Deliberately **not** shown because no reliable free source was available here: goal-level set-piece breakdowns / set-piece scorer lists (need Opta/StatsBomb event data), plus xG/xGA and ownership.
 
 *Analysis by [@omerfin7](https://github.com/OmerFinzi).*

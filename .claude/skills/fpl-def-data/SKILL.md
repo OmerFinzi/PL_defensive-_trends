@@ -37,8 +37,15 @@ Important gotcha: the **live FPL API cannot supply last season's DefCon** — af
 
 DefCon points rule (2025/26): +2 in a match when defensive contributions reach the threshold — **DEF: >= 10** (clearances+blocks+interceptions+tackles); **MID/FWD: >= 12** (that total plus recoveries). GKs excluded. The `defensive_contribution` field is already position-correct (DEF excludes recoveries; MID/FWD includes them).
 
+## Set-piece data — a THIRD source (corners) + FPL takers
+The Set Pieces section (`setpieces.py` -> `docs/setpieces.json`) uses two things, **penalties excluded**:
+- **Corners for/against** per team and league (attacking vs defensive set-piece volume) from **football-data.co.uk** — `https://www.football-data.co.uk/mmz4281/<code>/E0.csv` (season code: `2526` = 2025/26, `2021` = 2020/21, etc.; needs a browser UA). Columns `HC`/`AC` are home/away corners. Staged under `data/football_data/E0_<startyear>.csv`. Team names differ slightly — map `Man United`->`Man Utd`, `Tottenham`->`Spurs`.
+- **Set-piece takers** (corners + direct free kicks, NOT penalties) from the official FPL orders already in `players_raw.csv` (`corners_and_indirect_freekicks_order`, `direct_freekicks_order`; order==1 is the primary taker).
+
+Gotcha: **FBref (403) and Understat (stripped pages) were not reliably fetchable** in this environment, so shot-level "goals from set pieces" and set-piece SCORER lists are NOT available and must not be fabricated — report takers as takers, not scorers.
+
 ## Still out of scope (be honest — do not fabricate)
-Other player metrics not in either source here: xG/xGA, ownership %, expected defensive stats. Don't invent them.
+Other player metrics not in any source here: xG/xGA, ownership %, expected defensive stats, and goal-level set-piece breakdowns. Don't invent them.
 
 ## Adding a season
 1. Download `epl-<YEAR>.csv` into `data/`.

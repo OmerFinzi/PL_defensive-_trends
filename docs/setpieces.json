@@ -1,0 +1,407 @@
+{
+  "meta": {
+    "latest": "2025/26",
+    "penalties_excluded": true,
+    "corners_source": "football-data.co.uk (English Premier League match data)",
+    "takers_source": "Official Fantasy Premier League set-piece taker orders (2025/26)",
+    "note": "Corners are open-play set pieces (no penalties). Set-piece TAKERS are designated corner / direct-free-kick takers, not confirmed scorers. Player-level goals-from-set-pieces was not available from a reliable free source and is not shown."
+  },
+  "league": [
+    {
+      "season": "2020/21",
+      "matches": 380,
+      "corners_pg": 10.19
+    },
+    {
+      "season": "2021/22",
+      "matches": 380,
+      "corners_pg": 10.42
+    },
+    {
+      "season": "2022/23",
+      "matches": 380,
+      "corners_pg": 10.11
+    },
+    {
+      "season": "2023/24",
+      "matches": 380,
+      "corners_pg": 10.84
+    },
+    {
+      "season": "2024/25",
+      "matches": 380,
+      "corners_pg": 10.3
+    },
+    {
+      "season": "2025/26",
+      "matches": 380,
+      "corners_pg": 10.0
+    }
+  ],
+  "teams_latest": [
+    {
+      "team": "Man City",
+      "games": 38,
+      "for": 247,
+      "against": 145,
+      "for_pg": 6.5,
+      "against_pg": 3.82,
+      "net_pg": 2.68,
+      "for_home_pg": 7.16,
+      "for_away_pg": 5.84
+    },
+    {
+      "team": "Liverpool",
+      "games": 38,
+      "for": 232,
+      "against": 167,
+      "for_pg": 6.11,
+      "against_pg": 4.39,
+      "net_pg": 1.71,
+      "for_home_pg": 6.26,
+      "for_away_pg": 5.95
+    },
+    {
+      "team": "Chelsea",
+      "games": 38,
+      "for": 231,
+      "against": 164,
+      "for_pg": 6.08,
+      "against_pg": 4.32,
+      "net_pg": 1.76,
+      "for_home_pg": 6.84,
+      "for_away_pg": 5.32
+    },
+    {
+      "team": "Newcastle",
+      "games": 38,
+      "for": 231,
+      "against": 187,
+      "for_pg": 6.08,
+      "against_pg": 4.92,
+      "net_pg": 1.16,
+      "for_home_pg": 6.79,
+      "for_away_pg": 5.37
+    },
+    {
+      "team": "Arsenal",
+      "games": 38,
+      "for": 216,
+      "against": 128,
+      "for_pg": 5.68,
+      "against_pg": 3.37,
+      "net_pg": 2.32,
+      "for_home_pg": 5.89,
+      "for_away_pg": 5.47
+    },
+    {
+      "team": "Bournemouth",
+      "games": 38,
+      "for": 212,
+      "against": 202,
+      "for_pg": 5.58,
+      "against_pg": 5.32,
+      "net_pg": 0.26,
+      "for_home_pg": 6.0,
+      "for_away_pg": 5.16
+    },
+    {
+      "team": "Spurs",
+      "games": 38,
+      "for": 208,
+      "against": 178,
+      "for_pg": 5.47,
+      "against_pg": 4.68,
+      "net_pg": 0.79,
+      "for_home_pg": 6.16,
+      "for_away_pg": 4.79
+    },
+    {
+      "team": "Aston Villa",
+      "games": 38,
+      "for": 199,
+      "against": 187,
+      "for_pg": 5.24,
+      "against_pg": 4.92,
+      "net_pg": 0.32,
+      "for_home_pg": 5.53,
+      "for_away_pg": 4.95
+    },
+    {
+      "team": "Nott'm Forest",
+      "games": 38,
+      "for": 199,
+      "against": 183,
+      "for_pg": 5.24,
+      "against_pg": 4.82,
+      "net_pg": 0.42,
+      "for_home_pg": 6.0,
+      "for_away_pg": 4.47
+    },
+    {
+      "team": "Fulham",
+      "games": 38,
+      "for": 188,
+      "against": 210,
+      "for_pg": 4.95,
+      "against_pg": 5.53,
+      "net_pg": -0.58,
+      "for_home_pg": 5.53,
+      "for_away_pg": 4.37
+    },
+    {
+      "team": "West Ham",
+      "games": 38,
+      "for": 187,
+      "against": 232,
+      "for_pg": 4.92,
+      "against_pg": 6.11,
+      "net_pg": -1.18,
+      "for_home_pg": 5.32,
+      "for_away_pg": 4.53
+    },
+    {
+      "team": "Brighton",
+      "games": 38,
+      "for": 185,
+      "against": 183,
+      "for_pg": 4.87,
+      "against_pg": 4.82,
+      "net_pg": 0.05,
+      "for_home_pg": 4.95,
+      "for_away_pg": 4.79
+    },
+    {
+      "team": "Brentford",
+      "games": 38,
+      "for": 182,
+      "against": 204,
+      "for_pg": 4.79,
+      "against_pg": 5.37,
+      "net_pg": -0.58,
+      "for_home_pg": 4.37,
+      "for_away_pg": 5.21
+    },
+    {
+      "team": "Man Utd",
+      "games": 38,
+      "for": 182,
+      "against": 186,
+      "for_pg": 4.79,
+      "against_pg": 4.89,
+      "net_pg": -0.11,
+      "for_home_pg": 5.26,
+      "for_away_pg": 4.32
+    },
+    {
+      "team": "Leeds",
+      "games": 38,
+      "for": 168,
+      "against": 193,
+      "for_pg": 4.42,
+      "against_pg": 5.08,
+      "net_pg": -0.66,
+      "for_home_pg": 5.58,
+      "for_away_pg": 3.26
+    },
+    {
+      "team": "Everton",
+      "games": 38,
+      "for": 163,
+      "against": 194,
+      "for_pg": 4.29,
+      "against_pg": 5.11,
+      "net_pg": -0.82,
+      "for_home_pg": 4.95,
+      "for_away_pg": 3.63
+    },
+    {
+      "team": "Crystal Palace",
+      "games": 38,
+      "for": 160,
+      "against": 199,
+      "for_pg": 4.21,
+      "against_pg": 5.24,
+      "net_pg": -1.03,
+      "for_home_pg": 4.37,
+      "for_away_pg": 4.05
+    },
+    {
+      "team": "Sunderland",
+      "games": 38,
+      "for": 141,
+      "against": 201,
+      "for_pg": 3.71,
+      "against_pg": 5.29,
+      "net_pg": -1.58,
+      "for_home_pg": 4.05,
+      "for_away_pg": 3.37
+    },
+    {
+      "team": "Burnley",
+      "games": 38,
+      "for": 138,
+      "against": 228,
+      "for_pg": 3.63,
+      "against_pg": 6.0,
+      "net_pg": -2.37,
+      "for_home_pg": 3.74,
+      "for_away_pg": 3.53
+    },
+    {
+      "team": "Wolves",
+      "games": 38,
+      "for": 130,
+      "against": 228,
+      "for_pg": 3.42,
+      "against_pg": 6.0,
+      "net_pg": -2.58,
+      "for_home_pg": 3.16,
+      "for_away_pg": 3.68
+    }
+  ],
+  "takers": [
+    {
+      "team": "Arsenal",
+      "corner_taker": "Rice",
+      "fk_taker": "Rice"
+    },
+    {
+      "team": "Aston Villa",
+      "corner_taker": "Douglas Luiz",
+      "fk_taker": "Rogers"
+    },
+    {
+      "team": "Bournemouth",
+      "corner_taker": null,
+      "fk_taker": "Enes \u00dcnal"
+    },
+    {
+      "team": "Brentford",
+      "corner_taker": "Jensen",
+      "fk_taker": "Lewis-Potter"
+    },
+    {
+      "team": "Brighton",
+      "corner_taker": "Gro\u00df",
+      "fk_taker": "De Cuyper"
+    },
+    {
+      "team": "Burnley",
+      "corner_taker": "Ward-Prowse",
+      "fk_taker": "Ward-Prowse"
+    },
+    {
+      "team": "Chelsea",
+      "corner_taker": "James",
+      "fk_taker": "James"
+    },
+    {
+      "team": "Crystal Palace",
+      "corner_taker": "Johnson",
+      "fk_taker": "Yeremy"
+    },
+    {
+      "team": "Everton",
+      "corner_taker": "Garner",
+      "fk_taker": null
+    },
+    {
+      "team": "Fulham",
+      "corner_taker": "Wilson",
+      "fk_taker": "Wilson"
+    },
+    {
+      "team": "Leeds",
+      "corner_taker": "Stach",
+      "fk_taker": "Stach"
+    },
+    {
+      "team": "Liverpool",
+      "corner_taker": "Szoboszlai",
+      "fk_taker": null
+    },
+    {
+      "team": "Man City",
+      "corner_taker": "Bernardo",
+      "fk_taker": "Marmoush"
+    },
+    {
+      "team": "Man Utd",
+      "corner_taker": "B.Fernandes",
+      "fk_taker": "B.Fernandes"
+    },
+    {
+      "team": "Newcastle",
+      "corner_taker": "Tonali",
+      "fk_taker": "Hall"
+    },
+    {
+      "team": "Nott'm Forest",
+      "corner_taker": "Anderson",
+      "fk_taker": "Gibbs-White"
+    },
+    {
+      "team": "Spurs",
+      "corner_taker": "Tel",
+      "fk_taker": null
+    },
+    {
+      "team": "Sunderland",
+      "corner_taker": "Xhaka",
+      "fk_taker": "Xhaka"
+    },
+    {
+      "team": "West Ham",
+      "corner_taker": "Bowen",
+      "fk_taker": "Bowen"
+    },
+    {
+      "team": "Wolves",
+      "corner_taker": "H.Bueno",
+      "fk_taker": "Man\u00e9"
+    }
+  ],
+  "notable_takers": [
+    {
+      "name": "Rice",
+      "team": "Arsenal",
+      "roles": "corners + direct free kicks"
+    },
+    {
+      "name": "Ward-Prowse",
+      "team": "Burnley",
+      "roles": "corners + direct free kicks"
+    },
+    {
+      "name": "James",
+      "team": "Chelsea",
+      "roles": "corners + direct free kicks"
+    },
+    {
+      "name": "Wilson",
+      "team": "Fulham",
+      "roles": "corners + direct free kicks"
+    },
+    {
+      "name": "Stach",
+      "team": "Leeds",
+      "roles": "corners + direct free kicks"
+    },
+    {
+      "name": "B.Fernandes",
+      "team": "Man Utd",
+      "roles": "corners + direct free kicks"
+    },
+    {
+      "name": "Xhaka",
+      "team": "Sunderland",
+      "roles": "corners + direct free kicks"
+    },
+    {
+      "name": "Bowen",
+      "team": "West Ham",
+      "roles": "corners + direct free kicks"
+    }
+  ]
+}

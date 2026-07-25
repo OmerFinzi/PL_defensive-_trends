@@ -6,6 +6,8 @@ DOCS = os.path.join(ROOT, "docs")
 data = json.load(open(os.path.join(DOCS, "data.json"), encoding="utf-8"))
 defcon_path = os.path.join(DOCS, "defcon.json")
 defcon = json.load(open(defcon_path, encoding="utf-8")) if os.path.exists(defcon_path) else None
+sp_path = os.path.join(DOCS, "setpieces.json")
+setpieces = json.load(open(sp_path, encoding="utf-8")) if os.path.exists(sp_path) else None
 
 HTML = r"""<!doctype html>
 <html lang="en">
@@ -215,8 +217,31 @@ footer a{color:var(--accent)}
     <div class="card" style="padding:6px 10px"><div style="overflow-x:auto"><table id="dctbl"></table></div></div>
   </section>
 
+  <section id="spSec" style="display:none">
+    <p class="eyebrow" style="color:var(--s3)">Set pieces &middot; Corners &amp; free kicks (penalties excluded)</p>
+    <h3 class="sec-h">Set-piece volume &amp; who takes them</h3>
+    <p class="sec-sub" id="spIntro"></p>
+    <div class="kpis" id="spKpis" style="margin-top:22px"></div>
+
+    <div class="grid2" style="margin-top:20px">
+      <div>
+        <div class="card"><div id="c_spteams"></div></div>
+      </div>
+      <div>
+        <div class="card"><div id="c_sptrend"></div></div>
+        <h3 class="sec-h" style="margin-top:26px">Notable set-piece takers</h3>
+        <p class="sec-sub">Players who are their club's designated taker for <b>both</b> corners and direct free kicks in 2025/26.</p>
+        <div class="pill-row" id="sp_notable"></div>
+      </div>
+    </div>
+
+    <h3 class="sec-h" style="margin-top:34px">Designated takers by club &mdash; 2025/26</h3>
+    <p class="sec-sub">Primary corner and direct-free-kick takers per club (official FPL set-piece orders). Penalty takers are excluded. These are designated takers, not confirmed scorers.</p>
+    <div class="card" style="padding:6px 10px"><div style="overflow-x:auto"><table id="sp_takers"></table></div></div>
+  </section>
+
   <footer><div class="wrap">
-  <p><b>Data</b> &middot; League &amp; team trends from <span id="fsrc"></span> (match results). Player-level DefCon section from the community FPL archive (official FPL season-end stats) &mdash; a separate source, clearly labelled. Other player metrics (xGA, ownership) remain out of scope and are not shown.<br>
+  <p><b>Data</b> &middot; League &amp; team trends from <span id="fsrc"></span> (match results). DefCon section from the community FPL archive (official FPL season-end stats). Set-piece corners from football-data.co.uk; set-piece takers from official FPL orders (penalties excluded). Each source is clearly labelled. Goal-level set-piece breakdown and xGA/ownership need event data and are out of scope &mdash; not shown, not estimated.<br>
   <b>Method</b> &middot; A clean sheet is credited to a team that concedes zero in a match. "CS rate" = clean sheets &divide; matches. Built with a reproducible Python pipeline; this page embeds its output and makes no external requests.<br>
   Analysis by <b>@omerfin7</b> &middot; refreshed for the 2025/26 season.</p>
 </div></footer>
@@ -225,6 +250,7 @@ footer a{color:var(--accent)}
 <script>
 const DATA = __DATA_JSON__;
 const DEFCON = __DEFCON_JSON__;
+const SP = __SP_JSON__;
 const $=(s,r=document)=>r.querySelector(s);
 const tip=$("#tip");
 const cv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -499,8 +525,53 @@ function renderMain(){
   movers("#c_risers",DATA.risers,true,"Biggest improvers — 2025/26","Fewer goals conceded/gm vs 2024/25");
   movers("#c_fallers",DATA.fallers,false,"Biggest declines — 2025/26","More goals conceded/gm vs 2024/25");
 }
+// ---------- Set pieces (corners + free kicks, penalties excluded) ----------
+function spBars(sel,rows,title,sub){
+  const W=560,rowH=25,mT=56,mL=104,mR=52,H=mT+rows.length*rowH+22;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
+  const max=Math.max(...rows.map(r=>Math.max(r.for_pg,r.against_pg)))*1.08;
+  const X=v=>mL+(W-mL-mR)*v/max;
+  rows.forEach((r,i)=>{
+    const y=mT+i*rowH;
+    const t=el("text",{x:mL-8,y:y+rowH/2+1,"text-anchor":"end",class:"val-lbl"});t.textContent=r.team;svg.appendChild(t);
+    const mkbar=(val,col,off)=>{const w=Math.max(2,X(val)-mL);
+      const rc=el("rect",{x:mL,y:y+off,width:w,height:7,rx:3,fill:col});
+      rc.addEventListener("mousemove",e=>showTip(`<b>${r.team}</b><div class="row"><span>Corners won/gm</span><b>${r.for_pg}</b></div><div class="row"><span>Corners conceded/gm</span><b>${r.against_pg}</b></div><div class="row"><span>Net/gm</span><b>${r.net_pg>0?'+':''}${r.net_pg}</b></div>`,e));
+      rc.addEventListener("mouseleave",hideTip);svg.appendChild(rc);};
+    mkbar(r.for_pg,cv('--s3'),3);
+    mkbar(r.against_pg,cv('--s2'),13);
+    const vl=el("text",{x:X(Math.max(r.for_pg,r.against_pg))+6,y:y+rowH/2+1,class:"axis-lbl"});
+    vl.textContent=r.for_pg;svg.appendChild(vl);
+  });
+  banner(svg,W,H,title,sub,[{label:'Won',color:cv('--s3')},{label:'Conceded',color:cv('--s2')}]);
+  $(sel).appendChild(svg);
+}
+function renderSP(){
+  if(!SP)return;
+  $("#spSec").style.display="";
+  const T=SP.teams_latest, sl=SP.league;
+  const topWin=T[0], mostExposed=[...T].sort((a,b)=>b.against_pg-a.against_pg)[0];
+  $("#spIntro").innerHTML=`Corners are open-play set pieces (penalties excluded). "Won" = your attacking corners; "conceded" = defensive set-piece exposure. In ${SP.meta.latest}, <b>${topWin.team}</b> won the most corners (${topWin.for_pg}/game) and <b>${mostExposed.team}</b> faced the most (${mostExposed.against_pg}/game). ${SP.meta.note}`;
+  $("#spKpis").innerHTML=
+    `<div class="kpi"><div class="v">${sl[sl.length-1].corners_pg}</div><div class="l">Corners per match (${SP.meta.latest})</div><div class="d up">league-wide, both teams</div></div>`+
+    `<div class="kpi"><div class="v">${topWin.for_pg}</div><div class="l">Most corners won &middot; ${topWin.team}</div><div class="d up">per game</div></div>`+
+    `<div class="kpi"><div class="v">${mostExposed.against_pg}</div><div class="l">Most exposed &middot; ${mostExposed.team}</div><div class="d down">corners conceded/game</div></div>`+
+    `<div class="kpi"><div class="v">${SP.notable_takers.length}</div><div class="l">Dual set-piece takers</div><div class="d up">corners + free kicks</div></div>`;
+  spBars("#c_spteams",T,"Corners won vs conceded per game — "+SP.meta.latest,"Attacking vs defensive set-piece volume, by team");
+  lineChart("#c_sptrend",sl.map(r=>({y:r.corners_pg,lab:r.season.slice(2),full:r.season,name:'Corners/match'})),
+    {color:cv('--s1'),fmt:v=>v.toFixed(1),title:"Corners per match — league trend",sub:"Both teams combined, 2020/21 to "+SP.meta.latest});
+  $("#sp_notable").innerHTML=SP.notable_takers.map(r=>
+    `<div class="promo"><div class="n">${r.name}</div><div class="s">${r.team}<br>${r.roles}</div></div>`).join('');
+  // takers table
+  const rows=[...SP.takers];
+  let h="<thead><tr><th>Club</th><th style='text-align:left'>Corners</th><th style='text-align:left'>Direct free kicks</th></tr></thead><tbody>";
+  rows.forEach(r=>{h+=`<tr><td><b>${r.team}</b></td><td style='text-align:left'>${r.corner_taker||'&mdash;'}</td><td style='text-align:left'>${r.fk_taker||'&mdash;'}</td></tr>`;});
+  $("#sp_takers").innerHTML=h+"</tbody>";
+}
+
 renderMain();
 renderDefcon();
+renderSP();
 
 // ---------- theme toggle ----------
 $("#themeBtn").onclick=()=>{
@@ -510,6 +581,7 @@ $("#themeBtn").onclick=()=>{
   document.querySelectorAll("[id^=c_]").forEach(n=>n.innerHTML="");
   renderMain();
   renderDefcon();
+  renderSP();
 };
 </script>
 </body>
@@ -518,6 +590,7 @@ $("#themeBtn").onclick=()=>{
 
 out = HTML.replace("__DATA_JSON__", json.dumps(data))
 out = out.replace("__DEFCON_JSON__", json.dumps(defcon))
+out = out.replace("__SP_JSON__", json.dumps(setpieces))
 with open(os.path.join(DOCS, "index.html"), "w", encoding="utf-8") as f:
     f.write(out)
 print("Wrote docs/index.html (", len(out), "bytes )")

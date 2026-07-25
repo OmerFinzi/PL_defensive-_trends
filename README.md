@@ -33,6 +33,10 @@ A few charts from the dashboard (each is a self-contained, shareable image). The
 
 ![Set-piece goals scored, 2025/26](docs/examples/set-piece-goals-scored.png)
 
+**Set-piece efficiency — shots needed per goal, every team**
+
+![Set-piece efficiency, 2025/26](docs/examples/set-piece-efficiency.png)
+
 ---
 
 ## Headline findings (2025/26)
@@ -45,6 +49,7 @@ A few charts from the dashboard (each is a self-contained, shareable image). The
 - **DefCon points (new 2025/26 scoring metric).** **Elliot Anderson (NFO)** and **Marcos Senesi (BOU)** tied on a league-leading **52 DefCon points** (26 threshold-hit matches each). Defenders banked **1,642** DefCon points to midfielders' **1,174**; forwards essentially none. The hardest-working defensive squads were **Everton, Bournemouth and Burnley** — often the busier, deeper-defending sides. Best budget value: **Maxime Estève (BUR, £3.8m)** and **Senesi** at ~10 DefCon points per £m.
 - **Set pieces (corners & free kicks, penalties excluded).** **Man City** won the most corners (6.5/game); **West Ham** faced the most (6.11/game). League-wide corners have held steady (~10 per match across six seasons). Designated set-piece specialists doing *both* corners and direct free kicks include **Rice (Arsenal)**, **Ward-Prowse (Burnley)**, **Reece James (Chelsea)**, **Bruno Fernandes (Man Utd)** and **Bowen (West Ham)**.
 - **Set-piece goals (2025/26, via Understat).** **Arsenal have scored 23 goals from set pieces** (corners + set pieces + direct free kicks, no penalties) — comfortably the league's most, and the most *clinical* too at just **6.9 set-piece shots per goal**. **Bournemouth have conceded the most (18)**. Brentford and Burnley are the least dangerous at set pieces (4 goals each, 24–26 shots needed per goal — roughly 3–4× less efficient than Arsenal).
+- **Set-piece efficiency, every team.** The dashboard now shows, for all 20 clubs: how many set-piece shots they need to score once, and how many their opponents need to score against them. Extremes: **Arsenal need just 6.9 shots per goal** (best), **Brentford need 26** (worst); **Newcastle are hardest to score against from set pieces (6.8 shots needed)**, **Brentford are easiest to breach (18.7)**.
 
 Full numbers and charts are in the dashboard ([`docs/index.html`](docs/index.html)) and [REPORT.md](REPORT.md).
 

@@ -257,6 +257,10 @@ footer a{color:var(--accent)}
         <div class="card"><div id="c_spgfor"></div></div>
         <div class="card"><div id="c_spgagainst"></div></div>
       </div>
+
+      <h3 class="sec-h" style="margin-top:34px">Set-piece efficiency &mdash; shots needed per goal</h3>
+      <p class="sec-sub">How many set-piece shots, on average, each team needs to score once &mdash; and how many their opponents need to score against them. Lower "to score" = more clinical; lower "to concede" = more porous defensively.</p>
+      <div class="card"><div id="c_spgeff"></div></div>
     </div>
   </section>
 
@@ -616,6 +620,31 @@ function renderSPG(){
   hbars("#c_spgagainst",agRows,{value:r=>r.ga,label:r=>r.team,color:cv('--s2'),
     title:"Set-piece goals CONCEDED — "+SPG.meta.season,sub:"Defensive set-piece exposure (no penalties)",
     tip:r=>`<b>${r.team}</b><div class="row"><span>Conceded (set pieces)</span><b>${r.ga}</b></div><div class="row"><span>Set-piece shots faced</span><b>${r.sa}</b></div><div class="row"><span>Shots per goal conceded</span><b>${r.shots_per_goal_against}</b></div><div class="row"><span>Set-piece xG against</span><b>${r.xga}</b></div>`});
+  const effRows=[...T].filter(r=>r.shots_per_goal_for!=null).sort((a,b)=>a.shots_per_goal_for-b.shots_per_goal_for);
+  effBars("#c_spgeff",effRows,"Set-piece shots needed per goal — "+SPG.meta.season,"Sorted by most clinical first (lowest \"to score\")");
+}
+function effBars(sel,rows,title,sub){
+  const W=560,rowH=24,mT=74,mL=104,mR=54,H=mT+rows.length*rowH+22;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
+  const max=Math.max(...rows.map(r=>Math.max(r.shots_per_goal_for,r.shots_per_goal_against)))*1.1;
+  const X=v=>mL+(W-mL-mR)*v/max;
+  rows.forEach((r,i)=>{
+    const y=mT+i*rowH;
+    const t=el("text",{x:mL-8,y:y+rowH/2+1,"text-anchor":"end",class:"val-lbl"});t.textContent=r.team;svg.appendChild(t);
+    const tipHtml=`<b>${r.team}</b><div class="row"><span>Shots per goal &mdash; to score</span><b>${r.shots_per_goal_for}</b></div><div class="row"><span>Shots per goal &mdash; to concede</span><b>${r.shots_per_goal_against!=null?r.shots_per_goal_against:'&mdash;'}</b></div>`;
+    const w1=Math.max(2,X(r.shots_per_goal_for)-mL);
+    const rc1=el("rect",{x:mL,y:y+3,width:w1,height:7,rx:3,fill:cv('--s3')});
+    rc1.addEventListener("mousemove",e=>showTip(tipHtml,e));rc1.addEventListener("mouseleave",hideTip);svg.appendChild(rc1);
+    const vl1=el("text",{x:mL+w1+6,y:y+3+6,class:"axis-lbl"});vl1.textContent=r.shots_per_goal_for;svg.appendChild(vl1);
+    if(r.shots_per_goal_against!=null){
+      const w2=Math.max(2,X(r.shots_per_goal_against)-mL);
+      const rc2=el("rect",{x:mL,y:y+13,width:w2,height:7,rx:3,fill:cv('--s2')});
+      rc2.addEventListener("mousemove",e=>showTip(tipHtml,e));rc2.addEventListener("mouseleave",hideTip);svg.appendChild(rc2);
+      const vl2=el("text",{x:mL+w2+6,y:y+13+6,class:"axis-lbl"});vl2.textContent=r.shots_per_goal_against;svg.appendChild(vl2);
+    }
+  });
+  banner(svg,W,H,title,sub,[{label:'To score',color:cv('--s3')},{label:'To concede',color:cv('--s2')}]);
+  $(sel).appendChild(svg);
 }
 
 // ---------- per-chart save / copy ----------

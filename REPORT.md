@@ -127,6 +127,23 @@ League-wide: **243 set-piece goals from 2,481 set-piece shots** (~10.2 shots per
 
 On the defensive side, **Bournemouth's 18 conceded** stands out as a genuine defensive-set-piece weakness — worth cross-referencing against their overall clean-sheet numbers in §2. **Arsenal also concede the fewest (7)** — the same side dominates both ends of the set-piece game, consistent with their overall defensive standing this season (§2).
 
+**Efficiency, every team — set-piece shots needed per goal (lower = better):**
+
+| Team | To score | To concede | | Team | To score | To concede |
+|---|:---:|:---:|---|---|:---:|:---:|
+| Arsenal | **6.9** | 10.1 | | Everton | 12.7 | 14.4 |
+| Man Utd | 7.1 | 9.2 | | Man City | 12.8 | 7.7 |
+| West Ham | 7.4 | 10.1 | | Wolves | 14.0 | 12.8 |
+| Spurs | 7.5 | 15.3 | | Crystal Palace | 14.1 | 8.8 |
+| Aston Villa | 7.9 | 9.1 | | Sunderland | 14.7 | 10.7 |
+| Liverpool | 8.4 | 8.3 | | Burnley | 24.5 | 11.5 |
+| Chelsea | 8.9 | **8.2** | | Brentford | **26.0** | **18.7** |
+| Bournemouth | 9.2 | 8.3 | | Newcastle | 12.2 | **6.8** |
+| Fulham | 10.6 | 11.6 | | Leeds | 11.1 | 9.6 |
+| Nott'm Forest | 10.6 | 10.4 | | Brighton | 11.7 | 12.7 |
+
+Two things worth calling out beyond the volume numbers: **Newcastle are the hardest team in the league to score against from set pieces** (opponents need 6.8 shots per goal) despite generating plenty of set-piece shots themselves — their set-piece *defending* is elite even though their set-piece *attacking* is only mid-table (12.2 shots/goal). Inversely, **Brentford are bad at both ends** — worst attacking efficiency (26.0) and one of the worst defensively (18.7), a genuine set-piece liability on both sides of the ball.
+
 *Reliability note: Understat blocks automated/datacenter requests (as do FBref, Sofascore and FotMob), so this pull required running the fetch client-side from a browser session rather than a server script — see [`fetch_setpiece_goals.py`](fetch_setpiece_goals.py) and the README for the mechanism. The numbers themselves are Understat's; nothing is estimated.*
 
 ---

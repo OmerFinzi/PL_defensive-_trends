@@ -4,7 +4,9 @@ A six-season study of **defensive performance in the English Premier League**, b
 
 > **Now updated for the 2025/26 season.** All 380 matches of 2025/26 are included.
 
-**➡️ [Open the interactive dashboard](https://omerfinzi.github.io/PL_defensive-_trends/)** &nbsp;·&nbsp; [Read the findings report](REPORT.md)
+**➡️ View the interactive dashboard** — download **[`docs/index.html`](docs/index.html)** (open it → **Download raw file**) and open it in any browser. It is fully self-contained and works offline. &nbsp;·&nbsp; [Read the findings report](REPORT.md)
+
+> **Prefer a hosted link?** Enable GitHub Pages once — **Settings → Pages → Source: _Deploy from a branch_ → `main` / `/docs` → Save** — and the dashboard goes live at `https://omerfinzi.github.io/PL_defensive-_trends/` (it 404s until Pages is enabled). The static charts below preview it either way.
 
 ![Dashboard preview](docs/preview.png)
 
@@ -12,7 +14,7 @@ A six-season study of **defensive performance in the English Premier League**, b
 
 ## Sample visuals
 
-A few charts from the dashboard (each is a self-contained, shareable image). The full set is interactive — with tooltips, a light/dark toggle and sortable tables — in the [dashboard](https://omerfinzi.github.io/PL_defensive-_trends/).
+A few charts from the dashboard (each is a self-contained, shareable image). The full set is interactive — with tooltips, a light/dark toggle and sortable tables — in [`docs/index.html`](docs/index.html) (see how to open it above).
 
 | | |
 |---|---|
@@ -34,7 +36,7 @@ A few charts from the dashboard (each is a self-contained, shareable image). The
 - **Promoted-side watch.** **Sunderland** were a genuine defensive surprise (29% CS, 1.26 conceded/gm); Leeds (21%) held up moderately; Burnley struggled (11% CS, 1.97 conceded/gm).
 - **DefCon points (new 2025/26 scoring metric).** **Elliot Anderson (NFO)** and **Marcos Senesi (BOU)** tied on a league-leading **52 DefCon points** (26 threshold-hit matches each). Defenders banked **1,642** DefCon points to midfielders' **1,174**; forwards essentially none. The hardest-working defensive squads were **Everton, Bournemouth and Burnley** — often the busier, deeper-defending sides. Best budget value: **Maxime Estève (BUR, £3.8m)** and **Senesi** at ~10 DefCon points per £m.
 
-Full numbers and charts are in the [dashboard](https://omerfinzi.github.io/PL_defensive-_trends/) and [REPORT.md](REPORT.md).
+Full numbers and charts are in the dashboard ([`docs/index.html`](docs/index.html)) and [REPORT.md](REPORT.md).
 
 ---
 

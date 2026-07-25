@@ -1,0 +1,986 @@
+{
+  "meta": {
+    "season": "2025/26",
+    "source": "vaastav/Fantasy-Premier-League archive (data/2025-26); official FPL API stats, season-end snapshot",
+    "note": "DefCon points: +2/match at DEF>=10 or MID/FWD>=12 defensive contributions. GKs excluded.",
+    "n_players": 744,
+    "n_returning": 263
+  },
+  "top_points": [
+    {
+      "name": "Anderson",
+      "team_short": "NFO",
+      "pos": "MID",
+      "minutes": 3332,
+      "dc": 515,
+      "dc90": 13.91,
+      "dc_matches": 26,
+      "defcon_points": 52,
+      "cost": 5.7,
+      "pts_per_m": 9.12
+    },
+    {
+      "name": "Senesi",
+      "team_short": "BOU",
+      "pos": "DEF",
+      "minutes": 3288,
+      "dc": 419,
+      "dc90": 11.47,
+      "dc_matches": 26,
+      "defcon_points": 52,
+      "cost": 5.2,
+      "pts_per_m": 10.0
+    },
+    {
+      "name": "Tarkowski",
+      "team_short": "EVE",
+      "pos": "DEF",
+      "minutes": 3330,
+      "dc": 376,
+      "dc90": 10.16,
+      "dc_matches": 22,
+      "defcon_points": 44,
+      "cost": 5.8,
+      "pts_per_m": 7.59
+    },
+    {
+      "name": "Garner",
+      "team_short": "EVE",
+      "pos": "MID",
+      "minutes": 3413,
+      "dc": 458,
+      "dc90": 12.08,
+      "dc_matches": 20,
+      "defcon_points": 40,
+      "cost": 5.2,
+      "pts_per_m": 7.69
+    },
+    {
+      "name": "Lacroix",
+      "team_short": "CRY",
+      "pos": "DEF",
+      "minutes": 3085,
+      "dc": 370,
+      "dc90": 10.79,
+      "dc_matches": 20,
+      "defcon_points": 40,
+      "cost": 5.2,
+      "pts_per_m": 7.69
+    },
+    {
+      "name": "Andersen",
+      "team_short": "FUL",
+      "pos": "DEF",
+      "minutes": 2882,
+      "dc": 329,
+      "dc90": 10.27,
+      "dc_matches": 20,
+      "defcon_points": 40,
+      "cost": 4.4,
+      "pts_per_m": 9.09
+    },
+    {
+      "name": "Ampadu",
+      "team_short": "LEE",
+      "pos": "MID",
+      "minutes": 3119,
+      "dc": 416,
+      "dc90": 12.0,
+      "dc_matches": 19,
+      "defcon_points": 38,
+      "cost": 4.9,
+      "pts_per_m": 7.76
+    },
+    {
+      "name": "Est\u00e8ve",
+      "team_short": "BUR",
+      "pos": "DEF",
+      "minutes": 2933,
+      "dc": 334,
+      "dc90": 10.25,
+      "dc_matches": 19,
+      "defcon_points": 38,
+      "cost": 3.8,
+      "pts_per_m": 10.0
+    },
+    {
+      "name": "Mavropanos",
+      "team_short": "WHU",
+      "pos": "DEF",
+      "minutes": 2532,
+      "dc": 313,
+      "dc90": 11.13,
+      "dc_matches": 18,
+      "defcon_points": 36,
+      "cost": 4.5,
+      "pts_per_m": 8.0
+    },
+    {
+      "name": "Andr\u00e9",
+      "team_short": "WOL",
+      "pos": "MID",
+      "minutes": 2760,
+      "dc": 383,
+      "dc90": 12.49,
+      "dc_matches": 16,
+      "defcon_points": 32,
+      "cost": 5.2,
+      "pts_per_m": 6.15
+    },
+    {
+      "name": "Virgil",
+      "team_short": "LIV",
+      "pos": "DEF",
+      "minutes": 3420,
+      "dc": 352,
+      "dc90": 9.26,
+      "dc_matches": 16,
+      "defcon_points": 32,
+      "cost": 6.1,
+      "pts_per_m": 5.25
+    },
+    {
+      "name": "Collins",
+      "team_short": "BRE",
+      "pos": "DEF",
+      "minutes": 2971,
+      "dc": 319,
+      "dc90": 9.66,
+      "dc_matches": 16,
+      "defcon_points": 32,
+      "cost": 4.9,
+      "pts_per_m": 6.53
+    },
+    {
+      "name": "J.Gomes",
+      "team_short": "WOL",
+      "pos": "MID",
+      "minutes": 2829,
+      "dc": 387,
+      "dc90": 12.31,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 5.3,
+      "pts_per_m": 5.66
+    },
+    {
+      "name": "Scott",
+      "team_short": "BOU",
+      "pos": "MID",
+      "minutes": 2848,
+      "dc": 386,
+      "dc90": 12.2,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 4.9,
+      "pts_per_m": 6.12
+    },
+    {
+      "name": "M.Fernandes",
+      "team_short": "WHU",
+      "pos": "MID",
+      "minutes": 3017,
+      "dc": 369,
+      "dc90": 11.01,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 5.5,
+      "pts_per_m": 5.45
+    }
+  ],
+  "top_per90": [
+    {
+      "name": "Anderson",
+      "team_short": "NFO",
+      "pos": "MID",
+      "minutes": 3332,
+      "dc": 515,
+      "dc90": 13.91,
+      "dc_matches": 26,
+      "defcon_points": 52,
+      "cost": 5.7,
+      "pts_per_m": 9.12
+    },
+    {
+      "name": "Florentino",
+      "team_short": "BUR",
+      "pos": "MID",
+      "minutes": 2100,
+      "dc": 313,
+      "dc90": 13.41,
+      "dc_matches": 14,
+      "defcon_points": 28,
+      "cost": 5.0,
+      "pts_per_m": 5.6
+    },
+    {
+      "name": "Bentancur",
+      "team_short": "TOT",
+      "pos": "MID",
+      "minutes": 1880,
+      "dc": 278,
+      "dc90": 13.31,
+      "dc_matches": 13,
+      "defcon_points": 26,
+      "cost": 5.2,
+      "pts_per_m": 5.0
+    },
+    {
+      "name": "Wieffer",
+      "team_short": "BHA",
+      "pos": "MID",
+      "minutes": 1901,
+      "dc": 269,
+      "dc90": 12.74,
+      "dc_matches": 11,
+      "defcon_points": 22,
+      "cost": 4.8,
+      "pts_per_m": 4.58
+    },
+    {
+      "name": "Andr\u00e9",
+      "team_short": "WOL",
+      "pos": "MID",
+      "minutes": 2760,
+      "dc": 383,
+      "dc90": 12.49,
+      "dc_matches": 16,
+      "defcon_points": 32,
+      "cost": 5.2,
+      "pts_per_m": 6.15
+    },
+    {
+      "name": "Casemiro",
+      "team_short": "MUN",
+      "pos": "MID",
+      "minutes": 2575,
+      "dc": 355,
+      "dc90": 12.41,
+      "dc_matches": 14,
+      "defcon_points": 28,
+      "cost": 5.8,
+      "pts_per_m": 4.83
+    },
+    {
+      "name": "J.Palhinha",
+      "team_short": "TOT",
+      "pos": "MID",
+      "minutes": 2192,
+      "dc": 302,
+      "dc90": 12.4,
+      "dc_matches": 12,
+      "defcon_points": 24,
+      "cost": 5.5,
+      "pts_per_m": 4.36
+    },
+    {
+      "name": "J.Gomes",
+      "team_short": "WOL",
+      "pos": "MID",
+      "minutes": 2829,
+      "dc": 387,
+      "dc90": 12.31,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 5.3,
+      "pts_per_m": 5.66
+    },
+    {
+      "name": "Rodrigo",
+      "team_short": "MCI",
+      "pos": "MID",
+      "minutes": 1510,
+      "dc": 206,
+      "dc90": 12.28,
+      "dc_matches": 8,
+      "defcon_points": 16,
+      "cost": 6.3,
+      "pts_per_m": 2.54
+    },
+    {
+      "name": "Scott",
+      "team_short": "BOU",
+      "pos": "MID",
+      "minutes": 2848,
+      "dc": 386,
+      "dc90": 12.2,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 4.9,
+      "pts_per_m": 6.12
+    },
+    {
+      "name": "Garner",
+      "team_short": "EVE",
+      "pos": "MID",
+      "minutes": 3413,
+      "dc": 458,
+      "dc90": 12.08,
+      "dc_matches": 20,
+      "defcon_points": 40,
+      "cost": 5.2,
+      "pts_per_m": 7.69
+    },
+    {
+      "name": "Ampadu",
+      "team_short": "LEE",
+      "pos": "MID",
+      "minutes": 3119,
+      "dc": 416,
+      "dc90": 12.0,
+      "dc_matches": 19,
+      "defcon_points": 38,
+      "cost": 4.9,
+      "pts_per_m": 7.76
+    },
+    {
+      "name": "N.Gonzalez",
+      "team_short": "MCI",
+      "pos": "MID",
+      "minutes": 1561,
+      "dc": 206,
+      "dc90": 11.88,
+      "dc_matches": 7,
+      "defcon_points": 14,
+      "cost": 5.9,
+      "pts_per_m": 2.37
+    },
+    {
+      "name": "P.M.Sarr",
+      "team_short": "TOT",
+      "pos": "MID",
+      "minutes": 1388,
+      "dc": 183,
+      "dc90": 11.87,
+      "dc_matches": 4,
+      "defcon_points": 8,
+      "cost": 4.5,
+      "pts_per_m": 1.78
+    },
+    {
+      "name": "Adams",
+      "team_short": "BOU",
+      "pos": "MID",
+      "minutes": 1769,
+      "dc": 232,
+      "dc90": 11.8,
+      "dc_matches": 7,
+      "defcon_points": 14,
+      "cost": 4.9,
+      "pts_per_m": 2.86
+    }
+  ],
+  "best_value": [
+    {
+      "name": "Est\u00e8ve",
+      "team_short": "BUR",
+      "pos": "DEF",
+      "minutes": 2933,
+      "dc": 334,
+      "dc90": 10.25,
+      "dc_matches": 19,
+      "defcon_points": 38,
+      "cost": 3.8,
+      "pts_per_m": 10.0
+    },
+    {
+      "name": "Senesi",
+      "team_short": "BOU",
+      "pos": "DEF",
+      "minutes": 3288,
+      "dc": 419,
+      "dc90": 11.47,
+      "dc_matches": 26,
+      "defcon_points": 52,
+      "cost": 5.2,
+      "pts_per_m": 10.0
+    },
+    {
+      "name": "Andersen",
+      "team_short": "FUL",
+      "pos": "DEF",
+      "minutes": 2882,
+      "dc": 329,
+      "dc90": 10.27,
+      "dc_matches": 20,
+      "defcon_points": 40,
+      "cost": 4.4,
+      "pts_per_m": 9.09
+    },
+    {
+      "name": "Mavropanos",
+      "team_short": "WHU",
+      "pos": "DEF",
+      "minutes": 2532,
+      "dc": 313,
+      "dc90": 11.13,
+      "dc_matches": 18,
+      "defcon_points": 36,
+      "cost": 4.5,
+      "pts_per_m": 8.0
+    },
+    {
+      "name": "Ampadu",
+      "team_short": "LEE",
+      "pos": "MID",
+      "minutes": 3119,
+      "dc": 416,
+      "dc90": 12.0,
+      "dc_matches": 19,
+      "defcon_points": 38,
+      "cost": 4.9,
+      "pts_per_m": 7.76
+    },
+    {
+      "name": "Lacroix",
+      "team_short": "CRY",
+      "pos": "DEF",
+      "minutes": 3085,
+      "dc": 370,
+      "dc90": 10.79,
+      "dc_matches": 20,
+      "defcon_points": 40,
+      "cost": 5.2,
+      "pts_per_m": 7.69
+    },
+    {
+      "name": "Garner",
+      "team_short": "EVE",
+      "pos": "MID",
+      "minutes": 3413,
+      "dc": 458,
+      "dc90": 12.08,
+      "dc_matches": 20,
+      "defcon_points": 40,
+      "cost": 5.2,
+      "pts_per_m": 7.69
+    },
+    {
+      "name": "Hill",
+      "team_short": "BOU",
+      "pos": "DEF",
+      "minutes": 2102,
+      "dc": 260,
+      "dc90": 11.13,
+      "dc_matches": 14,
+      "defcon_points": 28,
+      "cost": 4.2,
+      "pts_per_m": 6.67
+    },
+    {
+      "name": "Keane",
+      "team_short": "EVE",
+      "pos": "DEF",
+      "minutes": 2588,
+      "dc": 302,
+      "dc90": 10.5,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 4.5,
+      "pts_per_m": 6.67
+    },
+    {
+      "name": "Collins",
+      "team_short": "BRE",
+      "pos": "DEF",
+      "minutes": 2971,
+      "dc": 319,
+      "dc90": 9.66,
+      "dc_matches": 16,
+      "defcon_points": 32,
+      "cost": 4.9,
+      "pts_per_m": 6.53
+    },
+    {
+      "name": "Ballard",
+      "team_short": "SUN",
+      "pos": "DEF",
+      "minutes": 2144,
+      "dc": 264,
+      "dc90": 11.08,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 4.6,
+      "pts_per_m": 6.52
+    },
+    {
+      "name": "Struijk",
+      "team_short": "LEE",
+      "pos": "DEF",
+      "minutes": 2935,
+      "dc": 297,
+      "dc90": 9.11,
+      "dc_matches": 13,
+      "defcon_points": 26,
+      "cost": 4.2,
+      "pts_per_m": 6.19
+    }
+  ],
+  "table": [
+    {
+      "name": "Anderson",
+      "team_short": "NFO",
+      "pos": "MID",
+      "minutes": 3332,
+      "dc": 515,
+      "dc90": 13.91,
+      "dc_matches": 26,
+      "defcon_points": 52,
+      "cost": 5.7,
+      "pts_per_m": 9.12
+    },
+    {
+      "name": "Senesi",
+      "team_short": "BOU",
+      "pos": "DEF",
+      "minutes": 3288,
+      "dc": 419,
+      "dc90": 11.47,
+      "dc_matches": 26,
+      "defcon_points": 52,
+      "cost": 5.2,
+      "pts_per_m": 10.0
+    },
+    {
+      "name": "Tarkowski",
+      "team_short": "EVE",
+      "pos": "DEF",
+      "minutes": 3330,
+      "dc": 376,
+      "dc90": 10.16,
+      "dc_matches": 22,
+      "defcon_points": 44,
+      "cost": 5.8,
+      "pts_per_m": 7.59
+    },
+    {
+      "name": "Garner",
+      "team_short": "EVE",
+      "pos": "MID",
+      "minutes": 3413,
+      "dc": 458,
+      "dc90": 12.08,
+      "dc_matches": 20,
+      "defcon_points": 40,
+      "cost": 5.2,
+      "pts_per_m": 7.69
+    },
+    {
+      "name": "Andersen",
+      "team_short": "FUL",
+      "pos": "DEF",
+      "minutes": 2882,
+      "dc": 329,
+      "dc90": 10.27,
+      "dc_matches": 20,
+      "defcon_points": 40,
+      "cost": 4.4,
+      "pts_per_m": 9.09
+    },
+    {
+      "name": "Lacroix",
+      "team_short": "CRY",
+      "pos": "DEF",
+      "minutes": 3085,
+      "dc": 370,
+      "dc90": 10.79,
+      "dc_matches": 20,
+      "defcon_points": 40,
+      "cost": 5.2,
+      "pts_per_m": 7.69
+    },
+    {
+      "name": "Ampadu",
+      "team_short": "LEE",
+      "pos": "MID",
+      "minutes": 3119,
+      "dc": 416,
+      "dc90": 12.0,
+      "dc_matches": 19,
+      "defcon_points": 38,
+      "cost": 4.9,
+      "pts_per_m": 7.76
+    },
+    {
+      "name": "Est\u00e8ve",
+      "team_short": "BUR",
+      "pos": "DEF",
+      "minutes": 2933,
+      "dc": 334,
+      "dc90": 10.25,
+      "dc_matches": 19,
+      "defcon_points": 38,
+      "cost": 3.8,
+      "pts_per_m": 10.0
+    },
+    {
+      "name": "Mavropanos",
+      "team_short": "WHU",
+      "pos": "DEF",
+      "minutes": 2532,
+      "dc": 313,
+      "dc90": 11.13,
+      "dc_matches": 18,
+      "defcon_points": 36,
+      "cost": 4.5,
+      "pts_per_m": 8.0
+    },
+    {
+      "name": "Andr\u00e9",
+      "team_short": "WOL",
+      "pos": "MID",
+      "minutes": 2760,
+      "dc": 383,
+      "dc90": 12.49,
+      "dc_matches": 16,
+      "defcon_points": 32,
+      "cost": 5.2,
+      "pts_per_m": 6.15
+    },
+    {
+      "name": "Collins",
+      "team_short": "BRE",
+      "pos": "DEF",
+      "minutes": 2971,
+      "dc": 319,
+      "dc90": 9.66,
+      "dc_matches": 16,
+      "defcon_points": 32,
+      "cost": 4.9,
+      "pts_per_m": 6.53
+    },
+    {
+      "name": "Virgil",
+      "team_short": "LIV",
+      "pos": "DEF",
+      "minutes": 3420,
+      "dc": 352,
+      "dc90": 9.26,
+      "dc_matches": 16,
+      "defcon_points": 32,
+      "cost": 6.1,
+      "pts_per_m": 5.25
+    },
+    {
+      "name": "J.Gomes",
+      "team_short": "WOL",
+      "pos": "MID",
+      "minutes": 2829,
+      "dc": 387,
+      "dc90": 12.31,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 5.3,
+      "pts_per_m": 5.66
+    },
+    {
+      "name": "Scott",
+      "team_short": "BOU",
+      "pos": "MID",
+      "minutes": 2848,
+      "dc": 386,
+      "dc90": 12.2,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 4.9,
+      "pts_per_m": 6.12
+    },
+    {
+      "name": "Keane",
+      "team_short": "EVE",
+      "pos": "DEF",
+      "minutes": 2588,
+      "dc": 302,
+      "dc90": 10.5,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 4.5,
+      "pts_per_m": 6.67
+    },
+    {
+      "name": "M.Fernandes",
+      "team_short": "WHU",
+      "pos": "MID",
+      "minutes": 3017,
+      "dc": 369,
+      "dc90": 11.01,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 5.5,
+      "pts_per_m": 5.45
+    },
+    {
+      "name": "Ballard",
+      "team_short": "SUN",
+      "pos": "DEF",
+      "minutes": 2144,
+      "dc": 264,
+      "dc90": 11.08,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 4.6,
+      "pts_per_m": 6.52
+    },
+    {
+      "name": "Rice",
+      "team_short": "ARS",
+      "pos": "MID",
+      "minutes": 3093,
+      "dc": 376,
+      "dc90": 10.94,
+      "dc_matches": 14,
+      "defcon_points": 28,
+      "cost": 7.2,
+      "pts_per_m": 3.89
+    },
+    {
+      "name": "Casemiro",
+      "team_short": "MUN",
+      "pos": "MID",
+      "minutes": 2575,
+      "dc": 355,
+      "dc90": 12.41,
+      "dc_matches": 14,
+      "defcon_points": 28,
+      "cost": 5.8,
+      "pts_per_m": 4.83
+    },
+    {
+      "name": "Florentino",
+      "team_short": "BUR",
+      "pos": "MID",
+      "minutes": 2100,
+      "dc": 313,
+      "dc90": 13.41,
+      "dc_matches": 14,
+      "defcon_points": 28,
+      "cost": 5.0,
+      "pts_per_m": 5.6
+    },
+    {
+      "name": "Chalobah",
+      "team_short": "CHE",
+      "pos": "DEF",
+      "minutes": 2780,
+      "dc": 265,
+      "dc90": 8.58,
+      "dc_matches": 14,
+      "defcon_points": 28,
+      "cost": 5.4,
+      "pts_per_m": 5.19
+    },
+    {
+      "name": "Hill",
+      "team_short": "BOU",
+      "pos": "DEF",
+      "minutes": 2102,
+      "dc": 260,
+      "dc90": 11.13,
+      "dc_matches": 14,
+      "defcon_points": 28,
+      "cost": 4.2,
+      "pts_per_m": 6.67
+    },
+    {
+      "name": "Mukiele",
+      "team_short": "SUN",
+      "pos": "DEF",
+      "minutes": 2784,
+      "dc": 273,
+      "dc90": 8.83,
+      "dc_matches": 13,
+      "defcon_points": 26,
+      "cost": 4.6,
+      "pts_per_m": 5.65
+    },
+    {
+      "name": "Xhaka",
+      "team_short": "SUN",
+      "pos": "MID",
+      "minutes": 2901,
+      "dc": 362,
+      "dc90": 11.23,
+      "dc_matches": 13,
+      "defcon_points": 26,
+      "cost": 5.1,
+      "pts_per_m": 5.1
+    },
+    {
+      "name": "Bentancur",
+      "team_short": "TOT",
+      "pos": "MID",
+      "minutes": 1880,
+      "dc": 278,
+      "dc90": 13.31,
+      "dc_matches": 13,
+      "defcon_points": 26,
+      "cost": 5.2,
+      "pts_per_m": 5.0
+    },
+    {
+      "name": "Milenkovi\u0107",
+      "team_short": "NFO",
+      "pos": "DEF",
+      "minutes": 3375,
+      "dc": 311,
+      "dc90": 8.29,
+      "dc_matches": 13,
+      "defcon_points": 26,
+      "cost": 5.1,
+      "pts_per_m": 5.1
+    },
+    {
+      "name": "Van Hecke",
+      "team_short": "BHA",
+      "pos": "DEF",
+      "minutes": 3210,
+      "dc": 317,
+      "dc90": 8.89,
+      "dc_matches": 13,
+      "defcon_points": 26,
+      "cost": 4.7,
+      "pts_per_m": 5.53
+    },
+    {
+      "name": "Struijk",
+      "team_short": "LEE",
+      "pos": "DEF",
+      "minutes": 2935,
+      "dc": 297,
+      "dc90": 9.11,
+      "dc_matches": 13,
+      "defcon_points": 26,
+      "cost": 4.2,
+      "pts_per_m": 6.19
+    },
+    {
+      "name": "Caicedo",
+      "team_short": "CHE",
+      "pos": "MID",
+      "minutes": 2796,
+      "dc": 366,
+      "dc90": 11.78,
+      "dc_matches": 13,
+      "defcon_points": 26,
+      "cost": 5.7,
+      "pts_per_m": 4.56
+    },
+    {
+      "name": "Richards",
+      "team_short": "CRY",
+      "pos": "DEF",
+      "minutes": 2825,
+      "dc": 311,
+      "dc90": 9.91,
+      "dc_matches": 13,
+      "defcon_points": 26,
+      "cost": 4.4,
+      "pts_per_m": 5.91
+    }
+  ],
+  "position_summary": [
+    {
+      "pos": "DEF",
+      "players": 270,
+      "returning_players": 141,
+      "total_points": 1642,
+      "avg_points_returning": 11.6
+    },
+    {
+      "pos": "MID",
+      "players": 379,
+      "returning_players": 118,
+      "total_points": 1174,
+      "avg_points_returning": 9.9
+    },
+    {
+      "pos": "FWD",
+      "players": 95,
+      "returning_players": 4,
+      "total_points": 18,
+      "avg_points_returning": 4.5
+    }
+  ],
+  "team_defcon": [
+    {
+      "team": "EVE",
+      "points": 206
+    },
+    {
+      "team": "BOU",
+      "points": 190
+    },
+    {
+      "team": "BUR",
+      "points": 174
+    },
+    {
+      "team": "LEE",
+      "points": 164
+    },
+    {
+      "team": "WHU",
+      "points": 162
+    },
+    {
+      "team": "CRY",
+      "points": 154
+    },
+    {
+      "team": "NFO",
+      "points": 154
+    },
+    {
+      "team": "BRE",
+      "points": 154
+    },
+    {
+      "team": "WOL",
+      "points": 150
+    },
+    {
+      "team": "SUN",
+      "points": 150
+    },
+    {
+      "team": "TOT",
+      "points": 148
+    },
+    {
+      "team": "NEW",
+      "points": 140
+    },
+    {
+      "team": "MUN",
+      "points": 132
+    },
+    {
+      "team": "FUL",
+      "points": 128
+    },
+    {
+      "team": "MCI",
+      "points": 118
+    },
+    {
+      "team": "BHA",
+      "points": 116
+    },
+    {
+      "team": "LIV",
+      "points": 116
+    },
+    {
+      "team": "ARS",
+      "points": 110
+    },
+    {
+      "team": "CHE",
+      "points": 104
+    },
+    {
+      "team": "AVL",
+      "points": 64
+    }
+  ]
+}

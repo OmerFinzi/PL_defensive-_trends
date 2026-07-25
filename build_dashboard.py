@@ -4,6 +4,8 @@ import json, os
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DOCS = os.path.join(ROOT, "docs")
 data = json.load(open(os.path.join(DOCS, "data.json"), encoding="utf-8"))
+defcon_path = os.path.join(DOCS, "defcon.json")
+defcon = json.load(open(defcon_path, encoding="utf-8")) if os.path.exists(defcon_path) else None
 
 HTML = r"""<!doctype html>
 <html lang="en">
@@ -193,8 +195,41 @@ footer a{color:var(--accent)}
   </section>
 </main>
 
-<footer><div class="wrap">
-  <p><b>Data</b> &middot; <span id="fsrc"></span>. Match results only &mdash; player-level FPL metrics (defensive contributions, xGA, minutes, prices) are out of scope and are not shown.<br>
+<section id="defconSec" style="display:none">
+    <p class="eyebrow" style="color:var(--s2)">New for 2025/26 &middot; Player-level data</p>
+    <h3 class="sec-h">Defensive Contribution (DefCon) points</h3>
+    <p class="sec-sub" id="defconIntro"></p>
+    <div class="kpis" id="defconKpis" style="margin-top:22px"></div>
+
+    <div class="grid2" style="margin-top:20px">
+      <div>
+        <div class="card"><p class="ctitle">DefCon points banked &mdash; top 15</p>
+          <p class="csub">Matches hitting the threshold &times; 2 pts</p>
+          <div class="legend" style="margin:0 0 12px">
+            <span><i class="dot" style="background:var(--s1)"></i>Defender</span>
+            <span><i class="dot" style="background:var(--s2)"></i>Midfielder</span>
+            <span><i class="dot" style="background:var(--s3)"></i>Forward</span>
+          </div><div id="c_dcpts"></div></div>
+      </div>
+      <div>
+        <div class="card"><p class="ctitle">Where DefCon points come from</p>
+          <p class="csub">Total points banked by position (2025/26)</p><div id="c_dcpos"></div></div>
+        <div class="card" style="margin-top:18px"><p class="ctitle">Hardest-working defensive clubs</p>
+          <p class="csub">Total DefCon points across each club's squad</p><div id="c_dcteam"></div></div>
+      </div>
+    </div>
+
+    <h3 class="sec-h" style="margin-top:34px">Best budget DefCon value</h3>
+    <p class="sec-sub">DefCon points per &pound;m of season-end price, for enablers priced &pound;5.5m or under. These are the cheap defenders and midfielders who quietly banked points all season.</p>
+    <div class="card"><div id="c_dcvalue"></div></div>
+
+    <h3 class="sec-h" style="margin-top:34px">Top 30 DefCon earners &mdash; full table</h3>
+    <p class="sec-sub">Sortable. DC = total defensive contributions; DC/90 = per 90 minutes; Hits = matches reaching the DefCon threshold.</p>
+    <div class="card" style="padding:6px 10px"><div style="overflow-x:auto"><table id="dctbl"></table></div></div>
+  </section>
+
+  <footer><div class="wrap">
+  <p><b>Data</b> &middot; League &amp; team trends from <span id="fsrc"></span> (match results). Player-level DefCon section from the community FPL archive (official FPL season-end stats) &mdash; a separate source, clearly labelled. Other player metrics (xGA, ownership) remain out of scope and are not shown.<br>
   <b>Method</b> &middot; A clean sheet is credited to a team that concedes zero in a match. "CS rate" = clean sheets &divide; matches. Built with a reproducible Python pipeline; this page embeds its output and makes no external requests.<br>
   Analysis by <b>@omerfin7</b> &middot; refreshed for the 2025/26 season.</p>
 </div></footer>
@@ -202,6 +237,7 @@ footer a{color:var(--accent)}
 <div class="tip" id="tip"></div>
 <script>
 const DATA = __DATA_JSON__;
+const DEFCON = __DEFCON_JSON__;
 const $=(s,r=document)=>r.querySelector(s);
 const tip=$("#tip");
 const cv=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -391,6 +427,69 @@ function renderTable(){
 }
 renderTable();
 
+// ---------- DefCon (player-level, 2025/26) ----------
+const POSCOL={DEF:'--s1',MID:'--s2',FWD:'--s3'};
+function hbars(sel,rows,{value,label,color,valfmt=(v)=>v,rowH=26,mL=118,mR=48,tip}){
+  const W=560,mT=6,H=mT+rows.length*rowH+6;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
+  const max=Math.max(...rows.map(r=>value(r)))*1.06||1;
+  const X=v=>mL+(W-mL-mR)*v/max;
+  rows.forEach((r,i)=>{
+    const y=mT+i*rowH, v=value(r);
+    const t=el("text",{x:mL-8,y:y+rowH/2+1,"text-anchor":"end",class:"val-lbl"});t.textContent=label(r);svg.appendChild(t);
+    const w=Math.max(2,X(v)-mL), col=typeof color==='function'?color(r):color;
+    const rc=el("rect",{x:mL,y:y+rowH/2-5,width:w,height:10,rx:3,fill:col});
+    if(tip){rc.addEventListener("mousemove",e=>showTip(tip(r),e));rc.addEventListener("mouseleave",hideTip);}
+    svg.appendChild(rc);
+    const vl=el("text",{x:mL+w+6,y:y+rowH/2+1,class:"axis-lbl"});vl.textContent=valfmt(v);svg.appendChild(vl);
+  });
+  $(sel).appendChild(svg);
+}
+function dcTip(r){return `<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>DefCon points</span><b>${r.defcon_points}</b></div><div class="row"><span>Threshold hits</span><b>${r.dc_matches} matches</b></div><div class="row"><span>Per 90</span><b>${r.dc90.toFixed(1)}</b></div><div class="row"><span>Price</span><b>&pound;${r.cost}m</b></div>`;}
+function renderDefcon(){
+  if(!DEFCON)return;
+  $("#defconSec").style.display="";
+  $("#defconIntro").innerHTML=`New this season, players bank <b>+2 points</b> in a match when their defensive work hits a threshold &mdash; <b>10+</b> clearances/blocks/interceptions/tackles for defenders, <b>12+</b> (also counting recoveries) for midfielders and forwards. Across ${DEFCON.meta.season}, <b>${DEFCON.meta.n_returning}</b> of ${DEFCON.meta.n_players} outfielders banked at least one DefCon return. ${DEFCON.meta.note}`;
+  const tp=DEFCON.top_points, lead=tp[0], ps=DEFCON.position_summary;
+  const defP=ps.find(p=>p.pos==='DEF'), midP=ps.find(p=>p.pos==='MID');
+  $("#defconKpis").innerHTML=
+    `<div class="kpi"><div class="v">${lead.defcon_points}</div><div class="l">Most DefCon points &middot; ${lead.name} (${lead.team_short})</div><div class="d up">${lead.dc_matches} threshold hits</div></div>`+
+    `<div class="kpi"><div class="v">${DEFCON.meta.n_returning}</div><div class="l">Players with DefCon returns</div><div class="d up">of ${DEFCON.meta.n_players} outfielders</div></div>`+
+    `<div class="kpi"><div class="v">${defP.total_points}</div><div class="l">Points banked by defenders</div><div class="d up">${defP.returning_players} returning</div></div>`+
+    `<div class="kpi"><div class="v">${midP.total_points}</div><div class="l">Points banked by midfielders</div><div class="d up">${midP.returning_players} returning</div></div>`;
+  hbars("#c_dcpts",tp,{value:r=>r.defcon_points,label:r=>`${r.name} (${r.team_short})`,
+    color:r=>cv(POSCOL[r.pos]),tip:dcTip});
+  hbars("#c_dcpos",ps,{value:r=>r.total_points,label:r=>r.pos,
+    color:r=>cv(POSCOL[r.pos]),rowH:34,mL:56,
+    tip:r=>`<b>${r.pos}</b><div class="row"><span>Total points</span><b>${r.total_points}</b></div><div class="row"><span>Returning players</span><b>${r.returning_players}</b></div><div class="row"><span>Avg / returner</span><b>${r.avg_points_returning}</b></div>`});
+  hbars("#c_dcteam",DEFCON.team_defcon.slice(0,12),{value:r=>r.points,label:r=>r.team,
+    color:cv('--s1'),rowH:22,mL:56,tip:r=>`<b>${r.team}</b><div class="row"><span>DefCon points</span><b>${r.points}</b></div>`});
+  hbars("#c_dcvalue",DEFCON.best_value,{value:r=>r.pts_per_m,label:r=>`${r.name} (${r.team_short})`,
+    color:cv('--s3'),valfmt:v=>v.toFixed(1),
+    tip:r=>`<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>Points / &pound;m</span><b>${r.pts_per_m.toFixed(1)}</b></div><div class="row"><span>DefCon points</span><b>${r.defcon_points}</b></div><div class="row"><span>Price</span><b>&pound;${r.cost}m</b></div>`});
+  // table
+  const dcols=[["name","Player"],["team_short","Team"],["pos","Pos"],["minutes","Min"],
+    ["dc","DC"],["dc90","DC/90"],["dc_matches","Hits"],["defcon_points","DefCon pts"],["cost","&pound;m"]];
+  let sk="defcon_points",sd=-1;
+  function draw(){
+    const rows=[...DEFCON.table].sort((a,b)=>(a[sk]>b[sk]?1:-1)*sd);
+    let h="<thead><tr><th class='rk'>#</th>"+dcols.map(c=>`<th data-k="${c[0]}">${c[1]}</th>`).join('')+"</tr></thead><tbody>";
+    rows.forEach((r,i)=>{h+=`<tr><td class="rk">${i+1}</td>`+dcols.map(c=>{
+      const v=r[c[0]];
+      if(c[0]==="name")return `<td><b>${v}</b></td>`;
+      if(c[0]==="pos")return `<td><span class="dot" style="display:inline-block;background:${cv(POSCOL[v])}"></span> ${v}</td>`;
+      if(c[0]==="dc90")return `<td>${v.toFixed(1)}</td>`;
+      if(c[0]==="cost")return `<td>${v.toFixed(1)}</td>`;
+      if(c[0]==="defcon_points")return `<td><b>${v}</b></td>`;
+      return `<td>${v}</td>`;}).join('')+"</tr>";});
+    $("#dctbl").innerHTML=h+"</tbody>";
+    $("#dctbl").querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{
+      const k=th.dataset.k;if(k===sk)sd*=-1;else{sk=k;sd=(k==="name"||k==="team_short"||k==="pos")?1:-1;}draw();});
+  }
+  draw();
+}
+renderDefcon();
+
 // ---------- theme toggle ----------
 $("#themeBtn").onclick=()=>{
   const cur=document.documentElement.getAttribute("data-theme");
@@ -407,6 +506,7 @@ $("#themeBtn").onclick=()=>{
   thirdsChart("#c_thirds");
   movers("#c_risers",DATA.risers,true);
   movers("#c_fallers",DATA.fallers,false);
+  renderDefcon();
 };
 </script>
 </body>
@@ -414,6 +514,7 @@ $("#themeBtn").onclick=()=>{
 """
 
 out = HTML.replace("__DATA_JSON__", json.dumps(data))
+out = out.replace("__DEFCON_JSON__", json.dumps(defcon))
 with open(os.path.join(DOCS, "index.html"), "w", encoding="utf-8") as f:
     f.write(out)
 print("Wrote docs/index.html (", len(out), "bytes )")

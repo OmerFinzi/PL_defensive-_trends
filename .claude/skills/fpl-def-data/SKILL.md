@@ -28,10 +28,17 @@ Invoke-WebRequest -Uri "https://fixturedownload.com/download/epl-2025-GMTStandar
 - `season` is derived = the starting year (2025 → labelled "2025/26" for display).
 
 ## What this data CAN support
-Match-results-derived defensive metrics: clean sheets (home/away/total), goals conceded per game, goals per game, home-advantage splits, BTTS rate, season-third (early/mid/late) patterns, per-team defensive tables and multi-season trends.
+Match-results-derived defensive metrics: clean sheets (home/away/total), goals conceded per game, goals per game, home-advantage splits, BTTS rate, season-third (early/mid/late) patterns, per-team defensive tables and multi-season trends. Pipeline: `analyze.py`.
 
-## What it CANNOT support (be honest — do not fabricate)
-Player-level FPL stats: individual defensive contributions (tackles/CBIT), the new 25/26 defensive-contribution points, minutes, prices, ownership, xG/xGA. Those need the official FPL API or an xG provider — out of scope for this results-only dataset. Say so rather than inventing numbers.
+## Player-level DefCon data — a SECOND, separate source
+The 2025/26 **Defensive Contribution (DefCon)** section is player-level and does NOT come from the results CSVs. It comes from the **official FPL stats**, via the community archive **vaastav/Fantasy-Premier-League** (`data/2025-26/`): `players_raw.csv`, `teams.csv`, `merged_gw.csv`, staged under `data/fpl_2025_26/`. Pipeline: `defcon.py` -> `docs/defcon.json`.
+
+Important gotcha: the **live FPL API cannot supply last season's DefCon** — after the season it resets to the new campaign (0 gameweeks played, all stats zeroed). Use the archive for a completed season; the live API (`bootstrap-static`) only works mid-season.
+
+DefCon points rule (2025/26): +2 in a match when defensive contributions reach the threshold — **DEF: >= 10** (clearances+blocks+interceptions+tackles); **MID/FWD: >= 12** (that total plus recoveries). GKs excluded. The `defensive_contribution` field is already position-correct (DEF excludes recoveries; MID/FWD includes them).
+
+## Still out of scope (be honest — do not fabricate)
+Other player metrics not in either source here: xG/xGA, ownership %, expected defensive stats. Don't invent them.
 
 ## Adding a season
 1. Download `epl-<YEAR>.csv` into `data/`.

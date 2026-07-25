@@ -1,7 +1,7 @@
 # Premier League Defensive Trends — Findings Report
 
 **Window:** 2020/21 → 2025/26 (six completed seasons, 2,280 matches)
-**Source:** [fixturedownload.com](https://fixturedownload.com) EPL results · match-results only
+**Sources:** [fixturedownload.com](https://fixturedownload.com) EPL results (§1–6) · official FPL stats via the [vaastav archive](https://github.com/vaastav/Fantasy-Premier-League) for 2025/26 DefCon (§7)
 **Updated:** for the 2025/26 season
 
 ---
@@ -66,10 +66,33 @@ Averaging clean sheets per game by third of the season (Early GW1–12, Mid GW13
 
 **Sunderland were the standout newcomer defensively** — a 29% clean-sheet rate put them level with established mid-table sides and made their cheap defenders genuine early-season value. Leeds were serviceable; Burnley leaked heavily (nearly two per game) and were an FPL defensive avoid.
 
+## 7. DefCon — the new 2025/26 defensive-points metric (player-level)
+
+*Source note: this section is player-level and comes from a **different source** to the sections above — official FPL season-end stats via the vaastav archive, not the results feed. A player banks +2 in a match when defensive contributions reach the threshold (DEF ≥ 10 CBIT; MID/FWD ≥ 12 including recoveries). GKs excluded.*
+
+**Top DefCon points banked (2025/26):**
+
+| # | Player | Team | Pos | DefCon pts | Threshold hits | DC/90 | Price |
+|---|--------|------|-----|:---:|:---:|:---:|:---:|
+| 1 | Elliot Anderson | NFO | MID | 52 | 26 | 13.9 | £5.7m |
+| 1 | Marcos Senesi | BOU | DEF | 52 | 26 | 11.5 | £5.2m |
+| 3 | James Tarkowski | EVE | DEF | 44 | 22 | 10.2 | £5.8m |
+| 4 | James Garner | EVE | MID | 40 | 20 | 12.1 | £5.2m |
+| 4 | Maxence Lacroix | CRY | DEF | 40 | 20 | 10.8 | £5.2m |
+| 4 | Joachim Andersen | FUL | DEF | 40 | 20 | 10.3 | £4.4m |
+
+**By position:** defenders banked **1,642** DefCon points (141 returning players) versus midfielders' **1,174** (118 players); forwards were negligible (18 points). DefCon is overwhelmingly a defender-and-holding-midfielder mechanic.
+
+**Hardest-working defensive squads** (total DefCon points across the club): **Everton (206), Bournemouth (190), Burnley (174), Leeds (164), West Ham (162)**. Note the pattern — several are mid/lower-table or promoted sides that defend more and therefore rack up defensive actions. High DefCon volume is *not* the same as an elite defence (Burnley leaked the most goals in the league yet ranked third for DefCon points).
+
+**Best budget value** (DefCon points per £m, enablers ≤ £5.5m): **Maxime Estève (BUR, £3.8m)** and **Senesi** lead at ~10 points/£m, with **Andersen (FUL, £4.4m)** close behind — cheap, nailed defensive-contribution sources.
+
+**FPL takeaway:** DefCon rewards a distinct player profile from clean sheets. The elite-defence pick (Arsenal/City assets) chases clean-sheet points; the DefCon pick chases *volume of defensive actions*, which favours ball-winning defenders and holding midfielders at busy, deeper-defending clubs — often much cheaper. A balanced squad can target both.
+
 ---
 
 ## Scope & honesty
 
-This report is built **only** from match results. It deliberately does **not** cover player-level FPL metrics — the 2025/26 defensive-contribution points, tackles/CBIT, minutes, prices, ownership, or xG/xGA — because those are not in the results feed. Every number above is computed directly from the six season CSVs by [`analyze.py`](analyze.py); nothing is estimated or imported from third-party projections.
+Sections 1–6 are built **only** from match results (`analyze.py`). Section 7 (DefCon) is **player-level** and uses a **separate, clearly-labelled source** — official FPL season-end stats via the vaastav archive (`defcon.py`). The live FPL API cannot supply a completed season's DefCon (it resets each summer), so the archive is used. Every number in this report is computed directly from those files; nothing is estimated or imported from third-party projections. Other player metrics (xG/xGA, ownership) remain out of scope.
 
 *Analysis by [@omerfin7](https://github.com/OmerFinzi).*

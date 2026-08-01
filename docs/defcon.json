@@ -17,7 +17,11 @@
       "dc_matches": 26,
       "defcon_points": 52,
       "cost": 5.7,
-      "pts_per_m": 9.12
+      "pts_per_m": 9.12,
+      "apps": 38,
+      "hit_rate": 0.68,
+      "hit_rate_ci_lo": 0.53,
+      "hit_rate_ci_hi": 0.81
     },
     {
       "name": "Senesi",
@@ -29,7 +33,11 @@
       "dc_matches": 26,
       "defcon_points": 52,
       "cost": 5.2,
-      "pts_per_m": 10.0
+      "pts_per_m": 10.0,
+      "apps": 37,
+      "hit_rate": 0.7,
+      "hit_rate_ci_lo": 0.54,
+      "hit_rate_ci_hi": 0.83
     },
     {
       "name": "Tarkowski",
@@ -41,7 +49,11 @@
       "dc_matches": 22,
       "defcon_points": 44,
       "cost": 5.8,
-      "pts_per_m": 7.59
+      "pts_per_m": 7.59,
+      "apps": 37,
+      "hit_rate": 0.59,
+      "hit_rate_ci_lo": 0.43,
+      "hit_rate_ci_hi": 0.74
     },
     {
       "name": "Garner",
@@ -53,7 +65,11 @@
       "dc_matches": 20,
       "defcon_points": 40,
       "cost": 5.2,
-      "pts_per_m": 7.69
+      "pts_per_m": 7.69,
+      "apps": 38,
+      "hit_rate": 0.53,
+      "hit_rate_ci_lo": 0.37,
+      "hit_rate_ci_hi": 0.68
     },
     {
       "name": "Lacroix",
@@ -65,7 +81,11 @@
       "dc_matches": 20,
       "defcon_points": 40,
       "cost": 5.2,
-      "pts_per_m": 7.69
+      "pts_per_m": 7.69,
+      "apps": 35,
+      "hit_rate": 0.57,
+      "hit_rate_ci_lo": 0.41,
+      "hit_rate_ci_hi": 0.72
     },
     {
       "name": "Andersen",
@@ -77,7 +97,11 @@
       "dc_matches": 20,
       "defcon_points": 40,
       "cost": 4.4,
-      "pts_per_m": 9.09
+      "pts_per_m": 9.09,
+      "apps": 33,
+      "hit_rate": 0.61,
+      "hit_rate_ci_lo": 0.44,
+      "hit_rate_ci_hi": 0.75
     },
     {
       "name": "Ampadu",
@@ -89,7 +113,11 @@
       "dc_matches": 19,
       "defcon_points": 38,
       "cost": 4.9,
-      "pts_per_m": 7.76
+      "pts_per_m": 7.76,
+      "apps": 35,
+      "hit_rate": 0.54,
+      "hit_rate_ci_lo": 0.38,
+      "hit_rate_ci_hi": 0.7
     },
     {
       "name": "Est\u00e8ve",
@@ -101,7 +129,11 @@
       "dc_matches": 19,
       "defcon_points": 38,
       "cost": 3.8,
-      "pts_per_m": 10.0
+      "pts_per_m": 10.0,
+      "apps": 34,
+      "hit_rate": 0.56,
+      "hit_rate_ci_lo": 0.39,
+      "hit_rate_ci_hi": 0.71
     },
     {
       "name": "Mavropanos",
@@ -113,7 +145,11 @@
       "dc_matches": 18,
       "defcon_points": 36,
       "cost": 4.5,
-      "pts_per_m": 8.0
+      "pts_per_m": 8.0,
+      "apps": 31,
+      "hit_rate": 0.58,
+      "hit_rate_ci_lo": 0.41,
+      "hit_rate_ci_hi": 0.74
     },
     {
       "name": "Andr\u00e9",
@@ -125,7 +161,11 @@
       "dc_matches": 16,
       "defcon_points": 32,
       "cost": 5.2,
-      "pts_per_m": 6.15
+      "pts_per_m": 6.15,
+      "apps": 35,
+      "hit_rate": 0.46,
+      "hit_rate_ci_lo": 0.3,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "Virgil",
@@ -137,7 +177,11 @@
       "dc_matches": 16,
       "defcon_points": 32,
       "cost": 6.1,
-      "pts_per_m": 5.25
+      "pts_per_m": 5.25,
+      "apps": 38,
+      "hit_rate": 0.42,
+      "hit_rate_ci_lo": 0.28,
+      "hit_rate_ci_hi": 0.58
     },
     {
       "name": "Collins",
@@ -149,7 +193,11 @@
       "dc_matches": 16,
       "defcon_points": 32,
       "cost": 4.9,
-      "pts_per_m": 6.53
+      "pts_per_m": 6.53,
+      "apps": 35,
+      "hit_rate": 0.46,
+      "hit_rate_ci_lo": 0.3,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "J.Gomes",
@@ -161,7 +209,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 5.3,
-      "pts_per_m": 5.66
+      "pts_per_m": 5.66,
+      "apps": 35,
+      "hit_rate": 0.43,
+      "hit_rate_ci_lo": 0.28,
+      "hit_rate_ci_hi": 0.59
     },
     {
       "name": "Scott",
@@ -173,7 +225,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 4.9,
-      "pts_per_m": 6.12
+      "pts_per_m": 6.12,
+      "apps": 37,
+      "hit_rate": 0.41,
+      "hit_rate_ci_lo": 0.26,
+      "hit_rate_ci_hi": 0.57
     },
     {
       "name": "M.Fernandes",
@@ -185,7 +241,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 5.5,
-      "pts_per_m": 5.45
+      "pts_per_m": 5.45,
+      "apps": 36,
+      "hit_rate": 0.42,
+      "hit_rate_ci_lo": 0.27,
+      "hit_rate_ci_hi": 0.58
     }
   ],
   "top_per90": [
@@ -199,7 +259,11 @@
       "dc_matches": 26,
       "defcon_points": 52,
       "cost": 5.7,
-      "pts_per_m": 9.12
+      "pts_per_m": 9.12,
+      "apps": 38,
+      "hit_rate": 0.68,
+      "hit_rate_ci_lo": 0.53,
+      "hit_rate_ci_hi": 0.81
     },
     {
       "name": "Florentino",
@@ -211,7 +275,11 @@
       "dc_matches": 14,
       "defcon_points": 28,
       "cost": 5.0,
-      "pts_per_m": 5.6
+      "pts_per_m": 5.6,
+      "apps": 31,
+      "hit_rate": 0.45,
+      "hit_rate_ci_lo": 0.29,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "Bentancur",
@@ -223,7 +291,11 @@
       "dc_matches": 13,
       "defcon_points": 26,
       "cost": 5.2,
-      "pts_per_m": 5.0
+      "pts_per_m": 5.0,
+      "apps": 26,
+      "hit_rate": 0.5,
+      "hit_rate_ci_lo": 0.32,
+      "hit_rate_ci_hi": 0.68
     },
     {
       "name": "Wieffer",
@@ -235,7 +307,11 @@
       "dc_matches": 11,
       "defcon_points": 22,
       "cost": 4.8,
-      "pts_per_m": 4.58
+      "pts_per_m": 4.58,
+      "apps": 26,
+      "hit_rate": 0.42,
+      "hit_rate_ci_lo": 0.26,
+      "hit_rate_ci_hi": 0.61
     },
     {
       "name": "Andr\u00e9",
@@ -247,7 +323,11 @@
       "dc_matches": 16,
       "defcon_points": 32,
       "cost": 5.2,
-      "pts_per_m": 6.15
+      "pts_per_m": 6.15,
+      "apps": 35,
+      "hit_rate": 0.46,
+      "hit_rate_ci_lo": 0.3,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "Casemiro",
@@ -259,7 +339,11 @@
       "dc_matches": 14,
       "defcon_points": 28,
       "cost": 5.8,
-      "pts_per_m": 4.83
+      "pts_per_m": 4.83,
+      "apps": 34,
+      "hit_rate": 0.41,
+      "hit_rate_ci_lo": 0.26,
+      "hit_rate_ci_hi": 0.58
     },
     {
       "name": "J.Palhinha",
@@ -271,7 +355,11 @@
       "dc_matches": 12,
       "defcon_points": 24,
       "cost": 5.5,
-      "pts_per_m": 4.36
+      "pts_per_m": 4.36,
+      "apps": 33,
+      "hit_rate": 0.36,
+      "hit_rate_ci_lo": 0.22,
+      "hit_rate_ci_hi": 0.53
     },
     {
       "name": "J.Gomes",
@@ -283,7 +371,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 5.3,
-      "pts_per_m": 5.66
+      "pts_per_m": 5.66,
+      "apps": 35,
+      "hit_rate": 0.43,
+      "hit_rate_ci_lo": 0.28,
+      "hit_rate_ci_hi": 0.59
     },
     {
       "name": "Rodrigo",
@@ -295,7 +387,11 @@
       "dc_matches": 8,
       "defcon_points": 16,
       "cost": 6.3,
-      "pts_per_m": 2.54
+      "pts_per_m": 2.54,
+      "apps": 21,
+      "hit_rate": 0.38,
+      "hit_rate_ci_lo": 0.21,
+      "hit_rate_ci_hi": 0.59
     },
     {
       "name": "Scott",
@@ -307,7 +403,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 4.9,
-      "pts_per_m": 6.12
+      "pts_per_m": 6.12,
+      "apps": 37,
+      "hit_rate": 0.41,
+      "hit_rate_ci_lo": 0.26,
+      "hit_rate_ci_hi": 0.57
     },
     {
       "name": "Garner",
@@ -319,7 +419,11 @@
       "dc_matches": 20,
       "defcon_points": 40,
       "cost": 5.2,
-      "pts_per_m": 7.69
+      "pts_per_m": 7.69,
+      "apps": 38,
+      "hit_rate": 0.53,
+      "hit_rate_ci_lo": 0.37,
+      "hit_rate_ci_hi": 0.68
     },
     {
       "name": "Ampadu",
@@ -331,7 +435,11 @@
       "dc_matches": 19,
       "defcon_points": 38,
       "cost": 4.9,
-      "pts_per_m": 7.76
+      "pts_per_m": 7.76,
+      "apps": 35,
+      "hit_rate": 0.54,
+      "hit_rate_ci_lo": 0.38,
+      "hit_rate_ci_hi": 0.7
     },
     {
       "name": "N.Gonzalez",
@@ -343,7 +451,11 @@
       "dc_matches": 7,
       "defcon_points": 14,
       "cost": 5.9,
-      "pts_per_m": 2.37
+      "pts_per_m": 2.37,
+      "apps": 25,
+      "hit_rate": 0.28,
+      "hit_rate_ci_lo": 0.14,
+      "hit_rate_ci_hi": 0.48
     },
     {
       "name": "P.M.Sarr",
@@ -355,7 +467,11 @@
       "dc_matches": 4,
       "defcon_points": 8,
       "cost": 4.5,
-      "pts_per_m": 1.78
+      "pts_per_m": 1.78,
+      "apps": 26,
+      "hit_rate": 0.15,
+      "hit_rate_ci_lo": 0.06,
+      "hit_rate_ci_hi": 0.34
     },
     {
       "name": "Adams",
@@ -367,7 +483,11 @@
       "dc_matches": 7,
       "defcon_points": 14,
       "cost": 4.9,
-      "pts_per_m": 2.86
+      "pts_per_m": 2.86,
+      "apps": 25,
+      "hit_rate": 0.28,
+      "hit_rate_ci_lo": 0.14,
+      "hit_rate_ci_hi": 0.48
     }
   ],
   "best_value": [
@@ -381,7 +501,11 @@
       "dc_matches": 19,
       "defcon_points": 38,
       "cost": 3.8,
-      "pts_per_m": 10.0
+      "pts_per_m": 10.0,
+      "apps": 34,
+      "hit_rate": 0.56,
+      "hit_rate_ci_lo": 0.39,
+      "hit_rate_ci_hi": 0.71
     },
     {
       "name": "Senesi",
@@ -393,7 +517,11 @@
       "dc_matches": 26,
       "defcon_points": 52,
       "cost": 5.2,
-      "pts_per_m": 10.0
+      "pts_per_m": 10.0,
+      "apps": 37,
+      "hit_rate": 0.7,
+      "hit_rate_ci_lo": 0.54,
+      "hit_rate_ci_hi": 0.83
     },
     {
       "name": "Andersen",
@@ -405,7 +533,11 @@
       "dc_matches": 20,
       "defcon_points": 40,
       "cost": 4.4,
-      "pts_per_m": 9.09
+      "pts_per_m": 9.09,
+      "apps": 33,
+      "hit_rate": 0.61,
+      "hit_rate_ci_lo": 0.44,
+      "hit_rate_ci_hi": 0.75
     },
     {
       "name": "Mavropanos",
@@ -417,7 +549,11 @@
       "dc_matches": 18,
       "defcon_points": 36,
       "cost": 4.5,
-      "pts_per_m": 8.0
+      "pts_per_m": 8.0,
+      "apps": 31,
+      "hit_rate": 0.58,
+      "hit_rate_ci_lo": 0.41,
+      "hit_rate_ci_hi": 0.74
     },
     {
       "name": "Ampadu",
@@ -429,7 +565,11 @@
       "dc_matches": 19,
       "defcon_points": 38,
       "cost": 4.9,
-      "pts_per_m": 7.76
+      "pts_per_m": 7.76,
+      "apps": 35,
+      "hit_rate": 0.54,
+      "hit_rate_ci_lo": 0.38,
+      "hit_rate_ci_hi": 0.7
     },
     {
       "name": "Lacroix",
@@ -441,7 +581,11 @@
       "dc_matches": 20,
       "defcon_points": 40,
       "cost": 5.2,
-      "pts_per_m": 7.69
+      "pts_per_m": 7.69,
+      "apps": 35,
+      "hit_rate": 0.57,
+      "hit_rate_ci_lo": 0.41,
+      "hit_rate_ci_hi": 0.72
     },
     {
       "name": "Garner",
@@ -453,7 +597,11 @@
       "dc_matches": 20,
       "defcon_points": 40,
       "cost": 5.2,
-      "pts_per_m": 7.69
+      "pts_per_m": 7.69,
+      "apps": 38,
+      "hit_rate": 0.53,
+      "hit_rate_ci_lo": 0.37,
+      "hit_rate_ci_hi": 0.68
     },
     {
       "name": "Hill",
@@ -465,7 +613,11 @@
       "dc_matches": 14,
       "defcon_points": 28,
       "cost": 4.2,
-      "pts_per_m": 6.67
+      "pts_per_m": 6.67,
+      "apps": 29,
+      "hit_rate": 0.48,
+      "hit_rate_ci_lo": 0.31,
+      "hit_rate_ci_hi": 0.66
     },
     {
       "name": "Keane",
@@ -477,7 +629,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 4.5,
-      "pts_per_m": 6.67
+      "pts_per_m": 6.67,
+      "apps": 33,
+      "hit_rate": 0.45,
+      "hit_rate_ci_lo": 0.3,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "Collins",
@@ -489,7 +645,11 @@
       "dc_matches": 16,
       "defcon_points": 32,
       "cost": 4.9,
-      "pts_per_m": 6.53
+      "pts_per_m": 6.53,
+      "apps": 35,
+      "hit_rate": 0.46,
+      "hit_rate_ci_lo": 0.3,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "Ballard",
@@ -501,7 +661,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 4.6,
-      "pts_per_m": 6.52
+      "pts_per_m": 6.52,
+      "apps": 29,
+      "hit_rate": 0.52,
+      "hit_rate_ci_lo": 0.34,
+      "hit_rate_ci_hi": 0.69
     },
     {
       "name": "Struijk",
@@ -513,7 +677,11 @@
       "dc_matches": 13,
       "defcon_points": 26,
       "cost": 4.2,
-      "pts_per_m": 6.19
+      "pts_per_m": 6.19,
+      "apps": 34,
+      "hit_rate": 0.38,
+      "hit_rate_ci_lo": 0.24,
+      "hit_rate_ci_hi": 0.55
     }
   ],
   "table": [
@@ -527,7 +695,11 @@
       "dc_matches": 26,
       "defcon_points": 52,
       "cost": 5.7,
-      "pts_per_m": 9.12
+      "pts_per_m": 9.12,
+      "apps": 38,
+      "hit_rate": 0.68,
+      "hit_rate_ci_lo": 0.53,
+      "hit_rate_ci_hi": 0.81
     },
     {
       "name": "Senesi",
@@ -539,7 +711,11 @@
       "dc_matches": 26,
       "defcon_points": 52,
       "cost": 5.2,
-      "pts_per_m": 10.0
+      "pts_per_m": 10.0,
+      "apps": 37,
+      "hit_rate": 0.7,
+      "hit_rate_ci_lo": 0.54,
+      "hit_rate_ci_hi": 0.83
     },
     {
       "name": "Tarkowski",
@@ -551,7 +727,11 @@
       "dc_matches": 22,
       "defcon_points": 44,
       "cost": 5.8,
-      "pts_per_m": 7.59
+      "pts_per_m": 7.59,
+      "apps": 37,
+      "hit_rate": 0.59,
+      "hit_rate_ci_lo": 0.43,
+      "hit_rate_ci_hi": 0.74
     },
     {
       "name": "Garner",
@@ -563,7 +743,11 @@
       "dc_matches": 20,
       "defcon_points": 40,
       "cost": 5.2,
-      "pts_per_m": 7.69
+      "pts_per_m": 7.69,
+      "apps": 38,
+      "hit_rate": 0.53,
+      "hit_rate_ci_lo": 0.37,
+      "hit_rate_ci_hi": 0.68
     },
     {
       "name": "Andersen",
@@ -575,7 +759,11 @@
       "dc_matches": 20,
       "defcon_points": 40,
       "cost": 4.4,
-      "pts_per_m": 9.09
+      "pts_per_m": 9.09,
+      "apps": 33,
+      "hit_rate": 0.61,
+      "hit_rate_ci_lo": 0.44,
+      "hit_rate_ci_hi": 0.75
     },
     {
       "name": "Lacroix",
@@ -587,7 +775,11 @@
       "dc_matches": 20,
       "defcon_points": 40,
       "cost": 5.2,
-      "pts_per_m": 7.69
+      "pts_per_m": 7.69,
+      "apps": 35,
+      "hit_rate": 0.57,
+      "hit_rate_ci_lo": 0.41,
+      "hit_rate_ci_hi": 0.72
     },
     {
       "name": "Ampadu",
@@ -599,7 +791,11 @@
       "dc_matches": 19,
       "defcon_points": 38,
       "cost": 4.9,
-      "pts_per_m": 7.76
+      "pts_per_m": 7.76,
+      "apps": 35,
+      "hit_rate": 0.54,
+      "hit_rate_ci_lo": 0.38,
+      "hit_rate_ci_hi": 0.7
     },
     {
       "name": "Est\u00e8ve",
@@ -611,7 +807,11 @@
       "dc_matches": 19,
       "defcon_points": 38,
       "cost": 3.8,
-      "pts_per_m": 10.0
+      "pts_per_m": 10.0,
+      "apps": 34,
+      "hit_rate": 0.56,
+      "hit_rate_ci_lo": 0.39,
+      "hit_rate_ci_hi": 0.71
     },
     {
       "name": "Mavropanos",
@@ -623,7 +823,11 @@
       "dc_matches": 18,
       "defcon_points": 36,
       "cost": 4.5,
-      "pts_per_m": 8.0
+      "pts_per_m": 8.0,
+      "apps": 31,
+      "hit_rate": 0.58,
+      "hit_rate_ci_lo": 0.41,
+      "hit_rate_ci_hi": 0.74
     },
     {
       "name": "Andr\u00e9",
@@ -635,7 +839,11 @@
       "dc_matches": 16,
       "defcon_points": 32,
       "cost": 5.2,
-      "pts_per_m": 6.15
+      "pts_per_m": 6.15,
+      "apps": 35,
+      "hit_rate": 0.46,
+      "hit_rate_ci_lo": 0.3,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "Collins",
@@ -647,7 +855,11 @@
       "dc_matches": 16,
       "defcon_points": 32,
       "cost": 4.9,
-      "pts_per_m": 6.53
+      "pts_per_m": 6.53,
+      "apps": 35,
+      "hit_rate": 0.46,
+      "hit_rate_ci_lo": 0.3,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "Virgil",
@@ -659,7 +871,11 @@
       "dc_matches": 16,
       "defcon_points": 32,
       "cost": 6.1,
-      "pts_per_m": 5.25
+      "pts_per_m": 5.25,
+      "apps": 38,
+      "hit_rate": 0.42,
+      "hit_rate_ci_lo": 0.28,
+      "hit_rate_ci_hi": 0.58
     },
     {
       "name": "J.Gomes",
@@ -671,7 +887,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 5.3,
-      "pts_per_m": 5.66
+      "pts_per_m": 5.66,
+      "apps": 35,
+      "hit_rate": 0.43,
+      "hit_rate_ci_lo": 0.28,
+      "hit_rate_ci_hi": 0.59
     },
     {
       "name": "Scott",
@@ -683,7 +903,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 4.9,
-      "pts_per_m": 6.12
+      "pts_per_m": 6.12,
+      "apps": 37,
+      "hit_rate": 0.41,
+      "hit_rate_ci_lo": 0.26,
+      "hit_rate_ci_hi": 0.57
     },
     {
       "name": "Keane",
@@ -695,7 +919,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 4.5,
-      "pts_per_m": 6.67
+      "pts_per_m": 6.67,
+      "apps": 33,
+      "hit_rate": 0.45,
+      "hit_rate_ci_lo": 0.3,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "M.Fernandes",
@@ -707,7 +935,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 5.5,
-      "pts_per_m": 5.45
+      "pts_per_m": 5.45,
+      "apps": 36,
+      "hit_rate": 0.42,
+      "hit_rate_ci_lo": 0.27,
+      "hit_rate_ci_hi": 0.58
     },
     {
       "name": "Ballard",
@@ -719,7 +951,11 @@
       "dc_matches": 15,
       "defcon_points": 30,
       "cost": 4.6,
-      "pts_per_m": 6.52
+      "pts_per_m": 6.52,
+      "apps": 29,
+      "hit_rate": 0.52,
+      "hit_rate_ci_lo": 0.34,
+      "hit_rate_ci_hi": 0.69
     },
     {
       "name": "Rice",
@@ -731,7 +967,11 @@
       "dc_matches": 14,
       "defcon_points": 28,
       "cost": 7.2,
-      "pts_per_m": 3.89
+      "pts_per_m": 3.89,
+      "apps": 36,
+      "hit_rate": 0.39,
+      "hit_rate_ci_lo": 0.25,
+      "hit_rate_ci_hi": 0.55
     },
     {
       "name": "Casemiro",
@@ -743,7 +983,11 @@
       "dc_matches": 14,
       "defcon_points": 28,
       "cost": 5.8,
-      "pts_per_m": 4.83
+      "pts_per_m": 4.83,
+      "apps": 34,
+      "hit_rate": 0.41,
+      "hit_rate_ci_lo": 0.26,
+      "hit_rate_ci_hi": 0.58
     },
     {
       "name": "Florentino",
@@ -755,7 +999,11 @@
       "dc_matches": 14,
       "defcon_points": 28,
       "cost": 5.0,
-      "pts_per_m": 5.6
+      "pts_per_m": 5.6,
+      "apps": 31,
+      "hit_rate": 0.45,
+      "hit_rate_ci_lo": 0.29,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "Chalobah",
@@ -767,7 +1015,11 @@
       "dc_matches": 14,
       "defcon_points": 28,
       "cost": 5.4,
-      "pts_per_m": 5.19
+      "pts_per_m": 5.19,
+      "apps": 34,
+      "hit_rate": 0.41,
+      "hit_rate_ci_lo": 0.26,
+      "hit_rate_ci_hi": 0.58
     },
     {
       "name": "Hill",
@@ -779,7 +1031,11 @@
       "dc_matches": 14,
       "defcon_points": 28,
       "cost": 4.2,
-      "pts_per_m": 6.67
+      "pts_per_m": 6.67,
+      "apps": 29,
+      "hit_rate": 0.48,
+      "hit_rate_ci_lo": 0.31,
+      "hit_rate_ci_hi": 0.66
     },
     {
       "name": "Mukiele",
@@ -791,7 +1047,11 @@
       "dc_matches": 13,
       "defcon_points": 26,
       "cost": 4.6,
-      "pts_per_m": 5.65
+      "pts_per_m": 5.65,
+      "apps": 32,
+      "hit_rate": 0.41,
+      "hit_rate_ci_lo": 0.26,
+      "hit_rate_ci_hi": 0.58
     },
     {
       "name": "Xhaka",
@@ -803,7 +1063,11 @@
       "dc_matches": 13,
       "defcon_points": 26,
       "cost": 5.1,
-      "pts_per_m": 5.1
+      "pts_per_m": 5.1,
+      "apps": 34,
+      "hit_rate": 0.38,
+      "hit_rate_ci_lo": 0.24,
+      "hit_rate_ci_hi": 0.55
     },
     {
       "name": "Bentancur",
@@ -815,7 +1079,11 @@
       "dc_matches": 13,
       "defcon_points": 26,
       "cost": 5.2,
-      "pts_per_m": 5.0
+      "pts_per_m": 5.0,
+      "apps": 26,
+      "hit_rate": 0.5,
+      "hit_rate_ci_lo": 0.32,
+      "hit_rate_ci_hi": 0.68
     },
     {
       "name": "Milenkovi\u0107",
@@ -827,7 +1095,11 @@
       "dc_matches": 13,
       "defcon_points": 26,
       "cost": 5.1,
-      "pts_per_m": 5.1
+      "pts_per_m": 5.1,
+      "apps": 38,
+      "hit_rate": 0.34,
+      "hit_rate_ci_lo": 0.21,
+      "hit_rate_ci_hi": 0.5
     },
     {
       "name": "Van Hecke",
@@ -839,7 +1111,11 @@
       "dc_matches": 13,
       "defcon_points": 26,
       "cost": 4.7,
-      "pts_per_m": 5.53
+      "pts_per_m": 5.53,
+      "apps": 36,
+      "hit_rate": 0.36,
+      "hit_rate_ci_lo": 0.22,
+      "hit_rate_ci_hi": 0.52
     },
     {
       "name": "Struijk",
@@ -851,7 +1127,11 @@
       "dc_matches": 13,
       "defcon_points": 26,
       "cost": 4.2,
-      "pts_per_m": 6.19
+      "pts_per_m": 6.19,
+      "apps": 34,
+      "hit_rate": 0.38,
+      "hit_rate_ci_lo": 0.24,
+      "hit_rate_ci_hi": 0.55
     },
     {
       "name": "Caicedo",
@@ -863,7 +1143,11 @@
       "dc_matches": 13,
       "defcon_points": 26,
       "cost": 5.7,
-      "pts_per_m": 4.56
+      "pts_per_m": 4.56,
+      "apps": 33,
+      "hit_rate": 0.39,
+      "hit_rate_ci_lo": 0.25,
+      "hit_rate_ci_hi": 0.56
     },
     {
       "name": "Richards",
@@ -875,7 +1159,11 @@
       "dc_matches": 13,
       "defcon_points": 26,
       "cost": 4.4,
-      "pts_per_m": 5.91
+      "pts_per_m": 5.91,
+      "apps": 33,
+      "hit_rate": 0.39,
+      "hit_rate_ci_lo": 0.25,
+      "hit_rate_ci_hi": 0.56
     }
   ],
   "position_summary": [
@@ -884,14 +1172,14 @@
       "players": 270,
       "returning_players": 141,
       "total_points": 1642,
-      "avg_points_returning": 11.6
+      "avg_points_returning": 11.65
     },
     {
       "pos": "MID",
       "players": 379,
       "returning_players": 118,
       "total_points": 1174,
-      "avg_points_returning": 9.9
+      "avg_points_returning": 9.95
     },
     {
       "pos": "FWD",
@@ -981,6 +1269,292 @@
     {
       "team": "AVL",
       "points": 64
+    }
+  ],
+  "top_cbit": [
+    {
+      "name": "Senesi",
+      "team_short": "BOU",
+      "pos": "DEF",
+      "minutes": 3288,
+      "cbit": 419,
+      "cbit90": 11.47
+    },
+    {
+      "name": "Tarkowski",
+      "team_short": "EVE",
+      "pos": "DEF",
+      "minutes": 3330,
+      "cbit": 376,
+      "cbit90": 10.16
+    },
+    {
+      "name": "Lacroix",
+      "team_short": "CRY",
+      "pos": "DEF",
+      "minutes": 3085,
+      "cbit": 370,
+      "cbit90": 10.79
+    },
+    {
+      "name": "Virgil",
+      "team_short": "LIV",
+      "pos": "DEF",
+      "minutes": 3420,
+      "cbit": 352,
+      "cbit90": 9.26
+    },
+    {
+      "name": "Est\u00e8ve",
+      "team_short": "BUR",
+      "pos": "DEF",
+      "minutes": 2933,
+      "cbit": 334,
+      "cbit90": 10.25
+    },
+    {
+      "name": "Andersen",
+      "team_short": "FUL",
+      "pos": "DEF",
+      "minutes": 2882,
+      "cbit": 329,
+      "cbit90": 10.27
+    },
+    {
+      "name": "Collins",
+      "team_short": "BRE",
+      "pos": "DEF",
+      "minutes": 2971,
+      "cbit": 319,
+      "cbit90": 9.66
+    },
+    {
+      "name": "Van Hecke",
+      "team_short": "BHA",
+      "pos": "DEF",
+      "minutes": 3210,
+      "cbit": 317,
+      "cbit90": 8.89
+    },
+    {
+      "name": "Mavropanos",
+      "team_short": "WHU",
+      "pos": "DEF",
+      "minutes": 2532,
+      "cbit": 313,
+      "cbit90": 11.13
+    },
+    {
+      "name": "Alderete",
+      "team_short": "SUN",
+      "pos": "DEF",
+      "minutes": 2797,
+      "cbit": 312,
+      "cbit90": 10.04
+    },
+    {
+      "name": "Richards",
+      "team_short": "CRY",
+      "pos": "DEF",
+      "minutes": 2825,
+      "cbit": 311,
+      "cbit90": 9.91
+    },
+    {
+      "name": "Milenkovi\u0107",
+      "team_short": "NFO",
+      "pos": "DEF",
+      "minutes": 3375,
+      "cbit": 311,
+      "cbit90": 8.29
+    },
+    {
+      "name": "Keane",
+      "team_short": "EVE",
+      "pos": "DEF",
+      "minutes": 2588,
+      "cbit": 302,
+      "cbit90": 10.5
+    },
+    {
+      "name": "Truffert",
+      "team_short": "BOU",
+      "pos": "DEF",
+      "minutes": 3378,
+      "cbit": 301,
+      "cbit90": 8.02
+    },
+    {
+      "name": "Struijk",
+      "team_short": "LEE",
+      "pos": "DEF",
+      "minutes": 2935,
+      "cbit": 297,
+      "cbit90": 9.11
+    }
+  ],
+  "top_cbit90": [
+    {
+      "name": "Senesi",
+      "team_short": "BOU",
+      "pos": "DEF",
+      "minutes": 3288,
+      "cbit": 419,
+      "cbit90": 11.47
+    },
+    {
+      "name": "Hill",
+      "team_short": "BOU",
+      "pos": "DEF",
+      "minutes": 2102,
+      "cbit": 260,
+      "cbit90": 11.13
+    },
+    {
+      "name": "Mavropanos",
+      "team_short": "WHU",
+      "pos": "DEF",
+      "minutes": 2532,
+      "cbit": 313,
+      "cbit90": 11.13
+    },
+    {
+      "name": "Ballard",
+      "team_short": "SUN",
+      "pos": "DEF",
+      "minutes": 2144,
+      "cbit": 264,
+      "cbit90": 11.08
+    },
+    {
+      "name": "Lacroix",
+      "team_short": "CRY",
+      "pos": "DEF",
+      "minutes": 3085,
+      "cbit": 370,
+      "cbit90": 10.79
+    },
+    {
+      "name": "Fofana",
+      "team_short": "CHE",
+      "pos": "DEF",
+      "minutes": 1718,
+      "cbit": 206,
+      "cbit90": 10.79
+    },
+    {
+      "name": "Botman",
+      "team_short": "NEW",
+      "pos": "DEF",
+      "minutes": 1834,
+      "cbit": 216,
+      "cbit90": 10.6
+    },
+    {
+      "name": "Keane",
+      "team_short": "EVE",
+      "pos": "DEF",
+      "minutes": 2588,
+      "cbit": 302,
+      "cbit90": 10.5
+    },
+    {
+      "name": "Bijol",
+      "team_short": "LEE",
+      "pos": "DEF",
+      "minutes": 1888,
+      "cbit": 219,
+      "cbit90": 10.44
+    },
+    {
+      "name": "Andersen",
+      "team_short": "FUL",
+      "pos": "DEF",
+      "minutes": 2882,
+      "cbit": 329,
+      "cbit90": 10.27
+    }
+  ],
+  "team_cbit": [
+    {
+      "team": "CRY",
+      "cbit": 2262
+    },
+    {
+      "team": "BUR",
+      "cbit": 2251
+    },
+    {
+      "team": "LEE",
+      "cbit": 2251
+    },
+    {
+      "team": "EVE",
+      "cbit": 2246
+    },
+    {
+      "team": "BOU",
+      "cbit": 2225
+    },
+    {
+      "team": "WHU",
+      "cbit": 2215
+    },
+    {
+      "team": "WOL",
+      "cbit": 2155
+    },
+    {
+      "team": "SUN",
+      "cbit": 2153
+    },
+    {
+      "team": "TOT",
+      "cbit": 2111
+    },
+    {
+      "team": "BRE",
+      "cbit": 2110
+    },
+    {
+      "team": "FUL",
+      "cbit": 2075
+    },
+    {
+      "team": "MUN",
+      "cbit": 2055
+    },
+    {
+      "team": "NFO",
+      "cbit": 2030
+    },
+    {
+      "team": "BHA",
+      "cbit": 1971
+    },
+    {
+      "team": "MCI",
+      "cbit": 1926
+    },
+    {
+      "team": "NEW",
+      "cbit": 1913
+    },
+    {
+      "team": "CHE",
+      "cbit": 1865
+    },
+    {
+      "team": "ARS",
+      "cbit": 1838
+    },
+    {
+      "team": "LIV",
+      "cbit": 1774
+    },
+    {
+      "team": "AVL",
+      "cbit": 1724
     }
   ]
 }

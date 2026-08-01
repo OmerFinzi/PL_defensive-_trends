@@ -10,12 +10,16 @@ sp_path = os.path.join(DOCS, "setpieces.json")
 setpieces = json.load(open(sp_path, encoding="utf-8")) if os.path.exists(sp_path) else None
 spg_path = os.path.join(DOCS, "setpieces_goals.json")
 spgoals = json.load(open(spg_path, encoding="utf-8")) if os.path.exists(spg_path) else None
+if spgoals is not None:
+    n = len(spgoals["teams"])
+    assert n == 20, f"setpieces_goals.json has {n} teams, expected 20 — check for a dropped/misspelled team from the manual Understat entry"
 
 HTML = r"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>Premier League Defensive Trends 2020/21 - 2025/26</title>
 <style>
 :root{
@@ -134,6 +138,12 @@ footer a{color:var(--accent)}
 .promo .n{font-weight:650;font-size:15px}
 .promo .s{font-size:12.5px;color:var(--ink-2);margin-top:4px}
 @media(max-width:860px){.grid2,.grid3{grid-template-columns:1fr}.kpis{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){
+  .card{padding:16px 0 12px}
+  .card>[id^="c_"]{overflow-x:auto;-webkit-overflow-scrolling:touch;padding:0 14px}
+  .card>[id^="c_"] svg{min-width:480px}
+  .chart-actions{right:20px}
+}
 </style>
 </head>
 <body>
@@ -215,12 +225,23 @@ footer a{color:var(--accent)}
       <div>
         <div class="card"><div id="c_dcpos"></div></div>
         <div class="card" style="margin-top:18px"><div id="c_dcteam"></div></div>
+        <p class="csub" style="margin-top:8px">Note: this ranks defensive <i>workload</i> banked into FPL points, not defensive <i>quality</i> &mdash; a busy, deep-defending side racks up DefCon points the same way a leaky one does. For a quality read, see clean sheets &amp; goals conceded above.</p>
       </div>
     </div>
 
     <h3 class="sec-h" style="margin-top:34px">Best budget DefCon value</h3>
     <p class="sec-sub">DefCon points per &pound;m of season-end price, for enablers priced &pound;5.5m or under. These are the cheap defenders and midfielders who quietly banked points all season.</p>
-    <div class="card"><div id="c_dcvalue"></div></div>
+    <div class="card" style="max-width:620px"><div id="c_dcvalue"></div></div>
+
+    <h3 class="sec-h" style="margin-top:34px">Total defensive actions (CBIT)</h3>
+    <p class="sec-sub">CBIT = clearances + blocks + interceptions + tackles &mdash; the raw defensive-actions count behind DefCon, independent of the DEF/MID/FWD scoring thresholds. Season totals, plus per-90 rates for busy starters.</p>
+    <div class="grid2" style="margin-top:20px">
+      <div><div class="card"><div id="c_cbittop"></div></div></div>
+      <div>
+        <div class="card"><div id="c_cbitteam"></div></div>
+        <div class="card" style="margin-top:18px"><div id="c_cbit90"></div></div>
+      </div>
+    </div>
 
     <h3 class="sec-h" style="margin-top:34px">Top 30 DefCon earners &mdash; full table</h3>
     <p class="sec-sub">Sortable. DC = total defensive contributions; DC/90 = per 90 minutes; Hits = matches reaching the DefCon threshold.</p>
@@ -259,8 +280,8 @@ footer a{color:var(--accent)}
       </div>
 
       <h3 class="sec-h" style="margin-top:34px">Set-piece efficiency &mdash; shots needed per goal</h3>
-      <p class="sec-sub">How many set-piece shots, on average, each team needs to score once &mdash; and how many their opponents need to score against them. Lower "to score" = more clinical; lower "to concede" = more porous defensively.</p>
-      <div class="card"><div id="c_spgeff"></div></div>
+      <p class="sec-sub">How many set-piece shots, on average, each team needs to score once &mdash; and how many their opponents need to score against them. Lower "to score" = more clinical; lower "to concede" = more porous defensively. <b>The gray whiskers are 95% confidence intervals</b> on the goal count behind each ratio (a handful of goals either way from a small sample) &mdash; hover a bar for the exact range. Where two teams' whiskers overlap heavily, treat them as statistically indistinguishable rather than reading the ranking literally; an arrow means the interval runs past the edge of the chart.</p>
+      <div class="card" style="max-width:620px"><div id="c_spgeff"></div></div>
     </div>
   </section>
 
@@ -321,11 +342,16 @@ function banner(svg,W,H,title,sub,legend){
   }
 }
 // ---------- line chart ----------
-function lineChart(sel,pts,{color,fmt=fmt1,pad=0.14,title,sub}){
+function lineChart(sel,pts,{color,fmt=fmt1,pad=0.14,title,sub,sdCapLo=0,sdCapHi=Infinity}){
   const W=440,H=250,mL=44,mR=18,mT=58,mB=40;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,role:"img"});
+  const hasSd=pts.some(p=>p.sd!=null);
   const ys=pts.map(p=>p.y);
-  let lo=Math.min(...ys),hi=Math.max(...ys);const sp=(hi-lo)||1;lo-=sp*pad;hi+=sp*pad;
+  // a rate/count can't physically go below 0 (or, for a share, above 1) —
+  // clamp the band so it never implies an impossible value
+  const sdLo=pts.map(p=>Math.max(sdCapLo,p.y-(p.sd||0))), sdHi=pts.map(p=>Math.min(sdCapHi,p.y+(p.sd||0)));
+  let lo=Math.min(...ys,...sdLo),hi=Math.max(...ys,...sdHi);const sp=(hi-lo)||1;
+  lo=Math.max(sdCapLo,lo-sp*pad);hi=Math.min(sdCapHi,hi+sp*pad);
   const X=i=>mL+(W-mL-mR)*i/(pts.length-1);
   const Y=v=>mT+(H-mT-mB)*(1-(v-lo)/(hi-lo));
   for(let g=0;g<=3;g++){const v=lo+(hi-lo)*g/3;const y=Y(v);
@@ -333,6 +359,13 @@ function lineChart(sel,pts,{color,fmt=fmt1,pad=0.14,title,sub}){
     const t=el("text",{x:mL-6,y:y+3,"text-anchor":"end",class:"axis-lbl"});t.textContent=fmt(v);svg.appendChild(t);}
   pts.forEach((p,i)=>{const t=el("text",{x:X(i),y:H-22,"text-anchor":"middle",class:"axis-lbl"});
     t.textContent=p.lab;svg.appendChild(t);});
+  if(hasSd){
+    // ±1 SD across that season's matches — how much spread sits behind the average
+    let bd=`M ${X(0)} ${Y(sdHi[0])}`; pts.forEach((p,i)=>{if(i)bd+=` L ${X(i)} ${Y(sdHi[i])}`;});
+    for(let i=pts.length-1;i>=0;i--)bd+=` L ${X(i)} ${Y(sdLo[i])}`;
+    bd+=' Z';
+    svg.appendChild(el("path",{d:bd,fill:color,"fill-opacity":0.12}));
+  }
   let d=`M ${X(0)} ${Y(ys[0])}`; pts.forEach((p,i)=>d+=` L ${X(i)} ${Y(p.y)}`);
   const area=d+` L ${X(pts.length-1)} ${Y(lo)} L ${X(0)} ${Y(lo)} Z`;
   const gid="g"+sel.replace(/\W/g,'');
@@ -340,19 +373,21 @@ function lineChart(sel,pts,{color,fmt=fmt1,pad=0.14,title,sub}){
   lg.appendChild(el("stop",{offset:"0%","stop-color":color,"stop-opacity":.20}));
   lg.appendChild(el("stop",{offset:"100%","stop-color":color,"stop-opacity":0}));
   defs.appendChild(lg);svg.appendChild(defs);
-  svg.appendChild(el("path",{d:area,fill:`url(#${gid})`}));
+  if(!hasSd)svg.appendChild(el("path",{d:area,fill:`url(#${gid})`}));
   svg.appendChild(el("path",{d,fill:"none",stroke:color,"stroke-width":2.4,"stroke-linejoin":"round","stroke-linecap":"round"}));
   pts.forEach((p,i)=>{
     svg.appendChild(el("circle",{cx:X(i),cy:Y(p.y),r:3.6,fill:cv('--surface'),stroke:color,"stroke-width":2}));
     const vt=el("text",{x:X(i),y:Y(p.y)-9,"text-anchor":"middle",class:"val-lbl"});vt.textContent=fmt(p.y);svg.appendChild(vt);
     const hit=el("rect",{x:X(i)-18,y:mT,width:36,height:H-mT-mB,fill:"transparent"});
-    hit.addEventListener("mousemove",e=>showTip(`<b>${p.full}</b><div class="row"><span>${p.name}</span><b>${fmt(p.y)}</b></div>`,e));
+    hit.addEventListener("mousemove",e=>{
+      const sdRow=p.sd!=null?`<div class="row"><span>±1 SD (across matches)</span><b>${fmt(p.sd)}</b></div>`:'';
+      showTip(`<b>${p.full}</b><div class="row"><span>${p.name}</span><b>${fmt(p.y)}</b></div>${sdRow}`,e);});
     hit.addEventListener("mouseleave",hideTip);svg.appendChild(hit);});
   banner(svg,W,H,title,sub);
   $(sel).appendChild(svg);
 }
 const seasons=L.map(r=>r.season);
-function mk(key,name,f=fmt1){return L.map(r=>({x:r.season,y:r[key],lab:r.season.slice(2),full:r.season,name}));}
+function mk(key,name,f=fmt1){return L.map(r=>({x:r.season,y:r[key],sd:r[key+'_sd'],lab:r.season.slice(2),full:r.season,name}));}
 
 // ---------- horizontal team bars (home/away CS) ----------
 function teamBars(sel,rows,title,sub){
@@ -495,11 +530,11 @@ function hbars(sel,rows,{value,label,color,valfmt=(v)=>v,rowH=26,mL=118,mR=48,ti
   banner(svg,W,H,title,sub,legend);
   $(sel).appendChild(svg);
 }
-function dcTip(r){return `<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>DefCon points</span><b>${r.defcon_points}</b></div><div class="row"><span>Threshold hits</span><b>${r.dc_matches} matches</b></div><div class="row"><span>Per 90</span><b>${r.dc90.toFixed(1)}</b></div><div class="row"><span>Price</span><b>&pound;${r.cost}m</b></div>`;}
+function dcTip(r){return `<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>DefCon points</span><b>${r.defcon_points}</b></div><div class="row"><span>Threshold hits</span><b>${r.dc_matches}/${r.apps} matches</b></div><div class="row"><span>Hit rate</span><b>${(r.hit_rate*100).toFixed(0)}% <span style="opacity:.6">(95% CI ${(r.hit_rate_ci_lo*100).toFixed(0)}&ndash;${(r.hit_rate_ci_hi*100).toFixed(0)}%)</span></b></div><div class="row"><span>Per 90</span><b>${r.dc90.toFixed(2)}</b></div><div class="row"><span>Price</span><b>&pound;${r.cost}m</b></div>`;}
 function renderDefcon(){
   if(!DEFCON)return;
   $("#defconSec").style.display="";
-  $("#defconIntro").innerHTML=`New this season, players bank <b>+2 points</b> in a match when their defensive work hits a threshold &mdash; <b>10+</b> clearances/blocks/interceptions/tackles for defenders, <b>12+</b> (also counting recoveries) for midfielders and forwards. Across ${DEFCON.meta.season}, <b>${DEFCON.meta.n_returning}</b> of ${DEFCON.meta.n_players} outfielders banked at least one DefCon return. ${DEFCON.meta.note}`;
+  $("#defconIntro").innerHTML=`New this season, players bank <b>+2 points</b> in a match when their defensive work hits a threshold &mdash; <b>10+</b> clearances/blocks/interceptions/tackles for defenders, <b>12+</b> (also counting recoveries) for midfielders and forwards. Across ${DEFCON.meta.season}, <b>${DEFCON.meta.n_returning}</b> of ${DEFCON.meta.n_players} outfielders banked at least one DefCon return. ${DEFCON.meta.note} Hover a player for their <b>threshold-hit rate</b> with a 95% confidence interval &mdash; with 30+ matches to draw on, the leaders' hit-rates are a real, repeatable role/floor, not a hot streak.`;
   const tp=DEFCON.top_points, lead=tp[0], ps=DEFCON.position_summary;
   const defP=ps.find(p=>p.pos==='DEF'), midP=ps.find(p=>p.pos==='MID');
   $("#defconKpis").innerHTML=
@@ -519,9 +554,21 @@ function renderDefcon(){
     color:cv('--s1'),rowH:22,mL:56,title:"Hardest-working defensive clubs",sub:"Total DefCon points across each squad",
     tip:r=>`<b>${r.team}</b><div class="row"><span>DefCon points</span><b>${r.points}</b></div>`});
   hbars("#c_dcvalue",DEFCON.best_value,{value:r=>r.pts_per_m,label:r=>`${r.name} (${r.team_short})`,
-    color:cv('--s3'),valfmt:v=>v.toFixed(1),
+    color:cv('--s3'),valfmt:v=>v.toFixed(2),
     title:"Best budget DefCon value",sub:"DefCon points per £m · enablers ≤ £5.5m",
-    tip:r=>`<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>Points / &pound;m</span><b>${r.pts_per_m.toFixed(1)}</b></div><div class="row"><span>DefCon points</span><b>${r.defcon_points}</b></div><div class="row"><span>Price</span><b>&pound;${r.cost}m</b></div>`});
+    tip:r=>`<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>Points / &pound;m</span><b>${r.pts_per_m.toFixed(2)}</b></div><div class="row"><span>DefCon points</span><b>${r.defcon_points}</b></div><div class="row"><span>Price</span><b>&pound;${r.cost}m</b></div>`});
+  const cbitTip=r=>`<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>CBIT (season)</span><b>${r.cbit}</b></div><div class="row"><span>CBIT / 90</span><b>${r.cbit90.toFixed(2)}</b></div><div class="row"><span>Minutes</span><b>${r.minutes}</b></div>`;
+  hbars("#c_cbittop",DEFCON.top_cbit,{value:r=>r.cbit,label:r=>`${r.name} (${r.team_short})`,
+    color:r=>cv(POSCOL[r.pos]),tip:cbitTip,
+    title:"Most CBIT actions — top 15",sub:"Clearances + blocks + interceptions + tackles, season total",
+    legend:[{label:'DEF',color:cv('--s1')},{label:'MID',color:cv('--s2')},{label:'FWD',color:cv('--s3')}]});
+  hbars("#c_cbitteam",DEFCON.team_cbit.slice(0,12),{value:r=>r.cbit,label:r=>r.team,
+    color:cv('--s1'),rowH:22,mL:56,title:"Team CBIT totals",sub:"Total defensive actions across each squad, 2025/26",
+    tip:r=>`<b>${r.team}</b><div class="row"><span>CBIT (season)</span><b>${r.cbit}</b></div>`});
+  hbars("#c_cbit90",DEFCON.top_cbit90,{value:r=>r.cbit90,label:r=>`${r.name} (${r.team_short})`,
+    color:r=>cv(POSCOL[r.pos]),valfmt:v=>v.toFixed(2),tip:cbitTip,
+    title:"Best CBIT rate — top 10",sub:"CBIT per 90 · players with 1,500+ minutes",
+    legend:[{label:'DEF',color:cv('--s1')},{label:'MID',color:cv('--s2')},{label:'FWD',color:cv('--s3')}]});
   // table
   const dcols=[["name","Player"],["team_short","Team"],["pos","Pos"],["minutes","Min"],
     ["dc","DC"],["dc90","DC/90"],["dc_matches","Hits"],["defcon_points","DefCon pts"],["cost","&pound;m"]];
@@ -533,8 +580,8 @@ function renderDefcon(){
       const v=r[c[0]];
       if(c[0]==="name")return `<td><b>${v}</b></td>`;
       if(c[0]==="pos")return `<td><span class="dot" style="display:inline-block;background:${cv(POSCOL[v])}"></span> ${v}</td>`;
-      if(c[0]==="dc90")return `<td>${v.toFixed(1)}</td>`;
-      if(c[0]==="cost")return `<td>${v.toFixed(1)}</td>`;
+      if(c[0]==="dc90")return `<td>${v.toFixed(2)}</td>`;
+      if(c[0]==="cost")return `<td>${v.toFixed(2)}</td>`;
       if(c[0]==="defcon_points")return `<td><b>${v}</b></td>`;
       return `<td>${v}</td>`;}).join('')+"</tr>";});
     $("#dctbl").innerHTML=h+"</tbody>";
@@ -546,9 +593,9 @@ function renderDefcon(){
 
 // ---------- draw everything (also used to re-theme) ----------
 function renderMain(){
-  lineChart("#c_cs",mk('cs_per_game','Clean sheets / game'),{color:cv('--s1'),title:"Clean sheets per game",sub:"Premier League — 2020/21 to 2025/26"});
-  lineChart("#c_goals",mk('goals_per_game','Goals / game'),{color:cv('--s2'),title:"Goals per game",sub:"Total goals ÷ matches, by season"});
-  lineChart("#c_btts",L.map(r=>({y:r.btts_rate,lab:r.season.slice(2),full:r.season,name:'BTTS'})),{color:cv('--s3'),fmt:pct,title:"Both teams to score",sub:"Share of PL matches, by season"});
+  lineChart("#c_cs",mk('cs_per_game','Clean sheets / game'),{color:cv('--s1'),title:"Clean sheets per game",sub:"2020/21–2025/26 · shaded = ±1 SD across matches",sdCapHi:2});
+  lineChart("#c_goals",mk('goals_per_game','Goals / game'),{color:cv('--s2'),title:"Goals per game",sub:"Total goals ÷ matches · shaded = ±1 SD across matches"});
+  lineChart("#c_btts",L.map(r=>({y:r.btts_rate,sd:r.btts_rate_sd,lab:r.season.slice(2),full:r.season,name:'BTTS'})),{color:cv('--s3'),fmt:pct,title:"Both teams to score",sub:"Share of matches · shaded = ±1 SD across matches",sdCapHi:1});
   teamBars("#c_teams",DATA.latest_table,"Who to trust at the back — 2025/26","Clean-sheet rate per team, home vs away");
   multiLine("#c_ha",[{name:"Home CS rate",color:cv('--s1'),data:L.map(r=>({y:r.home_cs_rate,lab:r.season.slice(2),full:r.season}))},{name:"Away CS rate",color:cv('--s2'),data:L.map(r=>({y:r.away_cs_rate,lab:r.season.slice(2),full:r.season}))}],pct,"Home advantage is back","Clean-sheet rate by season",[{label:'Home',color:cv('--s1')},{label:'Away',color:cv('--s2')}]);
   thirdsChart("#c_thirds","When clean sheets come","Avg clean sheets/game by third of season",[{label:'All seasons',color:cv('--s4')},{label:'2025/26',color:cv('--s1')}]);
@@ -589,7 +636,7 @@ function renderSP(){
     `<div class="kpi"><div class="v">${SP.notable_takers.length}</div><div class="l">Dual set-piece takers</div><div class="d up">corners + free kicks</div></div>`;
   spBars("#c_spteams",T,"Corners won vs conceded per game — "+SP.meta.latest,"Attacking vs defensive set-piece volume, by team");
   lineChart("#c_sptrend",sl.map(r=>({y:r.corners_pg,lab:r.season.slice(2),full:r.season,name:'Corners/match'})),
-    {color:cv('--s1'),fmt:v=>v.toFixed(1),title:"Corners per match — league trend",sub:"Both teams combined, 2020/21 to "+SP.meta.latest});
+    {color:cv('--s1'),fmt:v=>v.toFixed(2),title:"Corners per match — league trend",sub:"Both teams combined, 2020/21 to "+SP.meta.latest});
   $("#sp_notable").innerHTML=SP.notable_takers.map(r=>
     `<div class="promo"><div class="n">${r.name}</div><div class="s">${r.team}<br>${r.roles}</div></div>`).join('');
   // takers table
@@ -608,20 +655,30 @@ function renderSPG(){
   const eff=T.filter(r=>r.gf>=5&&r.shots_per_goal_for!=null).sort((a,b)=>a.shots_per_goal_for-b.shots_per_goal_for)[0];
   $("#spgIntro").innerHTML=`Goals scored and conceded from set pieces (<b>corners + set pieces + direct free kicks</b>; penalties excluded), ${SPG.meta.season}. Source: ${SPG.meta.source}. "Per goal" = set-piece shots taken per set-piece goal &mdash; a lower number means more clinical. ${SPG.meta.note}`;
   $("#spgKpis").innerHTML=
-    `<div class="kpi"><div class="v">${topFor.gf}</div><div class="l">Most set-piece goals &middot; ${topFor.team}</div><div class="d up">${topFor.shots_per_goal_for} SP shots per goal</div></div>`+
+    `<div class="kpi"><div class="v">${topFor.gf}</div><div class="l">Most set-piece goals &middot; ${topFor.team}</div><div class="d up">${topFor.shots_per_goal_for.toFixed(2)} SP shots per goal</div></div>`+
     `<div class="kpi"><div class="v">${topAg.ga}</div><div class="l">Most conceded &middot; ${topAg.team}</div><div class="d down">from set pieces</div></div>`+
-    (eff?`<div class="kpi"><div class="v">${eff.shots_per_goal_for}</div><div class="l">Most clinical &middot; ${eff.team}</div><div class="d up">SP shots per goal</div></div>`:``)+
+    (eff?`<div class="kpi"><div class="v">${eff.shots_per_goal_for.toFixed(2)}</div><div class="l">Most clinical &middot; ${eff.team}</div><div class="d up">SP shots per goal</div></div>`:``)+
     `<div class="kpi"><div class="v">${SPG.league.sp_goals}</div><div class="l">Set-piece goals, league-wide</div><div class="d up">from ${SPG.league.sp_shots} SP shots</div></div>`;
   const forRows=[...T].sort((a,b)=>b.gf-a.gf);
   const agRows=[...T].sort((a,b)=>b.ga-a.ga);
   hbars("#c_spgfor",forRows,{value:r=>r.gf,label:r=>r.team,color:cv('--s3'),
     title:"Set-piece goals SCORED — "+SPG.meta.season,sub:"Corners + set pieces + direct free kicks (no penalties)",
-    tip:r=>`<b>${r.team}</b><div class="row"><span>Set-piece goals</span><b>${r.gf}</b></div><div class="row"><span>Set-piece shots</span><b>${r.sf}</b></div><div class="row"><span>Shots per goal</span><b>${r.shots_per_goal_for}</b></div><div class="row"><span>Set-piece xG</span><b>${r.xgf}</b></div>`});
+    tip:r=>`<b>${r.team}</b><div class="row"><span>Set-piece goals</span><b>${r.gf}</b></div><div class="row"><span>Set-piece shots</span><b>${r.sf}</b></div><div class="row"><span>Shots per goal</span><b>${r.shots_per_goal_for.toFixed(2)}</b></div><div class="row"><span>Set-piece xG</span><b>${r.xgf}</b></div>`});
   hbars("#c_spgagainst",agRows,{value:r=>r.ga,label:r=>r.team,color:cv('--s2'),
     title:"Set-piece goals CONCEDED — "+SPG.meta.season,sub:"Defensive set-piece exposure (no penalties)",
-    tip:r=>`<b>${r.team}</b><div class="row"><span>Conceded (set pieces)</span><b>${r.ga}</b></div><div class="row"><span>Set-piece shots faced</span><b>${r.sa}</b></div><div class="row"><span>Shots per goal conceded</span><b>${r.shots_per_goal_against}</b></div><div class="row"><span>Set-piece xG against</span><b>${r.xga}</b></div>`});
+    tip:r=>`<b>${r.team}</b><div class="row"><span>Conceded (set pieces)</span><b>${r.ga}</b></div><div class="row"><span>Set-piece shots faced</span><b>${r.sa}</b></div><div class="row"><span>Shots per goal conceded</span><b>${r.shots_per_goal_against.toFixed(2)}</b></div><div class="row"><span>Set-piece xG against</span><b>${r.xga}</b></div>`});
   const effRows=[...T].filter(r=>r.shots_per_goal_for!=null).sort((a,b)=>a.shots_per_goal_for-b.shots_per_goal_for);
-  effBars("#c_spgeff",effRows,"Set-piece shots needed per goal — "+SPG.meta.season,"Sorted by most clinical first (lowest \"to score\")");
+  effBars("#c_spgeff",effRows,"Set-piece shots needed per goal — "+SPG.meta.season,"Most clinical first · whiskers = 95% CI");
+}
+function whisker(svg,X,lo,hi,max,y,color){
+  const capH=4.4, x1=X(Math.max(0,lo)), clipped=hi>max, x2=clipped?X(max)-2:X(hi);
+  svg.appendChild(el("line",{x1,x2,y1:y,y2:y,stroke:color,"stroke-width":1.3,"stroke-linecap":"round",opacity:.75}));
+  svg.appendChild(el("line",{x1,x2:x1,y1:y-capH/2,y2:y+capH/2,stroke:color,"stroke-width":1.3,opacity:.75}));
+  if(clipped){
+    svg.appendChild(el("path",{d:`M ${x2-3} ${y-3.2} L ${x2+2} ${y} L ${x2-3} ${y+3.2}`,fill:"none",stroke:color,"stroke-width":1.3,"stroke-linecap":"round","stroke-linejoin":"round",opacity:.75}));
+  }else{
+    svg.appendChild(el("line",{x1:x2,x2,y1:y-capH/2,y2:y+capH/2,stroke:color,"stroke-width":1.3,opacity:.75}));
+  }
 }
 function effBars(sel,rows,title,sub){
   const W=560,rowH=24,mT=74,mL=104,mR=54,H=mT+rows.length*rowH+22;
@@ -631,19 +688,21 @@ function effBars(sel,rows,title,sub){
   rows.forEach((r,i)=>{
     const y=mT+i*rowH;
     const t=el("text",{x:mL-8,y:y+rowH/2+1,"text-anchor":"end",class:"val-lbl"});t.textContent=r.team;svg.appendChild(t);
-    const tipHtml=`<b>${r.team}</b><div class="row"><span>Shots per goal &mdash; to score</span><b>${r.shots_per_goal_for}</b></div><div class="row"><span>Shots per goal &mdash; to concede</span><b>${r.shots_per_goal_against!=null?r.shots_per_goal_against:'&mdash;'}</b></div>`;
+    const tipHtml=`<b>${r.team}</b><div class="row"><span>Shots per goal &mdash; to score</span><b>${r.shots_per_goal_for.toFixed(2)} <span style="opacity:.6">(95% CI ${r.sp_for_ci_lo.toFixed(1)}&ndash;${r.sp_for_ci_hi.toFixed(1)}, n=${r.gf} goals)</span></b></div><div class="row"><span>Shots per goal &mdash; to concede</span><b>${r.shots_per_goal_against!=null?`${r.shots_per_goal_against.toFixed(2)} <span style="opacity:.6">(95% CI ${r.sp_against_ci_lo.toFixed(1)}&ndash;${r.sp_against_ci_hi.toFixed(1)}, n=${r.ga} goals)</span>`:'&mdash;'}</b></div>`;
     const w1=Math.max(2,X(r.shots_per_goal_for)-mL);
     const rc1=el("rect",{x:mL,y:y+3,width:w1,height:7,rx:3,fill:cv('--s3')});
     rc1.addEventListener("mousemove",e=>showTip(tipHtml,e));rc1.addEventListener("mouseleave",hideTip);svg.appendChild(rc1);
-    const vl1=el("text",{x:mL+w1+6,y:y+3+6,class:"axis-lbl"});vl1.textContent=r.shots_per_goal_for;svg.appendChild(vl1);
+    const vl1=el("text",{x:mL+w1+6,y:y+3+6,class:"axis-lbl"});vl1.textContent=r.shots_per_goal_for.toFixed(2);svg.appendChild(vl1);
+    if(r.sp_for_ci_lo!=null)whisker(svg,X,r.sp_for_ci_lo,r.sp_for_ci_hi,max,y+6.5,cv('--ink-2'));
     if(r.shots_per_goal_against!=null){
       const w2=Math.max(2,X(r.shots_per_goal_against)-mL);
       const rc2=el("rect",{x:mL,y:y+13,width:w2,height:7,rx:3,fill:cv('--s2')});
       rc2.addEventListener("mousemove",e=>showTip(tipHtml,e));rc2.addEventListener("mouseleave",hideTip);svg.appendChild(rc2);
-      const vl2=el("text",{x:mL+w2+6,y:y+13+6,class:"axis-lbl"});vl2.textContent=r.shots_per_goal_against;svg.appendChild(vl2);
+      const vl2=el("text",{x:mL+w2+6,y:y+13+6,class:"axis-lbl"});vl2.textContent=r.shots_per_goal_against.toFixed(2);svg.appendChild(vl2);
+      if(r.sp_against_ci_lo!=null)whisker(svg,X,r.sp_against_ci_lo,r.sp_against_ci_hi,max,y+16.5,cv('--ink-2'));
     }
   });
-  banner(svg,W,H,title,sub,[{label:'To score',color:cv('--s3')},{label:'To concede',color:cv('--s2')}]);
+  banner(svg,W,H,title,sub,[{label:'To score',color:cv('--s3')},{label:'To concede',color:cv('--s2')},{label:'95% CI',color:cv('--ink-2')}]);
   $(sel).appendChild(svg);
 }
 
@@ -662,6 +721,21 @@ function svgToCanvas(svg,scale=3){
     const clone=svg.cloneNode(true);
     clone.setAttribute('xmlns','http://www.w3.org/2000/svg');
     clone.setAttribute('width',w); clone.setAttribute('height',h);
+    // exported SVG is serialized standalone — it has no access to the page's
+    // <style> rules or CSS custom properties, so bake the current theme's
+    // resolved colors/fonts in directly (otherwise text falls back to black serif).
+    const FONT='system-ui,-apple-system,"Segoe UI",sans-serif';
+    const style=document.createElementNS(NS,'style');
+    style.textContent=`
+      text{font-family:${FONT}}
+      .chart-h{fill:${cv('--ink')};font-size:15.5px;font-weight:720;letter-spacing:-.01em}
+      .chart-sub{fill:${cv('--muted')};font-size:11.5px}
+      .lgnd{fill:${cv('--ink-2')};font-size:11.5px;font-weight:550}
+      .wm{fill:${cv('--muted')};font-size:11.5px;font-weight:750;opacity:.5;letter-spacing:.02em}
+      .axis-lbl{fill:${cv('--muted')};font-size:11px}
+      .val-lbl{fill:${cv('--ink')};font-size:11px;font-weight:600}
+    `;
+    clone.insertBefore(style,clone.firstChild);
     const xml=new XMLSerializer().serializeToString(clone);
     const img=new Image();
     img.onload=()=>{

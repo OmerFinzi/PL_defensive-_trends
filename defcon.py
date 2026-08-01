@@ -51,16 +51,40 @@ p["team_short"] = p["team"].map(teams["short_name"])
 p["cost"] = p["now_cost"] / 10.0
 p["name"] = p["web_name"]
 p["dc"] = p["defensive_contribution"].astype(int)
-p["dc90"] = p["defensive_contribution_per_90"].astype(float)
+p["dc90"] = p["defensive_contribution_per_90"].astype(float).round(2)
 p["dc_matches"] = p["dc_matches"].astype(int)
 p["defcon_points"] = p["defcon_points"].astype(int)
 p["pts_per_m"] = (p["defcon_points"] / p["cost"]).round(2)
+p["apps"] = p["apps"].astype(int)
+
+def wilson_ci(hits, n, z=1.96):
+    """95% Wilson score interval on a hit-rate — how consistently a player
+    reaches the DefCon threshold, not just their raw point total."""
+    if n == 0:
+        return 0.0, 0.0
+    phat = hits / n
+    denom = 1 + z * z / n
+    center = phat + z * z / (2 * n)
+    adj = z * np.sqrt(phat * (1 - phat) / n + z * z / (4 * n * n))
+    return round(max(0, (center - adj) / denom), 2), round(min(1, (center + adj) / denom), 2)
+
+p["hit_rate"] = np.where(p["apps"] > 0, (p["dc_matches"] / p["apps"]).round(2), 0.0)
+_ci = [wilson_ci(h, n) for h, n in zip(p["dc_matches"], p["apps"])]
+p["hit_rate_ci_lo"] = [c[0] for c in _ci]
+p["hit_rate_ci_hi"] = [c[1] for c in _ci]
+
+# Raw CBIT (clearances + blocks + interceptions + tackles) — the underlying
+# defensive-actions stat, independent of the DEF/MID/FWD DefCon point thresholds.
+p["cbit"] = (p["clearances_blocks_interceptions"] + p["tackles"]).astype(int)
+p["cbit90"] = np.where(p["minutes"] > 0, p["cbit"] / p["minutes"] * 90, 0).round(2)
 
 def rows(df, cols):
     return df[cols].to_dict(orient="records")
 
 COLS = ["name", "team_short", "pos", "minutes", "dc", "dc90",
-        "dc_matches", "defcon_points", "cost", "pts_per_m"]
+        "dc_matches", "defcon_points", "cost", "pts_per_m", "apps",
+        "hit_rate", "hit_rate_ci_lo", "hit_rate_ci_hi"]
+CBIT_COLS = ["name", "team_short", "pos", "minutes", "cbit", "cbit90"]
 
 # Leaderboards
 top_points = p.sort_values(["defcon_points", "dc"], ascending=False).head(15)
@@ -78,7 +102,7 @@ for pos in ["DEF", "MID", "FWD"]:
         "pos": pos, "players": int(len(sub)),
         "returning_players": int(len(hitters)),
         "total_points": int(sub["defcon_points"].sum()),
-        "avg_points_returning": round(float(hitters["defcon_points"].mean()) if len(hitters) else 0, 1),
+        "avg_points_returning": round(float(hitters["defcon_points"].mean()) if len(hitters) else 0, 2),
     })
 
 # Team DefCon: total points banked by each club's players
@@ -86,6 +110,20 @@ team_tot = (p.groupby("team_short")["defcon_points"].sum()
             .sort_values(ascending=False).reset_index())
 team_defcon = [{"team": r.team_short, "points": int(r.defcon_points)}
                for r in team_tot.itertuples()]
+
+# Raw CBIT leaderboards
+top_cbit = p.sort_values("cbit", ascending=False).head(15)
+top_cbit90 = p[p["minutes"] >= 1500].sort_values("cbit90", ascending=False).head(10)
+team_cbit_tot = (p.groupby("team_short")["cbit"].sum()
+                 .sort_values(ascending=False).reset_index())
+team_cbit = [{"team": r.team_short, "cbit": int(r.cbit)}
+             for r in team_cbit_tot.itertuples()]
+
+# Pipeline safety net: a silent team-name mismatch in a merge/groupby would
+# quietly shrink a "per club" table instead of erroring. The Premier League
+# always has exactly 20 clubs, so fail loudly if any per-team table doesn't.
+for _name, _tbl in [("team_defcon", team_defcon), ("team_cbit", team_cbit)]:
+    assert len(_tbl) == 20, f"{_name} has {len(_tbl)} teams, expected 20 — check team_short mapping"
 
 payload = {
     "meta": {
@@ -101,6 +139,9 @@ payload = {
     "table": rows(table, COLS),
     "position_summary": pos_summary,
     "team_defcon": team_defcon,
+    "top_cbit": rows(top_cbit, CBIT_COLS),
+    "top_cbit90": rows(top_cbit90, CBIT_COLS),
+    "team_cbit": team_cbit,
 }
 with open(os.path.join(DOCS, "defcon.json"), "w", encoding="utf-8") as f:
     json.dump(payload, f, indent=2)
@@ -117,4 +158,10 @@ for r in pos_summary:
 print("\nTop 5 teams by DefCon points banked:")
 for r in team_defcon[:5]:
     print(f"  {r['team']}: {r['points']}")
+print("\nTop 5 players by raw CBIT (season total):")
+for r in payload["top_cbit"][:5]:
+    print(f"  {r['name']:<14} {r['team_short']} {r['pos']}  {r['cbit']} CBIT ({r['cbit90']}/90, {r['minutes']} min)")
+print("\nTop 5 CBIT/90 (min 1500 minutes):")
+for r in payload["top_cbit90"][:5]:
+    print(f"  {r['name']:<14} {r['team_short']} {r['pos']}  {r['cbit90']}/90 ({r['cbit']} CBIT, {r['minutes']} min)")
 print("\nWrote docs/defcon.json")

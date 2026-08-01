@@ -73,6 +73,11 @@ for y in seasons:
         "draw_rate": round(s["draw"].mean(), 3),
         "home_ppg": round((s["home_win"] * 3 + s["draw"]).mean(), 3),
         "away_ppg": round((s["away_win"] * 3 + s["draw"]).mean(), 3),
+        # match-level standard deviation behind each season average (these are
+        # means over ~380 per-match observations, so that's the natural spread)
+        "cs_per_game_sd": round((s["home_cs"] + s["away_cs"]).std(), 2),
+        "goals_per_game_sd": round(s["total_goals"].std(), 2),
+        "btts_rate_sd": round(s["btts"].std(), 2),
     })
 league_df = pd.DataFrame(league)
 
@@ -105,6 +110,7 @@ team_all.to_csv(os.path.join(OUT, "team_season_defence.csv"), index=False)
 
 def team_table(y):
     t = team_defence(m[m["start_year"] == y]).reset_index()
+    assert len(t) == 20, f"{season_label(y)} team table has {len(t)} teams, expected 20 — check Home/Away Team naming in data/epl-{y}.csv"
     t = t.sort_values("cs_rate", ascending=False)
     return [{
         "team": r.team, "games": int(r.games), "clean_sheets": int(r.clean_sheets),

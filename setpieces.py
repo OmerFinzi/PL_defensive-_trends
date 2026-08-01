@@ -51,6 +51,7 @@ for path in sorted(glob.glob(os.path.join(FD, "E0_*.csv"))):
     away = df.groupby("AwayTeam").agg(ag=("AC", "size"), af=("AC", "sum"), aa=("HC", "sum"))
     t = home.join(away, how="outer").fillna(0)
     t.index = [canon(x) for x in t.index]
+    assert len(t) == 20, f"{season_label(year)} corners table has {len(t)} teams, expected 20 — check the CANON name mapping"
     t["games"] = t.hg + t.ag
     t["cf"] = t.hf + t.af            # corners won (attacking)
     t["ca"] = t.ha + t.aa            # corners conceded (defensive)
@@ -90,6 +91,7 @@ for tid, tname in teams.items():
         "fk_taker": first_taker(tid, "direct_freekicks_order"),
     })
 taker_rows.sort(key=lambda r: r["team"])
+assert len(taker_rows) == 20, f"taker_rows has {len(taker_rows)} teams, expected 20 — check data/fpl_2025_26/teams.csv"
 
 # Notable takers: players who are the #1 taker for BOTH corners and direct FKs
 notable = []

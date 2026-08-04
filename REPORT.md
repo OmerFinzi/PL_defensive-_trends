@@ -1,7 +1,7 @@
 # Premier League Defensive Trends — Findings Report
 
 **Window:** 2020/21 → 2025/26 (six completed seasons, 2,280 matches)
-**Sources:** [fixturedownload.com](https://fixturedownload.com) EPL results (§1–6) · official FPL stats via the [vaastav archive](https://github.com/vaastav/Fantasy-Premier-League) for 2025/26 DefCon (§7) · [football-data.co.uk](https://www.football-data.co.uk) corners + official FPL set-piece orders (§8)
+**Sources:** [fixturedownload.com](https://fixturedownload.com) EPL results (§1–7) · official FPL stats via the [vaastav archive](https://github.com/vaastav/Fantasy-Premier-League) for 2025/26 DefCon (§8) · [football-data.co.uk](https://www.football-data.co.uk) corners + official FPL set-piece orders (§9)
 **Updated:** for the 2025/26 season
 
 ---
@@ -21,7 +21,52 @@ The story is a spike and a reversal. **2023/24 was the peak of an attacking era*
 
 Across the whole window the clean-sheet trend is still gently **negative** (≈ −0.023 clean sheets/game per season), so this is a *recovery within a longer attacking drift* rather than a return to low-scoring football. For FPL that argues for treating premium defensive assets as more viable in 2025/26 than in the 2023/24 chaos — but with selectivity, not a blanket "load up on defenders."
 
-## 2. Who to trust at the back in 2025/26
+## 2. How many goals in a match? Poisson, not a bell curve
+
+Averages hide shape. Across all 2,280 matches the mean is **2.89 goals** with an SD of 1.68 — but goals per match are a **count**: discrete, never negative, and skewed right. The distribution most people picture is the normal curve; the correct one is **Poisson**, and the difference is not academic.
+
+The evidence is direct. Poisson's defining property is that variance equals mean, and here the **variance-to-mean ratio is 0.98** against a predicted 1.00. Skewness is **+0.53**, where a normal distribution requires 0. Fitting both by chi-square, pooled over all six seasons:
+
+| Fit | χ² (df) | p | Verdict |
+|---|:---:|:---:|---|
+| Normal (Gaussian) | 62.6 (6) | <0.001 | decisively rejected |
+| **Poisson** | **2.4 (7)** | **0.936** | consistent with the data |
+
+Two visible failures of the bell curve. It puts **2.19% of its probability mass below zero goals** — about 50 impossible matches across the window — which Poisson cannot do by construction. And it misallocates in the middle: it predicts 12.7% of matches finishing with exactly one goal when 15.6% actually do, while over-predicting 3–4 goal games.
+
+**Per season** (each fitted separately; p-values are what make the two models comparable, since tail-pooling leaves them with different degrees of freedom):
+
+| Season | Matches | Mean | SD | Var/mean | Normal χ² (df) | p | Poisson χ² (df) | p | Better |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|---|
+| 2020/21 | 380 | 2.69 | 1.76 | 1.14 | 30.1 (5) | <0.001 | 10.5 (6) | 0.105 | Poisson |
+| 2021/22 | 380 | 2.82 | 1.63 | 0.94 | 8.7 (4) | 0.069 | 6.0 (6) | 0.426 | Poisson |
+| 2022/23 | 380 | 2.85 | 1.79 | 1.12 | 21.6 (5) | <0.001 | 4.8 (6) | 0.565 | Poisson |
+| 2023/24 | 380 | 3.28 | 1.66 | 0.84 | 6.4 (5) | 0.267 | 6.2 (7) | 0.519 | Poisson |
+| 2024/25 | 380 | 2.93 | 1.62 | 0.89 | 11.7 (5) | 0.039 | 4.0 (6) | 0.679 | Poisson |
+| **2025/26** | 380 | 2.75 | 1.57 | 0.90 | 4.2 (4) | 0.374 | 8.9 (6) | 0.178 | *normal* |
+
+Poisson fits better in five of six seasons, and is never *rejected* in any of them. But note the honest exception: **in 2025/26 alone the normal curve fits slightly better** (p 0.374 vs 0.178). That is not evidence the model changed — a single season is only 380 matches, which has little power to separate two similar-looking distributions, and 2025/26 is the least dispersed season in the window (SD 1.57). It is exactly the kind of result that would be over-read if the pooled fit weren't there to anchor it. The stable reading is the pooled one, where 2,280 matches make the verdict emphatic.
+
+**Why this matters for FPL.** If goals conceded follow a Poisson process with mean λ, then a clean sheet is just P(0) = e^−λ — so a team's clean-sheet rate is predictable from its goals-conceded average alone, with nothing else fitted. Tested against all 120 team-seasons in this window, that predicts clean-sheet rate to within **3.7 percentage points** on average (correlation 0.902, bias −0.6pp). Arsenal conceded 0.71 per game in 2025/26, which implies a 49.1% clean-sheet rate; they actually recorded 50.0%. This is the practical payoff: you do not need a clean-sheet model, only a goals-conceded estimate, and the conversion is one exponential.
+
+### Most common scorelines
+
+46 distinct scorelines were actually recorded. The top of the list, in **home–away** order:
+
+| Scoreline | Matches | Share | | Scoreline | Matches | Share |
+|---|:---:|:---:|---|---|:---:|:---:|
+| **1–1** | 250 | **10.96%** | | 2–2 | 131 | 5.75% |
+| 1–0 | 189 | 8.29% | | 0–0 | 129 | 5.66% |
+| 2–1 | 187 | 8.20% | | 0–2 | 126 | 5.53% |
+| 0–1 | 167 | 7.32% | | 3–1 | 111 | 4.87% |
+| 1–2 | 159 | 6.97% | | 3–0 | 103 | 4.52% |
+| 2–0 | 154 | 6.75% | | 1–3 | 71 | 3.11% |
+
+**1–1 is the single most likely result in a Premier League match**, at nearly 11% — and it was the modal scoreline in five of the six seasons (2022/23 was the exception, when 1–0 led on 12.1%). Note that only about one match in eighteen is a 0–0.
+
+Orientation is deliberate: scorelines are kept home–away rather than collapsed by margin, because **the gap between a result and its mirror image *is* home advantage**. Every mirrored pair leans home: 1–0 occurred 189 times against 167 for 0–1, 2–1 187 times against 159 for 1–2, and 2–0 154 times against 126 for 0–2. Collapsing them into "1-goal win" would erase the effect entirely.
+
+## 3. Who to trust at the back in 2025/26
 
 Top defences by clean-sheet rate:
 
@@ -36,7 +81,7 @@ Top defences by clean-sheet rate:
 
 **Arsenal are in a tier of their own** — a 50% clean-sheet rate and 0.71 goals conceded per game is the best defensive season **since 2021/22**, though not the best of the window: Man City and Liverpool both managed 21 clean sheets (55%) at 0.68 conceded that year, so Arsenal's 2025/26 ranks third of the 120 team-seasons here. Man City are the only other side clearing a 40% clean-sheet rate this season. After the top two there is a **sharp cliff**: the third-best defence (Crystal Palace) is already down at 32% and conceding roughly one-and-a-third per game. The practical FPL read: the two "set-and-forget" defensive sources are Arsenal and City; everyone else is a rotation/fixture play, not a season-long lock.
 
-## 3. The home clean-sheet edge: real, but not a trend
+## 4. The home clean-sheet edge: real, but not a trend
 
 Two different things get called "home advantage" here, and they behave differently — worth separating, because conflating them overstates the case.
 
@@ -46,7 +91,7 @@ Measured in **clean sheets**, which is what this project actually plots, there i
 
 So the honest read: home fixtures are the better clean-sheet bet in 2025/26 (28% vs 23%), and in five of six seasons overall — but this is a modest, noisy edge that reversed as recently as last season, not a durable pattern to lean on hard. Use it as a tiebreak between similar defensive assets, not as a primary signal.
 
-## 4. Momentum: who tightened up, who fell apart
+## 5. Momentum: who tightened up, who fell apart
 
 Change in goals conceded per game, **2025/26 vs 2024/25**:
 
@@ -58,11 +103,11 @@ Change in goals conceded per game, **2025/26 vs 2024/25**:
 
 Momentum is an FPL edge because it front-runs price and template moves. Brighton's sharp tightening and Spurs' improvement are the kind of under-owned defensive stories worth acting on early; **Liverpool's step back** is the most notable decline among the traditional big sides.
 
-## 5. When clean sheets come
+## 6. When clean sheets come
 
-Averaging clean sheets per game by third of the season (Early GW1–12, Mid GW13–26, Late GW27–38) shows only mild variation across the campaign — there is no single "defensive window" that dominates. The bigger lever for timing defensive investment is **fixtures and home/away** (Sections 2–3) rather than the calendar third.
+Averaging clean sheets per game by third of the season (Early GW1–12, Mid GW13–26, Late GW27–38) shows only mild variation across the campaign — there is no single "defensive window" that dominates. The bigger lever for timing defensive investment is **fixtures and home/away** (Sections 3–4) rather than the calendar third.
 
-## 6. Promoted sides
+## 7. Promoted sides
 
 | Team | CS rate | Conceded/gm | Clean sheets |
 |------|:---:|:---:|:---:|
@@ -72,7 +117,7 @@ Averaging clean sheets per game by third of the season (Early GW1–12, Mid GW13
 
 **Sunderland were the standout newcomer defensively** — a 29% clean-sheet rate put them level with established mid-table sides and made their cheap defenders genuine early-season value. Leeds were serviceable; Burnley leaked heavily (nearly two per game) and were an FPL defensive avoid.
 
-## 7. DefCon — the new 2025/26 defensive-points metric (player-level)
+## 8. DefCon — the new 2025/26 defensive-points metric (player-level)
 
 *Source note: this section is player-level and comes from a **different source** to the sections above — official FPL season-end stats via the vaastav archive, not the results feed. A player banks +2 in a match when defensive contributions reach the threshold (DEF ≥ 10 CBIT; MID/FWD ≥ 12 including recoveries). GKs excluded.*
 
@@ -95,7 +140,7 @@ Averaging clean sheets per game by third of the season (Early GW1–12, Mid GW13
 
 **FPL takeaway:** DefCon rewards a distinct player profile from clean sheets. The elite-defence pick (Arsenal/City assets) chases clean-sheet points; the DefCon pick chases *volume of defensive actions*, which favours ball-winning defenders and holding midfielders at busy, deeper-defending clubs — often much cheaper. A balanced squad can target both.
 
-## 8. Set pieces — corners & free kicks (penalties excluded)
+## 9. Set pieces — corners & free kicks (penalties excluded)
 
 *Source note: corner counts (for & against) come from [football-data.co.uk](https://www.football-data.co.uk) match data; designated set-piece takers come from the official FPL set-piece orders. **Penalties are excluded** at the user's request. Corners are used as the reliable, open-play set-piece **volume** measure.*
 
@@ -136,7 +181,7 @@ League-wide: **243 set-piece goals from 2,481 set-piece shots** (~10.2 shots per
 
 The genuinely large gaps are at the bottom. **Brentford and Burnley manage only 4 set-piece goals each**, needing 24–26 shots per goal — roughly **3.5× less efficient** than Arsenal, a difference wide enough to survive the uncertainty. And efficiency clearly diverges from volume: Newcastle and Man City generate plenty of set-piece shots (158 and 141) but convert poorly (12.2 and 12.8 shots/goal), suggesting delivery quality matters more than sheer quantity.
 
-On the defensive side, **Bournemouth's 18 conceded** stands out as a genuine defensive-set-piece weakness — worth cross-referencing against their overall clean-sheet numbers in §2. The fewest conceded is **Brentford with 6**, with Arsenal next on 7. Arsenal's set-piece defence is best understood as **volume suppression rather than resistance**: they face by far the fewest set-piece shots in the league (71), but once a shot comes their per-shot resistance is only mid-table — 10.1 shots needed per goal conceded ranks 10th of 20.
+On the defensive side, **Bournemouth's 18 conceded** stands out as a genuine defensive-set-piece weakness — worth cross-referencing against their overall clean-sheet numbers in §3. The fewest conceded is **Brentford with 6**, with Arsenal next on 7. Arsenal's set-piece defence is best understood as **volume suppression rather than resistance**: they face by far the fewest set-piece shots in the league (71), but once a shot comes their per-shot resistance is only mid-table — 10.1 shots needed per goal conceded ranks 10th of 20.
 
 **Efficiency, every team — set-piece shots needed per goal (lower = better):**
 
@@ -173,8 +218,8 @@ Known limits, stated plainly:
 
 - **No set-piece scorer attribution.** Set-piece goals are **club totals** from Understat shot data; set-piece *takers* come from FPL's designated-taker orders. The two are never joined, so this report does not claim who scored a given set-piece goal.
 - **The Understat pull is the one non-reproducible input** from files committed here — rerun `fetch_setpiece_goals.py` from a normal network connection to regenerate it.
-- **Efficiency ratios on single-digit goal counts are noisy.** Every shots-per-goal figure carries a 95% Byar Poisson interval; where intervals overlap, treat the clubs as tied rather than ranked. Several plausible-looking gaps in §8 do not survive this test, and the text says so where that applies.
-- **Cross-position defensive-action comparisons need care** — see the DefCon note in §7 and the README method section. The positions differ on both which actions count and what threshold they must clear.
+- **Efficiency ratios on single-digit goal counts are noisy.** Every shots-per-goal figure carries a 95% Byar Poisson interval; where intervals overlap, treat the clubs as tied rather than ranked. Several plausible-looking gaps in §9 do not survive this test, and the text says so where that applies.
+- **Cross-position defensive-action comparisons need care** — see the DefCon note in §8 and the README method section. The positions differ on both which actions count and what threshold they must clear.
 - Out of scope: **player-level** xG/xGA and ownership. Club-level set-piece xG *is* included.
 
 *Analysis by [@omerfin7](https://github.com/OmerFinzi).*

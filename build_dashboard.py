@@ -173,6 +173,21 @@ footer a{color:var(--accent)}
   </section>
 
   <section>
+    <h3 class="sec-h">How many goals in a match? The shape of the distribution</h3>
+    <p class="sec-sub" id="distIntro"></p>
+    <div class="card" style="max-width:640px"><div id="c_dist"></div></div>
+    <h3 class="sec-h" style="margin-top:34px">Season by season</h3>
+    <p class="sec-sub">The same fit repeated for each of the six seasons. With only 380 matches a single season has far less power to separate the two models than the pooled 2,280 &mdash; so read these as a consistency check, not six independent verdicts. Hover any bar for that season's fit statistics.</p>
+    <div class="card" style="max-width:640px"><div id="c_distSeasons"></div></div>
+    <h3 class="sec-h" style="margin-top:34px">Most common scorelines</h3>
+    <p class="sec-sub" id="scoreIntro"></p>
+    <div class="grid2" style="margin-top:20px">
+      <div><div class="card"><div id="c_scores"></div></div></div>
+      <div><div class="card"><div id="c_scoremirror"></div></div></div>
+    </div>
+  </section>
+
+  <section>
     <div class="grid2">
       <div>
         <h3 class="sec-h">Who to trust at the back &mdash; 2025/26</h3>
@@ -613,6 +628,121 @@ function renderDefcon(){
 }
 
 // ---------- draw everything (also used to re-theme) ----------
+// ---------- goals per match: observed vs Gaussian vs Poisson ----------
+// Goals per match is a count, so the honest comparison is a discrete Poisson PMF
+// against the continuous normal density the eye expects. Both are drawn; the
+// normal curve visibly leaks past the zero-goal boundary, which Poisson cannot.
+const fmtP=p=>p==null?"n/a":(p<0.001?"<0.001":p.toFixed(3));
+const DIST_LEGEND=()=>[{label:'Observed',color:cv('--s1')},
+                       {label:'Normal (Gaussian)',color:cv('--s2')},
+                       {label:'Poisson',color:cv('--s3')}];
+function drawDist(svg,d,box,{yAxis=true,xAxis=true,labelEvery=1,seasonTag=""}={}){
+  const kmax=d.bins.length-1,x0=-1,x1=kmax+1;
+  const PX=v=>box.x+box.w*(v-x0)/(x1-x0);
+  const curve=d.gauss_curve.filter(p=>p.x>=x0&&p.x<=x1);
+  const hi=Math.max(...d.bins.map(b=>Math.max(b.obs_pct,b.gauss_pct,b.pois_pct)),
+                    ...curve.map(p=>p.y))*1.14;
+  const PY=p=>box.y+box.h*(1-p/hi);
+  for(let g=0;g<=4;g++){const v=hi*g/4,yy=PY(v);
+    svg.appendChild(el("line",{x1:box.x,x2:box.x+box.w,y1:yy,y2:yy,stroke:cv('--grid')}));
+    if(yAxis){const t=el("text",{x:box.x-6,y:yy+3,"text-anchor":"end",class:"axis-lbl"});
+      t.textContent=v.toFixed(0)+"%";svg.appendChild(t);}}
+  // The zero-goal boundary. Everything left of it is an impossible scoreline, yet
+  // the bell curve still carries mass there — the clearest visual of why it's the
+  // wrong family for counts.
+  const zb=PX(-0.5);
+  svg.appendChild(el("line",{x1:zb,x2:zb,y1:box.y,y2:box.y+box.h,stroke:cv('--axis'),
+    "stroke-dasharray":"3 3",opacity:.75}));
+  const bw=box.w/(x1-x0)*0.62;
+  d.bins.forEach(b=>{
+    const rc=el("rect",{x:PX(b.k)-bw/2,y:PY(b.obs_pct),width:bw,
+      height:Math.max(1,box.y+box.h-PY(b.obs_pct)),rx:2,fill:cv('--s1')});
+    rc.addEventListener("mousemove",e=>showTip(
+      `<b>${b.k} goal${b.k===1?'':'s'}</b>${seasonTag?` &middot; ${seasonTag}`:''}`+
+      `<div class="row"><span>Matches</span><b>${b.obs} (${b.obs_pct.toFixed(2)}%)</b></div>`+
+      `<div class="row"><span>Normal predicts</span><b>${b.gauss_pct.toFixed(2)}%</b></div>`+
+      `<div class="row"><span>Poisson predicts</span><b>${b.pois_pct.toFixed(2)}%</b></div>`+
+      `<div class="row"><span>Fit (p, higher=better)</span><b>normal ${fmtP(d.gauss_p)} &middot; Poisson ${fmtP(d.pois_p)}</b></div>`,e));
+    rc.addEventListener("mouseleave",hideTip);svg.appendChild(rc);});
+  // Gaussian is continuous -> smooth line. Poisson is discrete -> points at the
+  // integers only, joined by a dashed line purely so the shape is readable.
+  svg.appendChild(el("polyline",{points:curve.map(p=>`${PX(p.x)},${PY(p.y)}`).join(" "),
+    fill:"none",stroke:cv('--s2'),"stroke-width":2,"stroke-linejoin":"round"}));
+  svg.appendChild(el("polyline",{points:d.bins.map(b=>`${PX(b.k)},${PY(b.pois_pct)}`).join(" "),
+    fill:"none",stroke:cv('--s3'),"stroke-width":1.5,"stroke-dasharray":"4 3"}));
+  d.bins.forEach(b=>svg.appendChild(el("circle",{cx:PX(b.k),cy:PY(b.pois_pct),r:2.4,fill:cv('--s3')})));
+  if(xAxis)for(let k=0;k<=kmax;k+=labelEvery){
+    const t=el("text",{x:PX(k),y:box.y+box.h+14,"text-anchor":"middle",class:"axis-lbl"});
+    t.textContent=k;svg.appendChild(t);}
+}
+function distChart(sel,d,title,sub){
+  const W=600,H=372,mL=48,mR=16,mT=82,mB=46;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
+  drawDist(svg,d,{x:mL,y:mT,w:W-mL-mR,h:H-mT-mB});
+  const t=el("text",{x:mL+(W-mL-mR)/2,y:H-8,"text-anchor":"middle",class:"axis-lbl"});
+  t.textContent="total goals in the match";svg.appendChild(t);
+  banner(svg,W,H,title,sub,DIST_LEGEND());
+  $(sel).appendChild(svg);
+}
+function distPanels(sel,list,title,sub){
+  const W=600,pad=14,gap=24,cols=2,pw=(W-2*pad-gap)/cols,ph=104,stride=ph+48,mT=80;
+  const H=mT+Math.ceil(list.length/cols)*stride+8;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
+  list.forEach((d,i)=>{
+    const x=pad+(i%cols)*(pw+gap), y=mT+Math.floor(i/cols)*stride;
+    const lab=el("text",{x,y:y-8,class:"val-lbl"});
+    lab.textContent=`${d.season} · mean ${d.mean.toFixed(2)}`;svg.appendChild(lab);
+    const fit=el("text",{x:x+pw,y:y-8,"text-anchor":"end",class:"axis-lbl"});
+    fit.textContent=`p ${fmtP(d.gauss_p)} / ${fmtP(d.pois_p)}`;svg.appendChild(fit);
+    drawDist(svg,d,{x,y,w:pw,h:ph},{yAxis:false,labelEvery:3,seasonTag:d.season});
+  });
+  banner(svg,W,H,title,sub,DIST_LEGEND());
+  $(sel).appendChild(svg);
+}
+function renderDist(){
+  const d=DATA.goal_dist,S=DATA.scorelines;
+  const verdict=d.better==='poisson'
+    ? `Poisson wins decisively: p = ${fmtP(d.pois_p)} against ${fmtP(d.gauss_p)} for the bell curve`
+    : `unusually, the bell curve edges it here: p = ${fmtP(d.gauss_p)} against ${fmtP(d.pois_p)}`;
+  $("#distIntro").innerHTML=`How often does a Premier League match finish with 0, 1, 2 &hellip; goals? `+
+    `Across all ${d.n.toLocaleString()} matches the mean is <b>${d.mean.toFixed(2)}</b> goals `+
+    `(SD ${d.sd.toFixed(2)}). The bell curve is the shape most people reach for &mdash; but goals are a `+
+    `<b>count</b>: discrete, never negative, and skewed right (skew ${d.skew.toFixed(2)}, where a normal `+
+    `distribution expects 0). The right model is <b>Poisson</b>, and the data agrees almost exactly: the `+
+    `variance-to-mean ratio is <b>${d.var_mean_ratio.toFixed(2)}</b> where Poisson predicts 1.00. `+
+    `On a chi-square goodness-of-fit test ${verdict}. `+
+    `The giveaway is at the dashed line: the normal curve puts <b>${d.gauss_negative_pct.toFixed(2)}%</b> of its `+
+    `mass below zero goals &mdash; about ${Math.round(d.gauss_negative_pct/100*d.n)} impossible matches &mdash; `+
+    `and it under-predicts 1-goal games while over-predicting 3&ndash;4-goal ones. Poisson cannot go negative at all.`+
+    (()=>{const c=d.poisson_cs_check; if(!c)return "";
+      return ` <b>Why this is useful:</b> if goals conceded are Poisson, a clean sheet is simply `+
+        `P(0) = e<sup>&minus;&lambda;</sup>, so a team's clean-sheet rate follows from its goals-conceded `+
+        `average with nothing else fitted. Across all ${c.n_team_seasons} team-seasons here that predicts `+
+        `clean-sheet rate to within <b>${c.mae_pp} percentage points</b> on average (correlation `+
+        `${c.corr.toFixed(2)}, essentially no bias) &mdash; ${c.example.team} in ${c.example.season} conceded `+
+        `${c.example.conceded_pg.toFixed(2)} per game, which predicts ${pct(c.example.predicted_cs)} clean `+
+        `sheets against ${pct(c.example.actual_cs)} actual.`;})();
+  distChart("#c_dist",d,"Goals per match — observed vs fitted",
+    `All ${d.n.toLocaleString()} matches, 2020/21–${DATA.meta.latest} · dashed vertical = the zero-goal floor`);
+  distPanels("#c_distSeasons",d.per_season,"Goals per match, by season",
+    "Each season fitted separately · p-values: normal / Poisson");
+  const top=S.overall[0];
+  $("#scoreIntro").innerHTML=`The ${S.distinct} distinct scorelines actually recorded, ranked by frequency. `+
+    `<b>${top.score}</b> is the single most likely result at <b>${top.pct.toFixed(1)}%</b> of matches. `+
+    `Scorelines are kept in <b>home&ndash;away</b> order on purpose: the gap between a result and its mirror `+
+    `image (1&ndash;0 versus 0&ndash;1) <i>is</i> home advantage, and collapsing them would throw that away.`;
+  hbars("#c_scores",S.overall,{value:r=>r.pct,label:r=>r.score,color:cv('--s1'),
+    valfmt:v=>v.toFixed(1)+"%",rowH:24,mL:56,mR:56,
+    title:"Most common scorelines — all six seasons",sub:"Share of all matches · home&ndash;away order",
+    tip:r=>`<b>${r.score}</b><div class="row"><span>Matches</span><b>${r.n}</b></div><div class="row"><span>Share</span><b>${r.pct.toFixed(2)}%</b></div>`});
+  const mir=S.mirrored.flatMap(p=>[{score:p.home,n:p.home_n,home:true,vs:p.away,vn:p.away_n},
+                                   {score:p.away,n:p.away_n,home:false,vs:p.home,vn:p.home_n}]);
+  hbars("#c_scoremirror",mir,{value:r=>r.n,label:r=>r.score,
+    color:r=>cv(r.home?'--s1':'--s2'),rowH:22,mL:56,mR:48,
+    title:"The same margin, mirrored",sub:"Home win (blue) vs the identical away scoreline (orange)",
+    legend:[{label:'Home win',color:cv('--s1')},{label:'Away win',color:cv('--s2')}],
+    tip:r=>`<b>${r.score}</b> &middot; ${r.home?'home':'away'} win<div class="row"><span>Matches</span><b>${r.n}</b></div><div class="row"><span>Mirror ${r.vs}</span><b>${r.vn}</b></div><div class="row"><span>Difference</span><b>${r.n-r.vn>0?'+':''}${r.n-r.vn}</b></div>`});
+}
 function renderMain(){
   lineChart("#c_cs",mk('cs_per_game','Clean sheets / game'),{color:cv('--s1'),title:"Clean sheets per game",sub:"2020/21–2025/26 · shaded = ±1 SD across matches",sdCapHi:2});
   lineChart("#c_goals",mk('goals_per_game','Goals / game'),{color:cv('--s2'),title:"Goals per game",sub:"Total goals ÷ matches · shaded = ±1 SD across matches"});
@@ -813,6 +943,7 @@ function addChartActions(){
 }
 
 renderMain();
+renderDist();
 renderDefcon();
 renderSP();
 renderSPG();
@@ -825,6 +956,7 @@ $("#themeBtn").onclick=()=>{
   document.documentElement.setAttribute("data-theme",dark?"light":"dark");
   document.querySelectorAll("[id^=c_]").forEach(n=>n.innerHTML="");
   renderMain();
+  renderDist();
   renderDefcon();
   renderSP();
   renderSPG();

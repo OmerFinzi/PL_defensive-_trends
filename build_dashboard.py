@@ -414,11 +414,11 @@ function teamBars(sel,rows,title,sub){
       rect.addEventListener("mouseleave",hideTip);svg.appendChild(rect);};
     mkbar(r.home_cs_rate,cv('--s1'),3,7);
     mkbar(r.away_cs_rate,cv('--s3'),13,7);
-    // Label the bar the number actually sits at. It used to print the overall CS
-    // rate at the tip of the longer home/away bar, so it described neither.
-    const mx=Math.max(r.home_cs_rate,r.away_cs_rate);
-    const vl=el("text",{x:X(mx)+6,y:y+rowH/2+1,class:"axis-lbl"});
-    vl.textContent=pct(mx);svg.appendChild(vl);
+    // Label each bar separately. A single number at the tip of the longer bar
+    // (previously the overall CS rate) described neither series.
+    const lbl=(val,off)=>{const t=el("text",{x:X(val)+6,y:y+off+6,class:"axis-lbl"});
+      t.textContent=pct(val);svg.appendChild(t);};
+    lbl(r.home_cs_rate,3);lbl(r.away_cs_rate,13);
   });
   banner(svg,W,H,title,sub,[{label:'Home',color:cv('--s1')},{label:'Away',color:cv('--s3')}]);
   $(sel).appendChild(svg);
@@ -629,11 +629,11 @@ function spBars(sel,rows,title,sub){
       rc.addEventListener("mouseleave",hideTip);svg.appendChild(rc);};
     mkbar(r.for_pg,cv('--s3'),3);
     mkbar(r.against_pg,cv('--s2'),13);
-    // Label the bar the number actually sits at — for 10 of 20 clubs the conceded
-    // bar is the longer one, so printing corners *won* there described the wrong bar.
-    const mx=Math.max(r.for_pg,r.against_pg);
-    const vl=el("text",{x:X(mx)+6,y:y+rowH/2+1,class:"axis-lbl"});
-    vl.textContent=mx.toFixed(2);svg.appendChild(vl);
+    // Label each bar separately. Printing corners *won* at the tip of whichever bar
+    // was longer mislabelled the 10 clubs whose conceded bar is the longer one.
+    const lbl=(val,off)=>{const t=el("text",{x:X(val)+6,y:y+off+6,class:"axis-lbl"});
+      t.textContent=val.toFixed(2);svg.appendChild(t);};
+    lbl(r.for_pg,3);lbl(r.against_pg,13);
   });
   banner(svg,W,H,title,sub,[{label:'Won',color:cv('--s3')},{label:'Conceded',color:cv('--s2')}]);
   $(sel).appendChild(svg);
@@ -672,7 +672,7 @@ function renderSPG(){
   $("#spgKpis").innerHTML=
     `<div class="kpi"><div class="v">${topFor.gf}</div><div class="l">Most set-piece goals &middot; ${topFor.team}</div><div class="d up">${topFor.shots_per_goal_for.toFixed(2)} SP shots per goal</div></div>`+
     `<div class="kpi"><div class="v">${topAg.ga}</div><div class="l">Most conceded &middot; ${topAg.team}</div><div class="d down">from set pieces</div></div>`+
-    (eff?`<div class="kpi"><div class="v">${eff.shots_per_goal_for.toFixed(2)}</div><div class="l">Most clinical &middot; ${eff.team}</div><div class="d up">SP shots per goal &middot; 5+ goals only</div></div>`:``)+
+    (eff?`<div class="kpi"><div class="v">${eff.shots_per_goal_for.toFixed(2)}</div><div class="l">Fewest SP shots per goal &middot; ${eff.team}</div><div class="d up">5+ goals only &middot; CIs overlap, see chart</div></div>`:``)+
     `<div class="kpi"><div class="v">${SPG.league.sp_goals}</div><div class="l">Set-piece goals, league-wide</div><div class="d up">from ${SPG.league.sp_shots} SP shots</div></div>`;
   const forRows=[...T].sort((a,b)=>b.gf-a.gf);
   const agRows=[...T].sort((a,b)=>b.ga-a.ga);

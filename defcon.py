@@ -104,7 +104,10 @@ CBIT_COLS = ["name", "team_short", "pos", "minutes", "cbit", "rec", "dc", "dc90"
 
 # Leaderboards
 top_points = p.sort_values(["defcon_points", "dc"], ascending=False).head(15)
-top_per90 = p[p["minutes"] >= 900].sort_values("dc90", ascending=False).head(15)
+# NB: there is deliberately no raw dc90 leaderboard. Sorting every position on
+# actions per 90 ignores that MID/FWD need 12 and DEF only 10, so it returns 15
+# midfielders and reads as a cross-position ranking it isn't. The rate chart uses
+# thr_pct instead (see top_cbit90 below).
 best_value = p[(p["cost"] <= 5.5) & (p["defcon_points"] >= 6)].sort_values(
     "pts_per_m", ascending=False).head(12)
 table = p.sort_values(["defcon_points", "dc"], ascending=False).head(30)
@@ -164,7 +167,6 @@ payload = {
         "n_returning": int((p["defcon_points"] > 0).sum()),
     },
     "top_points": rows(top_points, COLS),
-    "top_per90": rows(top_per90, COLS),
     "best_value": rows(best_value, COLS),
     "table": rows(table, COLS),
     "position_summary": pos_summary,

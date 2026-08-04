@@ -42,7 +42,7 @@ Two different things get called "home advantage" here, and they behave different
 
 Measured in **points per game**, the home-minus-away gap does trend **positive** across the window (≈ +0.05 PPG per season), and 2020/21 — the behind-closed-doors season — is the one year it went *negative* (−0.07). That is a genuine, well-known crowd effect.
 
-Measured in **clean sheets**, which is what this project actually plots, there is no such trend. The home-minus-away clean-sheet gap by season runs +0.005, +0.068, +0.113, +0.055, **−0.010**, +0.058 — a slope of essentially zero (−0.0008 per season). It was near-flat in 2020/21, peaked in 2022/23, and **inverted in 2024/25**, when away sides kept marginally more clean sheets than home sides. Note also that only 2020/21 was played behind closed doors; crowds were back for 2021/22, which had a *larger* home clean-sheet edge than 2025/26 does.
+Measured in **clean sheets**, which is what this project actually plots, there is no such trend. The home-minus-away clean-sheet gap by season runs +0.005, +0.068, +0.113, +0.055, **−0.011**, +0.058 — a slope of essentially zero (−0.0009 per season). It was near-flat in 2020/21, peaked in 2022/23, and **inverted in 2024/25**, when away sides kept marginally more clean sheets than home sides. Note also that only 2020/21 was played behind closed doors; crowds were back for 2021/22, which had a *larger* home clean-sheet edge than 2025/26 does.
 
 So the honest read: home fixtures are the better clean-sheet bet in 2025/26 (28% vs 23%), and in five of six seasons overall — but this is a modest, noisy edge that reversed as recently as last season, not a durable pattern to lean on hard. Use it as a tiebreak between similar defensive assets, not as a primary signal.
 
@@ -123,9 +123,12 @@ The corner-winning leaders are the possession/attacking sides. On **net** corner
 |---|---|:---:|:---:|:---:|---|---|:---:|
 | 1 | **Arsenal** | **23** | 158 | **6.9** | | **Bournemouth** | **18** |
 | 2 | Man Utd | 20 | 142 | 7.1 | | West Ham | 16 |
-| 3 | Spurs | 18 | 135 | 7.5 | | Leeds | 15 |
-| 4 | Aston Villa | 17 | 134 | 7.9 | | Crystal Palace | 15 |
-| 5 | Liverpool | 15 | 126 | 8.4 | | Liverpool, Nott'm Forest, Newcastle | 14 |
+| 3 | Spurs | 18 | 135 | 7.5 | | Leeds *(3=)* | 15 |
+| 4 | Aston Villa | 17 | 134 | 7.9 | | Crystal Palace *(3=)* | 15 |
+| 5= | West Ham | 15 | 111 | 7.4 | | Liverpool *(5=)* | 14 |
+| 5= | Liverpool | 15 | 126 | 8.4 | | Nott'm Forest, Newcastle *(5=)* | 14 |
+
+Ranks on both sides carry `=` where clubs are level. Note West Ham appear on both sides — joint-fifth for set-piece goals scored *and* second-most conceded.
 
 League-wide: **243 set-piece goals from 2,481 set-piece shots** (~10.2 shots per goal on average).
 
@@ -156,7 +159,7 @@ Bold marks the league extremes: best and worst "to score" (Arsenal 6.9, Brentfor
 
 Two things worth calling out beyond the volume numbers — remember **higher "to concede" is better** (more shots needed before opponents score). **Brentford have the league's most resistant set-piece defence by this measure**: opponents need **18.7 shots** to score against them, the division's highest, and this is the rare efficiency claim that is corroborated rather than isolated — Brentford also concede the fewest set-piece goals outright (6). Their attack is the opposite story — **worst in the league at 26.0 shots per goal scored** — so Brentford pair a resistant set-piece defence with almost no set-piece threat going forward.
 
-**Newcastle sit at the other extreme**: despite a mid-table set-piece attack (12.2 shots/goal), they concede a set-piece goal every **6.8 shots faced**, the league low. One caveat on how to read that: the ratio is driven as much by Newcastle facing *few* set-piece shots (95, the third-fewest after Arsenal and Man City) as by conceding many — their 14 goals conceded is mid-table, tied with Liverpool and Nott'm Forest. With 14 goals the 95% interval is [4.0, 12.4], which overlaps much of the division, so treat this as a soft flag rather than a firm ranking. Directionally it still points the right way: Newcastle's dead-ball defending converts a below-average volume of chances faced into an average number of goals, which is the signature of poor per-shot resistance.
+**Newcastle sit at the other extreme**: despite a mid-table set-piece attack (12.2 shots/goal), they concede a set-piece goal every **6.8 shots faced**, the league low. One caveat on how to read that: the ratio is driven as much by Newcastle facing *few* set-piece shots (95, the third-fewest after Arsenal and Man City) as by conceding many — their 14 goals conceded is tied 5th–7th-most in the league (with Liverpool and Nott'm Forest) against a median of 13 — worse than average, but not among the leakiest. With 14 goals the 95% interval is [4.0, 12.4], which overlaps much of the division, so treat this as a soft flag rather than a firm ranking. Directionally it still points the right way: Newcastle's dead-ball defending converts one of the league's *lowest* volumes of chances faced into a slightly *above*-median number of goals, which is the signature of poor per-shot resistance.
 
 *Reliability note: Understat blocks automated/datacenter requests (as do FBref, Sofascore and FotMob), so [`fetch_setpiece_goals.py`](fetch_setpiece_goals.py) has to be run from an ordinary home/office connection — from a flagged IP it silently returns a data-stripped page. That makes this the one input in the project that cannot be re-derived from a file committed to the repo; rerun the script to reproduce `docs/setpieces_goals.json`. The numbers themselves are Understat's; nothing is estimated.*
 

@@ -233,8 +233,8 @@ footer a{color:var(--accent)}
     <p class="sec-sub">DefCon points per &pound;m of season-end price, for enablers priced &pound;5.5m or under. These are the cheap defenders and midfielders who quietly banked points all season.</p>
     <div class="card" style="max-width:620px"><div id="c_dcvalue"></div></div>
 
-    <h3 class="sec-h" style="margin-top:34px">Total defensive actions (CBIT)</h3>
-    <p class="sec-sub">CBIT = clearances + blocks + interceptions + tackles &mdash; the raw defensive-actions count behind DefCon, independent of the DEF/MID/FWD scoring thresholds. Season totals, plus per-90 rates for busy starters.</p>
+    <h3 class="sec-h" style="margin-top:34px">Total defensive actions</h3>
+    <p class="sec-sub">The raw action counts behind DefCon, before the per-match thresholds are applied. Crucially, <b>the two positions are scored on different actions</b>: defenders on CBIT alone (clearances + blocks + interceptions + tackles), midfielders and forwards on CBIT <b>plus ball recoveries</b>. Player leaderboards below therefore count each position on the actions that actually score for it &mdash; ranking everyone on raw CBIT would hide high-volume midfielders, whose recoveries do count. The team table is the exception: it stays on raw CBIT so all 20 squads sit on one uniform stat.</p>
     <div class="grid2" style="margin-top:20px">
       <div><div class="card"><div id="c_cbittop"></div></div></div>
       <div>
@@ -557,17 +557,17 @@ function renderDefcon(){
     color:cv('--s3'),valfmt:v=>v.toFixed(2),
     title:"Best budget DefCon value",sub:"DefCon points per £m · enablers ≤ £5.5m",
     tip:r=>`<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>Points / &pound;m</span><b>${r.pts_per_m.toFixed(2)}</b></div><div class="row"><span>DefCon points</span><b>${r.defcon_points}</b></div><div class="row"><span>Price</span><b>&pound;${r.cost}m</b></div>`});
-  const cbitTip=r=>`<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>CBIT (season)</span><b>${r.cbit}</b></div><div class="row"><span>CBIT / 90</span><b>${r.cbit90.toFixed(2)}</b></div><div class="row"><span>Minutes</span><b>${r.minutes}</b></div>`;
-  hbars("#c_cbittop",DEFCON.top_cbit,{value:r=>r.cbit,label:r=>`${r.name} (${r.team_short})`,
+  const cbitTip=r=>`<b>${r.name}</b> &middot; ${r.team_short} ${r.pos}<div class="row"><span>Defensive actions</span><b>${r.dc}</b></div><div class="row"><span>CBIT</span><b>${r.cbit}</b></div><div class="row"><span>Recoveries</span><b>${r.pos==='DEF'?`${r.rec} &middot; not counted for DEF`:r.rec}</b></div><div class="row"><span>Actions / 90</span><b>${r.dc90.toFixed(2)}</b></div><div class="row"><span>Minutes</span><b>${r.minutes}</b></div>`;
+  hbars("#c_cbittop",DEFCON.top_cbit,{value:r=>r.dc,label:r=>`${r.name} (${r.team_short})`,
     color:r=>cv(POSCOL[r.pos]),tip:cbitTip,
-    title:"Most CBIT actions — top 15",sub:"Clearances + blocks + interceptions + tackles, season total",
+    title:"Most defensive actions — top 15",sub:"Counted per position · DEF: CBIT · MID/FWD: CBIT + recoveries",
     legend:[{label:'DEF',color:cv('--s1')},{label:'MID',color:cv('--s2')},{label:'FWD',color:cv('--s3')}]});
   hbars("#c_cbitteam",DEFCON.team_cbit.slice(0,12),{value:r=>r.cbit,label:r=>r.team,
-    color:cv('--s1'),rowH:22,mL:56,title:"Team CBIT totals",sub:"Total defensive actions across each squad, 2025/26",
+    color:cv('--s1'),rowH:22,mL:56,title:"Team CBIT totals",sub:"Raw CBIT across each squad, recoveries excluded — 2025/26",
     tip:r=>`<b>${r.team}</b><div class="row"><span>CBIT (season)</span><b>${r.cbit}</b></div>`});
-  hbars("#c_cbit90",DEFCON.top_cbit90,{value:r=>r.cbit90,label:r=>`${r.name} (${r.team_short})`,
+  hbars("#c_cbit90",DEFCON.top_cbit90,{value:r=>r.dc90,label:r=>`${r.name} (${r.team_short})`,
     color:r=>cv(POSCOL[r.pos]),valfmt:v=>v.toFixed(2),tip:cbitTip,
-    title:"Best CBIT rate — top 10",sub:"CBIT per 90 · players with 1,500+ minutes",
+    title:"Best defensive-action rate — top 10",sub:"Actions per 90, counted per position · 1,500+ minutes",
     legend:[{label:'DEF',color:cv('--s1')},{label:'MID',color:cv('--s2')},{label:'FWD',color:cv('--s3')}]});
   // table
   const dcols=[["name","Player"],["team_short","Team"],["pos","Pos"],["minutes","Min"],

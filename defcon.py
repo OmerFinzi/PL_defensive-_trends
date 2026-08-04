@@ -73,10 +73,13 @@ _ci = [wilson_ci(h, n) for h, n in zip(p["dc_matches"], p["apps"])]
 p["hit_rate_ci_lo"] = [c[0] for c in _ci]
 p["hit_rate_ci_hi"] = [c[1] for c in _ci]
 
-# Raw CBIT (clearances + blocks + interceptions + tackles) — the underlying
-# defensive-actions stat, independent of the DEF/MID/FWD DefCon point thresholds.
+# Raw CBIT (clearances + blocks + interceptions + tackles) and ball recoveries.
+# These are the breakdown behind `dc`, not a ranking metric in their own right:
+# DEF are scored on CBIT alone, MID/FWD on CBIT + recoveries, so ranking every
+# position on raw CBIT buries midfielders whose recoveries genuinely do count.
+# Player leaderboards below therefore rank on `dc`, which is position-correct.
 p["cbit"] = (p["clearances_blocks_interceptions"] + p["tackles"]).astype(int)
-p["cbit90"] = np.where(p["minutes"] > 0, p["cbit"] / p["minutes"] * 90, 0).round(2)
+p["rec"] = p["recoveries"].astype(int)
 
 def rows(df, cols):
     return df[cols].to_dict(orient="records")
@@ -84,7 +87,7 @@ def rows(df, cols):
 COLS = ["name", "team_short", "pos", "minutes", "dc", "dc90",
         "dc_matches", "defcon_points", "cost", "pts_per_m", "apps",
         "hit_rate", "hit_rate_ci_lo", "hit_rate_ci_hi"]
-CBIT_COLS = ["name", "team_short", "pos", "minutes", "cbit", "cbit90"]
+CBIT_COLS = ["name", "team_short", "pos", "minutes", "cbit", "rec", "dc", "dc90"]
 
 # Leaderboards
 top_points = p.sort_values(["defcon_points", "dc"], ascending=False).head(15)
@@ -111,9 +114,11 @@ team_tot = (p.groupby("team_short")["defcon_points"].sum()
 team_defcon = [{"team": r.team_short, "points": int(r.defcon_points)}
                for r in team_tot.itertuples()]
 
-# Raw CBIT leaderboards
-top_cbit = p.sort_values("cbit", ascending=False).head(15)
-top_cbit90 = p[p["minutes"] >= 1500].sort_values("cbit90", ascending=False).head(10)
+# Defensive-action leaderboards. Players rank on the position-correct count (`dc`);
+# the team table stays on raw CBIT so all 20 squads are compared like-for-like on
+# one uniform stat rather than a DEF/MID hybrid.
+top_cbit = p.sort_values("dc", ascending=False).head(15)
+top_cbit90 = p[p["minutes"] >= 1500].sort_values("dc90", ascending=False).head(10)
 team_cbit_tot = (p.groupby("team_short")["cbit"].sum()
                  .sort_values(ascending=False).reset_index())
 team_cbit = [{"team": r.team_short, "cbit": int(r.cbit)}
@@ -158,10 +163,11 @@ for r in pos_summary:
 print("\nTop 5 teams by DefCon points banked:")
 for r in team_defcon[:5]:
     print(f"  {r['team']}: {r['points']}")
-print("\nTop 5 players by raw CBIT (season total):")
+print("\nTop 5 players by defensive actions (position-correct season total):")
 for r in payload["top_cbit"][:5]:
-    print(f"  {r['name']:<14} {r['team_short']} {r['pos']}  {r['cbit']} CBIT ({r['cbit90']}/90, {r['minutes']} min)")
-print("\nTop 5 CBIT/90 (min 1500 minutes):")
+    print(f"  {r['name']:<14} {r['team_short']} {r['pos']}  {r['dc']} actions "
+          f"({r['cbit']} CBIT + {r['rec']} rec, {r['dc90']}/90, {r['minutes']} min)")
+print("\nTop 5 defensive actions per 90 (min 1500 minutes):")
 for r in payload["top_cbit90"][:5]:
-    print(f"  {r['name']:<14} {r['team_short']} {r['pos']}  {r['cbit90']}/90 ({r['cbit']} CBIT, {r['minutes']} min)")
+    print(f"  {r['name']:<14} {r['team_short']} {r['pos']}  {r['dc90']}/90 ({r['dc']} actions, {r['minutes']} min)")
 print("\nWrote docs/defcon.json")

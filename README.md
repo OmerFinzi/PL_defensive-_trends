@@ -19,11 +19,19 @@ A few charts from the dashboard (each is a self-contained, shareable image). The
 | | |
 |---|---|
 | ![Clean sheets per game](docs/examples/clean-sheets-per-game.png) | ![Both teams to score](docs/examples/both-teams-to-score.png) |
-| ![Who to trust at the back 2025/26](docs/examples/who-to-trust-2025-26.png) | ![Home advantage](docs/examples/home-advantage.png) |
+| ![Who to trust at the back 2025/26](docs/examples/who-to-trust-2025-26.png) | ![The home clean-sheet edge](docs/examples/home-advantage.png) |
+
+**Goals per match — the distribution, against a fitted Poisson**
+
+![Goals per match, observed vs Poisson](docs/examples/goals-per-match-poisson.png)
 
 **DefCon points banked — 2025/26 (new player-level metric)**
 
 ![DefCon points banked, top 15](docs/examples/defcon-top15.png)
+
+**Most defensive actions — counted per position (defenders on CBIT; midfielders and forwards on CBIT + recoveries)**
+
+![Most defensive actions, top 15](docs/examples/defensive-actions-top15.png)
 
 **Set pieces — corners won vs conceded, 2025/26 (penalties excluded)**
 
@@ -68,6 +76,7 @@ defcon.py             2025/26 DefCon (player-level) pipeline → docs/defcon.jso
 setpieces.py          set-piece pipeline (corners + takers) → docs/setpieces.json
 fetch_setpiece_goals.py  set-piece GOALS from Understat → docs/setpieces_goals.json (run locally, see below)
 build_dashboard.py    builds the self-contained docs/index.html from the JSONs
+tools/export_examples.js  regenerates the README preview PNGs from the built dashboard
 docs/index.html       the interactive dashboard (GitHub Pages entry point)
 docs/data.json        league/team metrics consumed by the dashboard
 docs/defcon.json      player-level DefCon metrics
@@ -90,6 +99,16 @@ python setpieces.py        # set pieces (corners+takers) -> docs/setpieces.json
 python fetch_setpiece_goals.py   # set-piece GOALS from Understat -> docs/setpieces_goals.json  (run from a normal network — see note)
 python build_dashboard.py  # rebuilds docs/index.html from the JSONs
 ```
+
+### Refreshing the preview images
+
+The PNGs in [`docs/examples/`](docs/examples/) are screenshots, so they go stale silently whenever a chart's title, label or numbers change. Regenerate them all in one command after `build_dashboard.py`:
+
+```bash
+node tools/export_examples.js       # needs Node + Chrome or Edge (or set CHROME_PATH)
+```
+
+It runs the dashboard's **own** chart code out of `docs/index.html` under a small DOM shim, serializes each chart to a standalone SVG, and screenshots it at 2× — so the images cannot drift from what the dashboard actually draws. The only thing that can go out of date is the chart list at the top of that file, and it exits non-zero if a listed chart is missing.
 
 ### Set-piece goals (2025/26) — refreshing it later
 

@@ -399,8 +399,17 @@ const seasons=L.map(r=>r.season);
 function mk(key,name,f=fmt1){return L.map(r=>({x:r.season,y:r[key],sd:r[key+'_sd'],lab:r.season.slice(2),full:r.season,name}));}
 
 // ---------- horizontal team bars (home/away CS) ----------
+// Shared geometry for the three paired-bar team charts (clean sheets home/away,
+// corners won/conceded, set-piece shots per goal). The two bars used to sit 3px
+// apart, which put their 11px value labels only 10px apart vertically and ran the
+// two numbers together. Now: 8px inside a pair, 13px between pairs, so the labels
+// clear each other (15px of baseline separation) while the wider outer gap still
+// groups each team's two bars as one unit.
+const PB={h:7,off1:3,off2:18,rowH:35};
+const PB_C1=PB.off1+PB.h/2, PB_C2=PB.off2+PB.h/2;   // bar centre lines, for whiskers
+
 function teamBars(sel,rows,title,sub){
-  const W=560,rowH=24,mT=74,mL=104,mR=44,H=mT+rows.length*rowH+22;
+  const W=560,rowH=PB.rowH,mT=74,mL=104,mR=44,H=mT+rows.length*rowH+22;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const max=Math.max(...rows.map(r=>Math.max(r.home_cs_rate,r.away_cs_rate)))*1.08;
   const X=v=>mL+(W-mL-mR)*v/max;
@@ -412,13 +421,13 @@ function teamBars(sel,rows,title,sub){
       const rect=el("rect",{x:mL,y:y+off,width:w,height:h,rx:3,fill:col});
       rect.addEventListener("mousemove",e=>showTip(`<b>${r.team}</b><div class="row"><span>Overall CS</span><b>${pct(r.cs_rate)}</b></div><div class="row"><span>Home CS</span><b>${pct(r.home_cs_rate)}</b></div><div class="row"><span>Away CS</span><b>${pct(r.away_cs_rate)}</b></div><div class="row"><span>Conceded/gm</span><b>${fmt1(r.conceded_pg)}</b></div>`,e));
       rect.addEventListener("mouseleave",hideTip);svg.appendChild(rect);};
-    mkbar(r.home_cs_rate,cv('--s1'),3,7);
-    mkbar(r.away_cs_rate,cv('--s3'),13,7);
+    mkbar(r.home_cs_rate,cv('--s1'),PB.off1,PB.h);
+    mkbar(r.away_cs_rate,cv('--s3'),PB.off2,PB.h);
     // Label each bar separately. A single number at the tip of the longer bar
     // (previously the overall CS rate) described neither series.
-    const lbl=(val,off)=>{const t=el("text",{x:X(val)+6,y:y+off+6,class:"axis-lbl"});
+    const lbl=(val,off)=>{const t=el("text",{x:X(val)+6,y:y+off+PB.h-1,class:"axis-lbl"});
       t.textContent=pct(val);svg.appendChild(t);};
-    lbl(r.home_cs_rate,3);lbl(r.away_cs_rate,13);
+    lbl(r.home_cs_rate,PB.off1);lbl(r.away_cs_rate,PB.off2);
   });
   banner(svg,W,H,title,sub,[{label:'Home',color:cv('--s1')},{label:'Away',color:cv('--s3')}]);
   $(sel).appendChild(svg);
@@ -616,7 +625,7 @@ function renderMain(){
 }
 // ---------- Set pieces (corners + free kicks, penalties excluded) ----------
 function spBars(sel,rows,title,sub){
-  const W=560,rowH=25,mT=74,mL=104,mR=52,H=mT+rows.length*rowH+22;
+  const W=560,rowH=PB.rowH,mT=74,mL=104,mR=52,H=mT+rows.length*rowH+22;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const max=Math.max(...rows.map(r=>Math.max(r.for_pg,r.against_pg)))*1.08;
   const X=v=>mL+(W-mL-mR)*v/max;
@@ -624,16 +633,16 @@ function spBars(sel,rows,title,sub){
     const y=mT+i*rowH;
     const t=el("text",{x:mL-8,y:y+rowH/2+1,"text-anchor":"end",class:"val-lbl"});t.textContent=r.team;svg.appendChild(t);
     const mkbar=(val,col,off)=>{const w=Math.max(2,X(val)-mL);
-      const rc=el("rect",{x:mL,y:y+off,width:w,height:7,rx:3,fill:col});
+      const rc=el("rect",{x:mL,y:y+off,width:w,height:PB.h,rx:3,fill:col});
       rc.addEventListener("mousemove",e=>showTip(`<b>${r.team}</b><div class="row"><span>Corners won/gm</span><b>${r.for_pg}</b></div><div class="row"><span>Corners conceded/gm</span><b>${r.against_pg}</b></div><div class="row"><span>Net/gm</span><b>${r.net_pg>0?'+':''}${r.net_pg}</b></div>`,e));
       rc.addEventListener("mouseleave",hideTip);svg.appendChild(rc);};
-    mkbar(r.for_pg,cv('--s3'),3);
-    mkbar(r.against_pg,cv('--s2'),13);
+    mkbar(r.for_pg,cv('--s3'),PB.off1);
+    mkbar(r.against_pg,cv('--s2'),PB.off2);
     // Label each bar separately. Printing corners *won* at the tip of whichever bar
     // was longer mislabelled the 10 clubs whose conceded bar is the longer one.
-    const lbl=(val,off)=>{const t=el("text",{x:X(val)+6,y:y+off+6,class:"axis-lbl"});
+    const lbl=(val,off)=>{const t=el("text",{x:X(val)+6,y:y+off+PB.h-1,class:"axis-lbl"});
       t.textContent=val.toFixed(2);svg.appendChild(t);};
-    lbl(r.for_pg,3);lbl(r.against_pg,13);
+    lbl(r.for_pg,PB.off1);lbl(r.against_pg,PB.off2);
   });
   banner(svg,W,H,title,sub,[{label:'Won',color:cv('--s3')},{label:'Conceded',color:cv('--s2')}]);
   $(sel).appendChild(svg);
@@ -696,7 +705,7 @@ function whisker(svg,X,lo,hi,max,y,color){
   }
 }
 function effBars(sel,rows,title,sub){
-  const W=560,rowH=24,mT=74,mL=104,mR=54,H=mT+rows.length*rowH+22;
+  const W=560,rowH=PB.rowH,mT=74,mL=104,mR=54,H=mT+rows.length*rowH+22;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
   const max=Math.max(...rows.map(r=>Math.max(r.shots_per_goal_for,r.shots_per_goal_against)))*1.1;
   const X=v=>mL+(W-mL-mR)*v/max;
@@ -705,16 +714,16 @@ function effBars(sel,rows,title,sub){
     const t=el("text",{x:mL-8,y:y+rowH/2+1,"text-anchor":"end",class:"val-lbl"});t.textContent=r.team;svg.appendChild(t);
     const tipHtml=`<b>${r.team}</b><div class="row"><span>Shots per goal &mdash; to score</span><b>${r.shots_per_goal_for.toFixed(2)} <span style="opacity:.6">${r.sp_for_ci_lo!=null&&r.sp_for_ci_hi!=null?`(95% CI ${r.sp_for_ci_lo.toFixed(1)}&ndash;${r.sp_for_ci_hi.toFixed(1)}, n=${r.gf} goals)`:`(n=${r.gf} goals)`}</span></b></div><div class="row"><span>Shots per goal &mdash; to concede</span><b>${r.shots_per_goal_against!=null?`${r.shots_per_goal_against.toFixed(2)} <span style="opacity:.6">(95% CI ${r.sp_against_ci_lo.toFixed(1)}&ndash;${r.sp_against_ci_hi.toFixed(1)}, n=${r.ga} goals)</span>`:'&mdash;'}</b></div>`;
     const w1=Math.max(2,X(r.shots_per_goal_for)-mL);
-    const rc1=el("rect",{x:mL,y:y+3,width:w1,height:7,rx:3,fill:cv('--s3')});
+    const rc1=el("rect",{x:mL,y:y+PB.off1,width:w1,height:PB.h,rx:3,fill:cv('--s3')});
     rc1.addEventListener("mousemove",e=>showTip(tipHtml,e));rc1.addEventListener("mouseleave",hideTip);svg.appendChild(rc1);
-    const vl1=el("text",{x:mL+w1+6,y:y+3+6,class:"axis-lbl"});vl1.textContent=r.shots_per_goal_for.toFixed(2);svg.appendChild(vl1);
-    if(r.sp_for_ci_lo!=null)whisker(svg,X,r.sp_for_ci_lo,r.sp_for_ci_hi,max,y+6.5,cv('--ink-2'));
+    const vl1=el("text",{x:mL+w1+6,y:y+PB.off1+PB.h-1,class:"axis-lbl"});vl1.textContent=r.shots_per_goal_for.toFixed(2);svg.appendChild(vl1);
+    if(r.sp_for_ci_lo!=null)whisker(svg,X,r.sp_for_ci_lo,r.sp_for_ci_hi,max,y+PB_C1,cv('--ink-2'));
     if(r.shots_per_goal_against!=null){
       const w2=Math.max(2,X(r.shots_per_goal_against)-mL);
-      const rc2=el("rect",{x:mL,y:y+13,width:w2,height:7,rx:3,fill:cv('--s2')});
+      const rc2=el("rect",{x:mL,y:y+PB.off2,width:w2,height:PB.h,rx:3,fill:cv('--s2')});
       rc2.addEventListener("mousemove",e=>showTip(tipHtml,e));rc2.addEventListener("mouseleave",hideTip);svg.appendChild(rc2);
-      const vl2=el("text",{x:mL+w2+6,y:y+13+6,class:"axis-lbl"});vl2.textContent=r.shots_per_goal_against.toFixed(2);svg.appendChild(vl2);
-      if(r.sp_against_ci_lo!=null)whisker(svg,X,r.sp_against_ci_lo,r.sp_against_ci_hi,max,y+16.5,cv('--ink-2'));
+      const vl2=el("text",{x:mL+w2+6,y:y+PB.off2+PB.h-1,class:"axis-lbl"});vl2.textContent=r.shots_per_goal_against.toFixed(2);svg.appendChild(vl2);
+      if(r.sp_against_ci_lo!=null)whisker(svg,X,r.sp_against_ci_lo,r.sp_against_ci_hi,max,y+PB_C2,cv('--ink-2'));
     }
   });
   banner(svg,W,H,title,sub,[{label:'To score',color:cv('--s3')},{label:'To concede',color:cv('--s2')},{label:'95% CI',color:cv('--ink-2')}]);

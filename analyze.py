@@ -157,28 +157,17 @@ def third_cs(sdf):
 
 thirds = {"all_seasons": third_cs(m), latest_label: third_cs(m[m["start_year"] == latest])}
 
-# ---- Distribution of total goals per match: Gaussian vs Poisson -------------
+# ---- Distribution of total goals per match: Poisson fit ---------------------
 # Goals per match is a COUNT — discrete, non-negative, right-skewed — so the
-# textbook model is Poisson, not a normal curve. Both are fitted here so the
-# chart can show the comparison instead of asserting it: the bell curve is what
-# people reach for by habit, and seeing exactly where it fails is the point.
-# erf/lgamma by hand — this project deliberately has no scipy dependency.
-def norm_mass(k, mu, sd):
-    """Normal probability over [k-0.5, k+0.5] — the fair way to compare a
-    continuous density against integer counts (same width as a histogram bin)."""
-    cdf = lambda x: 0.5 * (1 + math.erf((x - mu) / (sd * math.sqrt(2))))
-    return cdf(k + 0.5) - cdf(k - 0.5)
-
-def norm_pdf(x, mu, sd):
-    return math.exp(-((x - mu) ** 2) / (2 * sd ** 2)) / (sd * math.sqrt(2 * math.pi))
-
+# model is Poisson. Conveniently it is a one-parameter family, which makes it
+# falsifiable on its own terms rather than only by beating some alternative:
+# given lambda it predicts the variance (= lambda) and the skew (= 1/sqrt(lambda)),
+# so those are checked against the data as well as the chi-square fit.
+# lgamma/erf by hand — this project deliberately has no scipy dependency.
 def pois_pmf(k, lam):
     return math.exp(-lam + k * math.log(lam) - math.lgamma(k + 1))
 
-# Regularized upper incomplete gamma Q(a,x), for chi-square p-values. Raw
-# chi-square statistics are NOT comparable between the two models because tail
-# pooling leaves them with different degrees of freedom (the normal fits two
-# parameters, Poisson one) — the p-value is what makes it a fair comparison.
+# Regularized upper incomplete gamma Q(a,x), for the chi-square p-value.
 def _gser(a, x):
     ap, s, d = a, 1.0 / a, 1.0 / a
     for _ in range(500):
@@ -222,32 +211,22 @@ def chi2_gof(obs, prob_fn, n, n_params):
     return round(stat, 1), df, (round(p, 4) if p is not None else None)
 
 def fit_goals(vals, label, kmax):
-    """Observed goals-per-match distribution plus both fitted models."""
+    """Observed goals-per-match distribution plus the fitted Poisson."""
     v = np.asarray(vals)
     n, mu, sd = len(v), float(v.mean()), float(v.std(ddof=1))
     obs = np.bincount(v, minlength=kmax + 1)
-    gchi, gdf, gp = chi2_gof(obs, lambda k: norm_mass(k, mu, sd), n, 2)
     pchi, pdf, pp = chi2_gof(obs, lambda k: pois_pmf(k, mu), n, 1)
     return {
         "season": label, "n": n,
         "mean": round(mu, 3), "sd": round(sd, 3),
-        "var_mean_ratio": round(sd ** 2 / mu, 3),        # Poisson predicts 1.0
-        "skew": round(float(pd.Series(v).skew()), 3),    # normal predicts 0
+        "var_mean_ratio": round(sd ** 2 / mu, 3),          # Poisson predicts 1.0
+        "skew": round(float(pd.Series(v).skew()), 3),      # Poisson predicts...
+        "skew_predicted": round(1 / math.sqrt(mu), 3),     # ...exactly this
         "bins": [{"k": k, "obs": int(obs[k]),
                   "obs_pct": round(obs[k] / n * 100, 2),
-                  "gauss_pct": round(norm_mass(k, mu, sd) * 100, 2),
                   "pois_pct": round(pois_pmf(k, mu) * 100, 2)}
                  for k in range(kmax + 1)],
-        # Smooth normal density as percent-per-goal, so it sits on the same scale
-        # as the bars. Sampled below zero too, to show the mass the bell curve
-        # puts on impossible negative scorelines.
-        "gauss_curve": [{"x": round(x, 2), "y": round(norm_pdf(x, mu, sd) * 100, 3)}
-                        for x in np.arange(-1.0, kmax + 1.01, 0.2)],
-        "gauss_negative_pct": round(
-            0.5 * (1 + math.erf((-0.5 - mu) / (sd * math.sqrt(2)))) * 100, 2),
-        "gauss_chi2": gchi, "gauss_df": gdf, "gauss_p": gp,
         "pois_chi2": pchi, "pois_df": pdf, "pois_p": pp,
-        "better": "poisson" if (pp or 0) >= (gp or 0) else "gauss",
     }
 
 KMAX = int(m["total_goals"].max())
@@ -276,14 +255,13 @@ goal_dist["poisson_cs_check"] = {
                 "actual_cs": round(float(_best["cs_rate"]), 3)},
 }
 
-# Pooled over 2,280 matches the verdict is emphatic, and the dashboard says so in
-# words — so fail loudly if a data refresh ever inverts it rather than shipping a
-# subtitle that lies. Deliberately NOT asserted per season: at n=380 a single
-# season has little power to separate the two, and 2025/26 currently favours the
-# normal curve. That nuance is reported, not hidden.
-assert goal_dist["better"] == "poisson", (
-    "Pooled goals-per-match no longer favours Poisson — the distribution "
-    "commentary in build_dashboard.py and REPORT.md needs rewriting")
+# The dashboard and REPORT state in words that the Poisson fit holds, so fail
+# loudly if a data refresh ever breaks it rather than shipping prose that lies.
+# Asserted on the POOLED fit only: at n=380 a single season has little power, so
+# one season drifting is noise, not a broken model.
+assert goal_dist["pois_p"] is not None and goal_dist["pois_p"] > 0.01, (
+    f"Poisson no longer fits pooled goals per match (p={goal_dist['pois_p']}) — "
+    "the distribution commentary in build_dashboard.py and REPORT.md needs rewriting")
 
 # ---- Most common exact scorelines -------------------------------------------
 # Kept in home-away orientation on purpose: 1-0 outnumbering 0-1 IS the home
@@ -373,18 +351,19 @@ for r in risers:
     print(f"  {r['team']:<15} {r['prev']:.2f} -> {r['cur']:.2f} conceded/gm ({r['delta']:+.2f})")
 print(f"\nPromoted {latest_label}: {promoted}")
 
-print("\nGoals per match — distribution fit (higher p = model consistent with data):")
-print(f"  {'season':<12}{'n':>5}{'mean':>7}{'sd':>6}{'var/mean':>10}"
-      f"{'Gauss chi2':>12}{'p':>8}{'Pois chi2':>11}{'p':>8}   better")
+print("\nGoals per match — Poisson fit (higher p = consistent with the data):")
+print(f"  {'season':<12}{'n':>5}{'lambda':>8}{'var/mean':>10}{'skew':>7}{'pred':>7}"
+      f"{'chi2':>8}{'df':>4}{'p':>8}")
 for r in [goal_dist] + goal_dist["per_season"]:
-    gp = f"{r['gauss_p']:.3f}" if r["gauss_p"] is not None else "  n/a"
-    pp = f"{r['pois_p']:.3f}" if r["pois_p"] is not None else "  n/a"
-    print(f"  {r['season']:<12}{r['n']:>5}{r['mean']:>7.2f}{r['sd']:>6.2f}"
-          f"{r['var_mean_ratio']:>10.2f}{r['gauss_chi2']:>12.1f}({r['gauss_df']}){gp:>8}"
-          f"{r['pois_chi2']:>9.1f}({r['pois_df']}){pp:>8}   {r['better']}")
-print(f"  The bell curve puts {goal_dist['gauss_negative_pct']:.2f}% of its mass on "
-      f"negative scorelines (~{goal_dist['gauss_negative_pct']/100*goal_dist['n']:.0f} "
-      f"impossible matches); Poisson cannot.")
+    pp = f"{r['pois_p']:.3f}" if r["pois_p"] is not None else "n/a"
+    print(f"  {r['season']:<12}{r['n']:>5}{r['mean']:>8.2f}{r['var_mean_ratio']:>10.2f}"
+          f"{r['skew']:>7.2f}{r['skew_predicted']:>7.2f}"
+          f"{r['pois_chi2']:>8.1f}{r['pois_df']:>4}{pp:>8}")
+print("  (var/mean and skew columns: Poisson predicts 1.00 and 1/sqrt(lambda) — "
+      "'pred' is that prediction)")
+_c = goal_dist["poisson_cs_check"]
+print(f"  Clean sheets from exp(-lambda) across {_c['n_team_seasons']} team-seasons: "
+      f"MAE {_c['mae_pp']}pp, bias {_c['bias_pp']:+}pp, corr {_c['corr']}")
 
 print(f"\nMost common scorelines (home-away), all seasons "
       f"({scorelines['distinct']} distinct):")

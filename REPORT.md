@@ -21,33 +21,37 @@ The story is a spike and a reversal. **2023/24 was the peak of an attacking era*
 
 Across the whole window the clean-sheet trend is still gently **negative** (≈ −0.023 clean sheets/game per season), so this is a *recovery within a longer attacking drift* rather than a return to low-scoring football. For FPL that argues for treating premium defensive assets as more viable in 2025/26 than in the 2023/24 chaos — but with selectivity, not a blanket "load up on defenders."
 
-## 2. How many goals in a match? Poisson, not a bell curve
+## 2. How many goals in a match? A Poisson distribution
 
-Averages hide shape. Across all 2,280 matches the mean is **2.89 goals** with an SD of 1.68 — but goals per match are a **count**: discrete, never negative, and skewed right. The distribution most people picture is the normal curve; the correct one is **Poisson**, and the difference is not academic.
+Averages hide shape. "2.89 goals per game" says nothing about how often a match ends 0–0 or 4–2. Goals are a **count** — discrete, never negative, arriving one at a time — and counts of independent-ish events follow a **Poisson** distribution. That is exactly what the six seasons show.
 
-The evidence is direct. Poisson's defining property is that variance equals mean, and here the **variance-to-mean ratio is 0.98** against a predicted 1.00. Skewness is **+0.53**, where a normal distribution requires 0. Fitting both by chi-square, pooled over all six seasons:
+Fitted across all 2,280 matches with λ = **2.89** (the observed mean, the distribution's only parameter), the goodness-of-fit test gives **χ² = 2.4 on 7 degrees of freedom, p = 0.936** — as close to the model as a sample this size can reasonably get.
 
-| Fit | χ² (df) | p | Verdict |
-|---|:---:|:---:|---|
-| Normal (Gaussian) | 62.6 (6) | <0.001 | decisively rejected |
-| **Poisson** | **2.4 (7)** | **0.936** | consistent with the data |
+That p-value on its own would be weak evidence, since any flexible curve can be made to fit. What makes it convincing is that **Poisson has only one parameter**, so fixing λ leaves nothing free to tune — and it then makes two further predictions that were not fitted:
 
-Two visible failures of the bell curve. It puts **2.19% of its probability mass below zero goals** — about 50 impossible matches across the window — which Poisson cannot do by construction. And it misallocates in the middle: it predicts 12.7% of matches finishing with exactly one goal when 15.6% actually do, while over-predicting 3–4 goal games.
+| Property | Poisson predicts | Observed |
+|---|:---:|:---:|
+| Variance ÷ mean | exactly 1.00 | **0.98** |
+| Skewness | 1/√λ = 0.59 | **0.53** |
 
-**Per season** (each fitted separately; p-values are what make the two models comparable, since tail-pooling leaves them with different degrees of freedom):
+Both land. A distribution fitted only to the *average* also reproduces the *spread* and the *asymmetry* of the real data, which is the signature of a genuine generating process rather than a curve drawn through points.
 
-| Season | Matches | Mean | SD | Var/mean | Normal χ² (df) | p | Poisson χ² (df) | p | Better |
-|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|:---:|---|
-| 2020/21 | 380 | 2.69 | 1.76 | 1.14 | 30.1 (5) | <0.001 | 10.5 (6) | 0.105 | Poisson |
-| 2021/22 | 380 | 2.82 | 1.63 | 0.94 | 8.7 (4) | 0.069 | 6.0 (6) | 0.426 | Poisson |
-| 2022/23 | 380 | 2.85 | 1.79 | 1.12 | 21.6 (5) | <0.001 | 4.8 (6) | 0.565 | Poisson |
-| 2023/24 | 380 | 3.28 | 1.66 | 0.84 | 6.4 (5) | 0.267 | 6.2 (7) | 0.519 | Poisson |
-| 2024/25 | 380 | 2.93 | 1.62 | 0.89 | 11.7 (5) | 0.039 | 4.0 (6) | 0.679 | Poisson |
-| **2025/26** | 380 | 2.75 | 1.57 | 0.90 | 4.2 (4) | 0.374 | 8.9 (6) | 0.178 | *normal* |
+The observed shape, and what Poisson expects: **15.6%** of matches finish with exactly one goal (16.1% predicted), **23.2%** with two (23.2%), and **5.7%** are goalless (5.6%). The largest single discrepancy anywhere in the table is under a percentage point.
 
-Poisson fits better in five of six seasons, and is never *rejected* in any of them. But note the honest exception: **in 2025/26 alone the normal curve fits slightly better** (p 0.374 vs 0.178). That is not evidence the model changed — a single season is only 380 matches, which has little power to separate two similar-looking distributions, and 2025/26 is the least dispersed season in the window (SD 1.57). It is exactly the kind of result that would be over-read if the pooled fit weren't there to anchor it. The stable reading is the pooled one, where 2,280 matches make the verdict emphatic.
+**Per season**, each refitted to its own λ:
 
-**Why this matters for FPL.** If goals conceded follow a Poisson process with mean λ, then a clean sheet is just P(0) = e^−λ — so a team's clean-sheet rate is predictable from its goals-conceded average alone, with nothing else fitted. Tested against all 120 team-seasons in this window, that predicts clean-sheet rate to within **3.7 percentage points** on average (correlation 0.902, bias −0.6pp). Arsenal conceded 0.71 per game in 2025/26, which implies a 49.1% clean-sheet rate; they actually recorded 50.0%. This is the practical payoff: you do not need a clean-sheet model, only a goals-conceded estimate, and the conversion is one exponential.
+| Season | Matches | λ | Var/mean | Skew | 1/√λ | χ² (df) | p |
+|---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
+| 2020/21 | 380 | 2.69 | 1.14 | 0.76 | 0.61 | 10.5 (6) | 0.105 |
+| 2021/22 | 380 | 2.82 | 0.94 | 0.38 | 0.60 | 6.0 (6) | 0.426 |
+| 2022/23 | 380 | 2.85 | 1.12 | 0.70 | 0.59 | 4.8 (6) | 0.565 |
+| 2023/24 | 380 | 3.28 | 0.84 | 0.30 | 0.55 | 6.2 (7) | 0.519 |
+| 2024/25 | 380 | 2.93 | 0.89 | 0.55 | 0.58 | 4.0 (6) | 0.679 |
+| **2025/26** | 380 | 2.75 | 0.90 | 0.47 | 0.60 | 8.9 (6) | 0.178 |
+
+**Poisson is not rejected in any individual season** — the weakest fit is 2020/21 at p = 0.11, which is also the most overdispersed season in the window (variance ÷ mean 1.14). Two caveats worth stating: a single season is 380 matches, so these have much less power than the pooled test, and λ itself drifts year to year (2.69 to 3.28). The claim is that goals are Poisson *within* a season, not that the rate is constant across them.
+
+**Why this matters for FPL.** If goals conceded follow a Poisson process with mean λ, then a clean sheet is simply P(0) = e^−λ — so a team's clean-sheet rate is predictable from its goals-conceded average alone, with nothing else fitted. Tested against all 120 team-seasons in this window, that predicts clean-sheet rate to within **3.7 percentage points** on average (correlation 0.902, bias -0.6pp). Arsenal conceded 0.71 per game in 2025/26, implying a 49.1% clean-sheet rate; they recorded 50.0%. This is the practical payoff: you do not need a clean-sheet model, only a goals-conceded estimate, and the conversion is one exponential.
 
 ### Most common scorelines
 

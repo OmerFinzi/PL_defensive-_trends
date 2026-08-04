@@ -173,11 +173,11 @@ footer a{color:var(--accent)}
   </section>
 
   <section>
-    <h3 class="sec-h">How many goals in a match? The shape of the distribution</h3>
+    <h3 class="sec-h">How many goals in a match? A Poisson distribution</h3>
     <p class="sec-sub" id="distIntro"></p>
     <div class="card" style="max-width:640px"><div id="c_dist"></div></div>
     <h3 class="sec-h" style="margin-top:34px">Season by season</h3>
-    <p class="sec-sub">The same fit repeated for each of the six seasons. With only 380 matches a single season has far less power to separate the two models than the pooled 2,280 &mdash; so read these as a consistency check, not six independent verdicts. Hover any bar for that season's fit statistics.</p>
+    <p class="sec-sub">The same fit repeated for each of the six seasons, refitted to that season's own &lambda;. With 380 matches a single season carries far less weight than the pooled 2,280, so read these as a consistency check rather than six independent verdicts &mdash; and Poisson is not rejected in any of them (the weakest fit is p = 0.11). Hover any bar for that season's numbers.</p>
     <div class="card" style="max-width:640px"><div id="c_distSeasons"></div></div>
     <h3 class="sec-h" style="margin-top:34px">Most common scorelines</h3>
     <p class="sec-sub" id="scoreIntro"></p>
@@ -628,31 +628,21 @@ function renderDefcon(){
 }
 
 // ---------- draw everything (also used to re-theme) ----------
-// ---------- goals per match: observed vs Gaussian vs Poisson ----------
-// Goals per match is a count, so the honest comparison is a discrete Poisson PMF
-// against the continuous normal density the eye expects. Both are drawn; the
-// normal curve visibly leaks past the zero-goal boundary, which Poisson cannot.
+// ---------- goals per match: observed counts vs the fitted Poisson ----------
+// Goals per match is a count, so the fit is drawn as a discrete PMF — points at
+// the integers — rather than a continuous curve through values that cannot occur.
 const fmtP=p=>p==null?"n/a":(p<0.001?"<0.001":p.toFixed(3));
 const DIST_LEGEND=()=>[{label:'Observed',color:cv('--s1')},
-                       {label:'Normal (Gaussian)',color:cv('--s2')},
-                       {label:'Poisson',color:cv('--s3')}];
+                       {label:'Poisson fit',color:cv('--s3')}];
 function drawDist(svg,d,box,{yAxis=true,xAxis=true,labelEvery=1,seasonTag=""}={}){
-  const kmax=d.bins.length-1,x0=-1,x1=kmax+1;
+  const kmax=d.bins.length-1,x0=-0.7,x1=kmax+0.7;
   const PX=v=>box.x+box.w*(v-x0)/(x1-x0);
-  const curve=d.gauss_curve.filter(p=>p.x>=x0&&p.x<=x1);
-  const hi=Math.max(...d.bins.map(b=>Math.max(b.obs_pct,b.gauss_pct,b.pois_pct)),
-                    ...curve.map(p=>p.y))*1.14;
+  const hi=Math.max(...d.bins.map(b=>Math.max(b.obs_pct,b.pois_pct)))*1.14;
   const PY=p=>box.y+box.h*(1-p/hi);
   for(let g=0;g<=4;g++){const v=hi*g/4,yy=PY(v);
     svg.appendChild(el("line",{x1:box.x,x2:box.x+box.w,y1:yy,y2:yy,stroke:cv('--grid')}));
     if(yAxis){const t=el("text",{x:box.x-6,y:yy+3,"text-anchor":"end",class:"axis-lbl"});
       t.textContent=v.toFixed(0)+"%";svg.appendChild(t);}}
-  // The zero-goal boundary. Everything left of it is an impossible scoreline, yet
-  // the bell curve still carries mass there — the clearest visual of why it's the
-  // wrong family for counts.
-  const zb=PX(-0.5);
-  svg.appendChild(el("line",{x1:zb,x2:zb,y1:box.y,y2:box.y+box.h,stroke:cv('--axis'),
-    "stroke-dasharray":"3 3",opacity:.75}));
   const bw=box.w/(x1-x0)*0.62;
   d.bins.forEach(b=>{
     const rc=el("rect",{x:PX(b.k)-bw/2,y:PY(b.obs_pct),width:bw,
@@ -660,17 +650,15 @@ function drawDist(svg,d,box,{yAxis=true,xAxis=true,labelEvery=1,seasonTag=""}={}
     rc.addEventListener("mousemove",e=>showTip(
       `<b>${b.k} goal${b.k===1?'':'s'}</b>${seasonTag?` &middot; ${seasonTag}`:''}`+
       `<div class="row"><span>Matches</span><b>${b.obs} (${b.obs_pct.toFixed(2)}%)</b></div>`+
-      `<div class="row"><span>Normal predicts</span><b>${b.gauss_pct.toFixed(2)}%</b></div>`+
       `<div class="row"><span>Poisson predicts</span><b>${b.pois_pct.toFixed(2)}%</b></div>`+
-      `<div class="row"><span>Fit (p, higher=better)</span><b>normal ${fmtP(d.gauss_p)} &middot; Poisson ${fmtP(d.pois_p)}</b></div>`,e));
+      `<div class="row"><span>Difference</span><b>${(b.obs_pct-b.pois_pct>0?'+':'')}${(b.obs_pct-b.pois_pct).toFixed(2)}pp</b></div>`+
+      `<div class="row"><span>Fit for ${seasonTag||'all seasons'}</span><b>&chi;&sup2; ${d.pois_chi2} (df ${d.pois_df}), p ${fmtP(d.pois_p)}</b></div>`,e));
     rc.addEventListener("mouseleave",hideTip);svg.appendChild(rc);});
-  // Gaussian is continuous -> smooth line. Poisson is discrete -> points at the
-  // integers only, joined by a dashed line purely so the shape is readable.
-  svg.appendChild(el("polyline",{points:curve.map(p=>`${PX(p.x)},${PY(p.y)}`).join(" "),
-    fill:"none",stroke:cv('--s2'),"stroke-width":2,"stroke-linejoin":"round"}));
+  // Poisson is discrete, so the fit is points at the integers — joined by a light
+  // dashed line only so the shape is readable, not to imply values in between.
   svg.appendChild(el("polyline",{points:d.bins.map(b=>`${PX(b.k)},${PY(b.pois_pct)}`).join(" "),
     fill:"none",stroke:cv('--s3'),"stroke-width":1.5,"stroke-dasharray":"4 3"}));
-  d.bins.forEach(b=>svg.appendChild(el("circle",{cx:PX(b.k),cy:PY(b.pois_pct),r:2.4,fill:cv('--s3')})));
+  d.bins.forEach(b=>svg.appendChild(el("circle",{cx:PX(b.k),cy:PY(b.pois_pct),r:3,fill:cv('--s3')})));
   if(xAxis)for(let k=0;k<=kmax;k+=labelEvery){
     const t=el("text",{x:PX(k),y:box.y+box.h+14,"text-anchor":"middle",class:"axis-lbl"});
     t.textContent=k;svg.appendChild(t);}
@@ -693,7 +681,7 @@ function distPanels(sel,list,title,sub){
     const lab=el("text",{x,y:y-8,class:"val-lbl"});
     lab.textContent=`${d.season} · mean ${d.mean.toFixed(2)}`;svg.appendChild(lab);
     const fit=el("text",{x:x+pw,y:y-8,"text-anchor":"end",class:"axis-lbl"});
-    fit.textContent=`p ${fmtP(d.gauss_p)} / ${fmtP(d.pois_p)}`;svg.appendChild(fit);
+    fit.textContent=`p ${fmtP(d.pois_p)}`;svg.appendChild(fit);
     drawDist(svg,d,{x,y,w:pw,h:ph},{yAxis:false,labelEvery:3,seasonTag:d.season});
   });
   banner(svg,W,H,title,sub,DIST_LEGEND());
@@ -701,19 +689,16 @@ function distPanels(sel,list,title,sub){
 }
 function renderDist(){
   const d=DATA.goal_dist,S=DATA.scorelines;
-  const verdict=d.better==='poisson'
-    ? `Poisson wins decisively: p = ${fmtP(d.pois_p)} against ${fmtP(d.gauss_p)} for the bell curve`
-    : `unusually, the bell curve edges it here: p = ${fmtP(d.gauss_p)} against ${fmtP(d.pois_p)}`;
   $("#distIntro").innerHTML=`How often does a Premier League match finish with 0, 1, 2 &hellip; goals? `+
-    `Across all ${d.n.toLocaleString()} matches the mean is <b>${d.mean.toFixed(2)}</b> goals `+
-    `(SD ${d.sd.toFixed(2)}). The bell curve is the shape most people reach for &mdash; but goals are a `+
-    `<b>count</b>: discrete, never negative, and skewed right (skew ${d.skew.toFixed(2)}, where a normal `+
-    `distribution expects 0). The right model is <b>Poisson</b>, and the data agrees almost exactly: the `+
-    `variance-to-mean ratio is <b>${d.var_mean_ratio.toFixed(2)}</b> where Poisson predicts 1.00. `+
-    `On a chi-square goodness-of-fit test ${verdict}. `+
-    `The giveaway is at the dashed line: the normal curve puts <b>${d.gauss_negative_pct.toFixed(2)}%</b> of its `+
-    `mass below zero goals &mdash; about ${Math.round(d.gauss_negative_pct/100*d.n)} impossible matches &mdash; `+
-    `and it under-predicts 1-goal games while over-predicting 3&ndash;4-goal ones. Poisson cannot go negative at all.`+
+    `Across all ${d.n.toLocaleString()} matches the mean is <b>&lambda; = ${d.mean.toFixed(2)}</b> goals. `+
+    `Goals are a <b>count</b> &mdash; discrete, never negative, one event at a time &mdash; so the model is `+
+    `<b>Poisson</b>, and the fit is close enough to be worth trusting: &chi;&sup2; = ${d.pois_chi2} on `+
+    `${d.pois_df} degrees of freedom, <b>p = ${fmtP(d.pois_p)}</b>. `+
+    `Poisson is a one-parameter family, which makes that more than curve-fitting: given &lambda; alone it also `+
+    `predicts the spread and the shape, and both check out. Variance &divide; mean comes to `+
+    `<b>${d.var_mean_ratio.toFixed(2)}</b> where Poisson requires exactly 1.00, and the skew is `+
+    `<b>${d.skew.toFixed(2)}</b> against a predicted 1&#8725;&radic;&lambda; = ${d.skew_predicted.toFixed(2)}. `+
+    `Nothing was tuned to make those match.`+
     (()=>{const c=d.poisson_cs_check; if(!c)return "";
       return ` <b>Why this is useful:</b> if goals conceded are Poisson, a clean sheet is simply `+
         `P(0) = e<sup>&minus;&lambda;</sup>, so a team's clean-sheet rate follows from its goals-conceded `+
@@ -722,10 +707,10 @@ function renderDist(){
         `${c.corr.toFixed(2)}, essentially no bias) &mdash; ${c.example.team} in ${c.example.season} conceded `+
         `${c.example.conceded_pg.toFixed(2)} per game, which predicts ${pct(c.example.predicted_cs)} clean `+
         `sheets against ${pct(c.example.actual_cs)} actual.`;})();
-  distChart("#c_dist",d,"Goals per match — observed vs fitted",
-    `All ${d.n.toLocaleString()} matches, 2020/21–${DATA.meta.latest} · dashed vertical = the zero-goal floor`);
+  distChart("#c_dist",d,"Goals per match — observed vs Poisson",
+    `All ${d.n.toLocaleString()} matches, 2020/21–${DATA.meta.latest} · bars = actual, dots = Poisson(λ=${d.mean.toFixed(2)})`);
   distPanels("#c_distSeasons",d.per_season,"Goals per match, by season",
-    "Each season fitted separately · p-values: normal / Poisson");
+    "Bars = actual, dots = that season's Poisson fit · p = goodness of fit");
   const top=S.overall[0];
   $("#scoreIntro").innerHTML=`The ${S.distinct} distinct scorelines actually recorded, ranked by frequency. `+
     `<b>${top.score}</b> is the single most likely result at <b>${top.pct.toFixed(1)}%</b> of matches. `+

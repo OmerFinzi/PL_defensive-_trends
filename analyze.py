@@ -122,6 +122,17 @@ def team_table(y):
 
 latest_table = team_table(latest)
 
+# Best defensive team-seasons across the whole window. The dashboard hero used to
+# call the latest season's leader "the best of the six seasons studied" without
+# anything ever computing that — it was third, behind Man City and Liverpool, who
+# both managed 21 clean sheets at 0.68 conceded in 2021/22. Ranked on clean-sheet
+# rate, then goals conceded per game as the tiebreak.
+best_defensive_seasons = [{
+    "team": r.team, "season": r.season, "clean_sheets": int(r.clean_sheets),
+    "cs_rate": round(r.cs_rate, 3), "conceded_pg": round(r.conceded_pg, 3),
+} for r in team_all.sort_values(["cs_rate", "conceded_pg"],
+                                ascending=[False, True]).head(5).itertuples()]
+
 # ---- Trends: linear slope of key league metrics over 6 seasons -------------
 def slope(series):
     x = np.arange(len(series))
@@ -159,7 +170,10 @@ for team in cur.index:
         d = cur[team] - prev[team]   # negative = conceding fewer = improving
         movers.append({"team": team, "cur": round(cur[team], 3),
                        "prev": round(prev[team], 3), "delta": round(d, 3)})
-movers.sort(key=lambda r: r["delta"])
+# Tiebreak on name so equal deltas get a stable published order rather than one
+# that depends on pandas sort stability — Newcastle and Bournemouth both moved
+# +0.211 in 2025/26, and which one appeared "third-worst" was previously arbitrary.
+movers.sort(key=lambda r: (r["delta"], r["team"]))
 risers = movers[:5]                    # improved most (delta most negative)
 fallers = movers[-5:][::-1]            # worsened most
 
@@ -179,6 +193,7 @@ payload = {
     },
     "league": league,
     "latest_table": latest_table,
+    "best_defensive_seasons": best_defensive_seasons,
     "trends": trends,
     "thirds": thirds,
     "risers": risers,

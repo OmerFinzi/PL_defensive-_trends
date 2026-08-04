@@ -343,6 +343,43 @@
       "away_cs_rate": 0.053
     }
   ],
+  "best_defensive_seasons": [
+    {
+      "team": "Liverpool",
+      "season": "2021/22",
+      "clean_sheets": 21,
+      "cs_rate": 0.553,
+      "conceded_pg": 0.684
+    },
+    {
+      "team": "Man City",
+      "season": "2021/22",
+      "clean_sheets": 21,
+      "cs_rate": 0.553,
+      "conceded_pg": 0.684
+    },
+    {
+      "team": "Arsenal",
+      "season": "2025/26",
+      "clean_sheets": 19,
+      "cs_rate": 0.5,
+      "conceded_pg": 0.711
+    },
+    {
+      "team": "Man City",
+      "season": "2020/21",
+      "clean_sheets": 19,
+      "cs_rate": 0.5,
+      "conceded_pg": 0.842
+    },
+    {
+      "team": "Arsenal",
+      "season": "2023/24",
+      "clean_sheets": 18,
+      "cs_rate": 0.474,
+      "conceded_pg": 0.763
+    }
+  ],
   "trends": {
     "cs_per_game_slope": -0.0226,
     "goals_per_game_slope": 0.03,

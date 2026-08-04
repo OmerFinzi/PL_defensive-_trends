@@ -10,11 +10,12 @@ Two reliable, distinct sources:
      -> designated corner and direct-free-kick takers per club, 2025/26.
      Penalty takers are intentionally excluded.
 
-Honesty note: goal-level "goals scored/conceded from set pieces" and a verified
-set-piece SCORER list need event data (Opta/StatsBomb via FBref/Understat), which
-was not reliably accessible when this was built (FBref 403; Understat served
-stripped pages). Those are NOT fabricated here. Direct-free-kick *takers* are
-reported as designated takers, not as confirmed scorers.
+Honesty note: goal-level "goals scored/conceded from set pieces" DO now exist in
+this project, but they come from Understat via fetch_setpiece_goals.py and land in
+docs/setpieces_goals.json — not from this script, and only as CLUB totals. A
+verified set-piece SCORER list still needs event data that is not available here,
+so the two are never joined: the corner/free-kick takers reported below are
+designated takers, NOT confirmed scorers of any set-piece goal.
 
 Writes docs/setpieces.json.
 """

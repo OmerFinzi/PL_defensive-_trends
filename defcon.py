@@ -32,6 +32,10 @@ teams = pd.read_csv(os.path.join(SRC, "teams.csv")).set_index("id")
 gw = pd.read_csv(os.path.join(SRC, "merged_gw.csv"))
 
 # --- DefCon points banked + threshold-hit matches, from per-gameweek data -----
+# The archive ships a few exactly-duplicated (element, GW, fixture) rows; left in
+# they double-count appearances and threshold hits. Genuine double-gameweeks have
+# distinct fixture ids and must survive, so dedupe on the fixture, not the GW.
+gw = gw.drop_duplicates(subset=["element", "GW", "fixture"])
 gw = gw[gw["minutes"] > 0].copy()
 thr = gw["position"].map(THRESH)
 gw["hit"] = (thr.notna()) & (gw["defensive_contribution"] >= thr)
@@ -81,20 +85,29 @@ p["hit_rate_ci_hi"] = [c[1] for c in _ci]
 p["cbit"] = (p["clearances_blocks_interceptions"] + p["tackles"]).astype(int)
 p["rec"] = p["recoveries"].astype(int)
 
+# Per-90 rates are NOT comparable across positions either, for a second reason:
+# the thresholds differ (DEF 10, MID/FWD 12). Ranking on dc90 alone puts 10
+# midfielders in a top 10 that advertises a DEF/MID/FWD legend. Expressing the
+# rate as a share of the player's own threshold is the cross-position-fair form:
+# 100% means an average match lands exactly on the +2 boundary.
+p["thr"] = p["pos"].map(THRESH)
+p["thr_pct"] = (p["dc90"] / p["thr"] * 100).round(1)
+
 def rows(df, cols):
     return df[cols].to_dict(orient="records")
 
 COLS = ["name", "team_short", "pos", "minutes", "dc", "dc90",
         "dc_matches", "defcon_points", "cost", "pts_per_m", "apps",
         "hit_rate", "hit_rate_ci_lo", "hit_rate_ci_hi"]
-CBIT_COLS = ["name", "team_short", "pos", "minutes", "cbit", "rec", "dc", "dc90"]
+CBIT_COLS = ["name", "team_short", "pos", "minutes", "cbit", "rec", "dc", "dc90",
+             "thr", "thr_pct"]
 
 # Leaderboards
 top_points = p.sort_values(["defcon_points", "dc"], ascending=False).head(15)
 top_per90 = p[p["minutes"] >= 900].sort_values("dc90", ascending=False).head(15)
 best_value = p[(p["cost"] <= 5.5) & (p["defcon_points"] >= 6)].sort_values(
     "pts_per_m", ascending=False).head(12)
-table = p.sort_values("defcon_points", ascending=False).head(30)
+table = p.sort_values(["defcon_points", "dc"], ascending=False).head(30)
 
 # Position summary: how DefCon points split across positions
 pos_summary = []
@@ -118,8 +131,17 @@ team_defcon = [{"team": r.team_short, "points": int(r.defcon_points)}
 # the team table stays on raw CBIT so all 20 squads are compared like-for-like on
 # one uniform stat rather than a DEF/MID hybrid.
 top_cbit = p.sort_values("dc", ascending=False).head(15)
-top_cbit90 = p[p["minutes"] >= 1500].sort_values("dc90", ascending=False).head(10)
-team_cbit_tot = (p.groupby("team_short")["cbit"].sum()
+top_cbit90 = p[p["minutes"] >= 1500].sort_values("thr_pct", ascending=False).head(10)
+
+# Team totals use `players` (all four positions), not the outfield-only `p`:
+# goalkeepers make real clearances and blocks, and dropping their 958 league-wide
+# CBIT reshuffles the table (Leeds 2nd -> 4th). GKs are excluded from the DefCon
+# points table above because they are ineligible to score it — different question.
+gk_cbit = (players[players["element_type"] == 1]
+           .assign(cbit=lambda d: d["clearances_blocks_interceptions"] + d["tackles"],
+                   team_short=lambda d: d["team"].map(teams["short_name"])))
+team_cbit_tot = (pd.concat([p[["team_short", "cbit"]], gk_cbit[["team_short", "cbit"]]])
+                 .groupby("team_short")["cbit"].sum()
                  .sort_values(ascending=False).reset_index())
 team_cbit = [{"team": r.team_short, "cbit": int(r.cbit)}
              for r in team_cbit_tot.itertuples()]
@@ -136,6 +158,9 @@ payload = {
         "source": "vaastav/Fantasy-Premier-League archive (data/2025-26); official FPL API stats, season-end snapshot",
         "note": "DefCon points: +2/match at DEF>=10 or MID/FWD>=12 defensive contributions. GKs excluded.",
         "n_players": int(len(p)),
+        # n_played is the honest denominator for the "how many returned" rate:
+        # 247 of the 744 registered outfielders never played a minute all season.
+        "n_played": int((p["minutes"] > 0).sum()),
         "n_returning": int((p["defcon_points"] > 0).sum()),
     },
     "top_points": rows(top_points, COLS),
@@ -152,11 +177,12 @@ with open(os.path.join(DOCS, "defcon.json"), "w", encoding="utf-8") as f:
     json.dump(payload, f, indent=2)
 
 # --- Console summary ---------------------------------------------------------
-print(f"Players analysed: {payload['meta']['n_players']} | with DefCon returns: {payload['meta']['n_returning']}")
+print(f"Outfielders registered: {payload['meta']['n_players']} | played: {payload['meta']['n_played']} "
+      f"| with DefCon returns: {payload['meta']['n_returning']}")
 print("\nTop 10 DefCon points banked (2025/26):")
 for r in payload["top_points"][:10]:
     print(f"  {r['name']:<14} {r['team_short']} {r['pos']}  {r['defcon_points']:>3} pts  "
-          f"({r['dc_matches']}/{r['minutes']//90 if r['minutes'] else 0} match-hits, {r['dc90']:.1f}/90, £{r['cost']}m)")
+          f"({r['dc_matches']}/{r['apps']} match-hits, {r['dc90']:.1f}/90, £{r['cost']}m)")
 print("\nPoints by position:")
 for r in pos_summary:
     print(f"  {r['pos']}: {r['total_points']} pts across {r['returning_players']} returning players")
@@ -167,7 +193,8 @@ print("\nTop 5 players by defensive actions (position-correct season total):")
 for r in payload["top_cbit"][:5]:
     print(f"  {r['name']:<14} {r['team_short']} {r['pos']}  {r['dc']} actions "
           f"({r['cbit']} CBIT + {r['rec']} rec, {r['dc90']}/90, {r['minutes']} min)")
-print("\nTop 5 defensive actions per 90 (min 1500 minutes):")
+print("\nTop 5 closest to their own threshold per 90 (min 1500 minutes):")
 for r in payload["top_cbit90"][:5]:
-    print(f"  {r['name']:<14} {r['team_short']} {r['pos']}  {r['dc90']}/90 ({r['dc']} actions, {r['minutes']} min)")
+    print(f"  {r['name']:<14} {r['team_short']} {r['pos']}  {r['thr_pct']}% of threshold "
+          f"({r['dc90']}/90 vs {r['thr']} needed)")
 print("\nWrote docs/defcon.json")

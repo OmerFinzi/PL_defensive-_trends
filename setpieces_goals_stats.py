@@ -31,14 +31,17 @@ def byar_ci(k, z=1.96):
 
 d = json.load(open(PATH, encoding="utf-8"))
 for r in d["teams"]:
-    r["shots_per_goal_for"] = round(r["sf"] / r["gf"], 2)
+    # A team on zero set-piece goals has no defined shots-per-goal. No club has hit
+    # zero in the seasons loaded so far, but guard it rather than divide by zero on
+    # a future refresh — the dashboard already handles a null ratio by skipping the row.
+    r["shots_per_goal_for"] = round(r["sf"] / r["gf"], 2) if r["gf"] else None
     lo, hi = byar_ci(r["gf"])
-    r["sp_for_ci_lo"] = round(r["sf"] / hi, 2)
+    r["sp_for_ci_lo"] = round(r["sf"] / hi, 2) if hi > 0 else None
     r["sp_for_ci_hi"] = round(r["sf"] / lo, 2) if lo > 0 else None
 
-    r["shots_per_goal_against"] = round(r["sa"] / r["ga"], 2)
+    r["shots_per_goal_against"] = round(r["sa"] / r["ga"], 2) if r["ga"] else None
     lo, hi = byar_ci(r["ga"])
-    r["sp_against_ci_lo"] = round(r["sa"] / hi, 2)
+    r["sp_against_ci_lo"] = round(r["sa"] / hi, 2) if hi > 0 else None
     r["sp_against_ci_hi"] = round(r["sa"] / lo, 2) if lo > 0 else None
 
 note = ("Set-piece goals = corners + set pieces + direct free kicks (penalties excluded). "
@@ -52,6 +55,10 @@ with open(PATH, "w", encoding="utf-8") as f:
 
 print(f"Wrote {PATH}")
 print("\nDefensive efficiency ranked, with 95% CI (wide CIs = don't over-read small gaps):")
-for r in sorted(d["teams"], key=lambda r: r["shots_per_goal_against"], reverse=True):
-    print(f"  {r['team']:<15} to-concede {r['shots_per_goal_against']:>5.2f}  "
-          f"95% CI [{r['sp_against_ci_lo']:.2f}, {r['sp_against_ci_hi']:.2f}]  (from {r['ga']} goals)")
+def _f(v):
+    return "n/a" if v is None else f"{v:.2f}"
+
+for r in sorted(d["teams"], key=lambda r: (r["shots_per_goal_against"] is None,
+                                           -(r["shots_per_goal_against"] or 0))):
+    print(f"  {r['team']:<15} to-concede {_f(r['shots_per_goal_against']):>6}  "
+          f"95% CI [{_f(r['sp_against_ci_lo'])}, {_f(r['sp_against_ci_hi'])}]  (from {r['ga']} goals)")

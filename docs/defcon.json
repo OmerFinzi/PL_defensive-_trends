@@ -4,6 +4,7 @@
     "source": "vaastav/Fantasy-Premier-League archive (data/2025-26); official FPL API stats, season-end snapshot",
     "note": "DefCon points: +2/match at DEF>=10 or MID/FWD>=12 defensive contributions. GKs excluded.",
     "n_players": 744,
+    "n_played": 497,
     "n_returning": 263
   },
   "top_points": [
@@ -750,22 +751,6 @@
       "hit_rate_ci_hi": 0.68
     },
     {
-      "name": "Andersen",
-      "team_short": "FUL",
-      "pos": "DEF",
-      "minutes": 2882,
-      "dc": 329,
-      "dc90": 10.27,
-      "dc_matches": 20,
-      "defcon_points": 40,
-      "cost": 4.4,
-      "pts_per_m": 9.09,
-      "apps": 33,
-      "hit_rate": 0.61,
-      "hit_rate_ci_lo": 0.44,
-      "hit_rate_ci_hi": 0.75
-    },
-    {
       "name": "Lacroix",
       "team_short": "CRY",
       "pos": "DEF",
@@ -780,6 +765,22 @@
       "hit_rate": 0.57,
       "hit_rate_ci_lo": 0.41,
       "hit_rate_ci_hi": 0.72
+    },
+    {
+      "name": "Andersen",
+      "team_short": "FUL",
+      "pos": "DEF",
+      "minutes": 2882,
+      "dc": 329,
+      "dc90": 10.27,
+      "dc_matches": 20,
+      "defcon_points": 40,
+      "cost": 4.4,
+      "pts_per_m": 9.09,
+      "apps": 33,
+      "hit_rate": 0.61,
+      "hit_rate_ci_lo": 0.44,
+      "hit_rate_ci_hi": 0.75
     },
     {
       "name": "Ampadu",
@@ -846,22 +847,6 @@
       "hit_rate_ci_hi": 0.62
     },
     {
-      "name": "Collins",
-      "team_short": "BRE",
-      "pos": "DEF",
-      "minutes": 2971,
-      "dc": 319,
-      "dc90": 9.66,
-      "dc_matches": 16,
-      "defcon_points": 32,
-      "cost": 4.9,
-      "pts_per_m": 6.53,
-      "apps": 35,
-      "hit_rate": 0.46,
-      "hit_rate_ci_lo": 0.3,
-      "hit_rate_ci_hi": 0.62
-    },
-    {
       "name": "Virgil",
       "team_short": "LIV",
       "pos": "DEF",
@@ -876,6 +861,22 @@
       "hit_rate": 0.42,
       "hit_rate_ci_lo": 0.28,
       "hit_rate_ci_hi": 0.58
+    },
+    {
+      "name": "Collins",
+      "team_short": "BRE",
+      "pos": "DEF",
+      "minutes": 2971,
+      "dc": 319,
+      "dc90": 9.66,
+      "dc_matches": 16,
+      "defcon_points": 32,
+      "cost": 4.9,
+      "pts_per_m": 6.53,
+      "apps": 35,
+      "hit_rate": 0.46,
+      "hit_rate_ci_lo": 0.3,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "J.Gomes",
@@ -910,22 +911,6 @@
       "hit_rate_ci_hi": 0.57
     },
     {
-      "name": "Keane",
-      "team_short": "EVE",
-      "pos": "DEF",
-      "minutes": 2588,
-      "dc": 302,
-      "dc90": 10.5,
-      "dc_matches": 15,
-      "defcon_points": 30,
-      "cost": 4.5,
-      "pts_per_m": 6.67,
-      "apps": 33,
-      "hit_rate": 0.45,
-      "hit_rate_ci_lo": 0.3,
-      "hit_rate_ci_hi": 0.62
-    },
-    {
       "name": "M.Fernandes",
       "team_short": "WHU",
       "pos": "MID",
@@ -940,6 +925,22 @@
       "hit_rate": 0.42,
       "hit_rate_ci_lo": 0.27,
       "hit_rate_ci_hi": 0.58
+    },
+    {
+      "name": "Keane",
+      "team_short": "EVE",
+      "pos": "DEF",
+      "minutes": 2588,
+      "dc": 302,
+      "dc90": 10.5,
+      "dc_matches": 15,
+      "defcon_points": 30,
+      "cost": 4.5,
+      "pts_per_m": 6.67,
+      "apps": 33,
+      "hit_rate": 0.45,
+      "hit_rate_ci_lo": 0.3,
+      "hit_rate_ci_hi": 0.62
     },
     {
       "name": "Ballard",
@@ -1038,20 +1039,20 @@
       "hit_rate_ci_hi": 0.66
     },
     {
-      "name": "Mukiele",
-      "team_short": "SUN",
-      "pos": "DEF",
-      "minutes": 2784,
-      "dc": 273,
-      "dc90": 8.83,
+      "name": "Caicedo",
+      "team_short": "CHE",
+      "pos": "MID",
+      "minutes": 2796,
+      "dc": 366,
+      "dc90": 11.78,
       "dc_matches": 13,
       "defcon_points": 26,
-      "cost": 4.6,
-      "pts_per_m": 5.65,
-      "apps": 32,
-      "hit_rate": 0.41,
-      "hit_rate_ci_lo": 0.26,
-      "hit_rate_ci_hi": 0.58
+      "cost": 5.7,
+      "pts_per_m": 4.56,
+      "apps": 33,
+      "hit_rate": 0.39,
+      "hit_rate_ci_lo": 0.25,
+      "hit_rate_ci_hi": 0.56
     },
     {
       "name": "Xhaka",
@@ -1070,20 +1071,36 @@
       "hit_rate_ci_hi": 0.55
     },
     {
-      "name": "Bentancur",
-      "team_short": "TOT",
-      "pos": "MID",
-      "minutes": 1880,
-      "dc": 278,
-      "dc90": 13.31,
+      "name": "Van Hecke",
+      "team_short": "BHA",
+      "pos": "DEF",
+      "minutes": 3210,
+      "dc": 317,
+      "dc90": 8.89,
       "dc_matches": 13,
       "defcon_points": 26,
-      "cost": 5.2,
-      "pts_per_m": 5.0,
-      "apps": 26,
-      "hit_rate": 0.5,
-      "hit_rate_ci_lo": 0.32,
-      "hit_rate_ci_hi": 0.68
+      "cost": 4.7,
+      "pts_per_m": 5.53,
+      "apps": 36,
+      "hit_rate": 0.36,
+      "hit_rate_ci_lo": 0.22,
+      "hit_rate_ci_hi": 0.52
+    },
+    {
+      "name": "Richards",
+      "team_short": "CRY",
+      "pos": "DEF",
+      "minutes": 2825,
+      "dc": 311,
+      "dc90": 9.91,
+      "dc_matches": 13,
+      "defcon_points": 26,
+      "cost": 4.4,
+      "pts_per_m": 5.91,
+      "apps": 33,
+      "hit_rate": 0.39,
+      "hit_rate_ci_lo": 0.25,
+      "hit_rate_ci_hi": 0.56
     },
     {
       "name": "Milenkovi\u0107",
@@ -1102,22 +1119,6 @@
       "hit_rate_ci_hi": 0.5
     },
     {
-      "name": "Van Hecke",
-      "team_short": "BHA",
-      "pos": "DEF",
-      "minutes": 3210,
-      "dc": 317,
-      "dc90": 8.89,
-      "dc_matches": 13,
-      "defcon_points": 26,
-      "cost": 4.7,
-      "pts_per_m": 5.53,
-      "apps": 36,
-      "hit_rate": 0.36,
-      "hit_rate_ci_lo": 0.22,
-      "hit_rate_ci_hi": 0.52
-    },
-    {
       "name": "Struijk",
       "team_short": "LEE",
       "pos": "DEF",
@@ -1134,36 +1135,36 @@
       "hit_rate_ci_hi": 0.55
     },
     {
-      "name": "Caicedo",
-      "team_short": "CHE",
-      "pos": "MID",
-      "minutes": 2796,
-      "dc": 366,
-      "dc90": 11.78,
+      "name": "Konat\u00e9",
+      "team_short": "LIV",
+      "pos": "DEF",
+      "minutes": 3090,
+      "dc": 293,
+      "dc90": 8.53,
       "dc_matches": 13,
       "defcon_points": 26,
-      "cost": 5.7,
-      "pts_per_m": 4.56,
-      "apps": 33,
-      "hit_rate": 0.39,
-      "hit_rate_ci_lo": 0.25,
-      "hit_rate_ci_hi": 0.56
+      "cost": 5.4,
+      "pts_per_m": 4.81,
+      "apps": 36,
+      "hit_rate": 0.36,
+      "hit_rate_ci_lo": 0.22,
+      "hit_rate_ci_hi": 0.52
     },
     {
-      "name": "Richards",
-      "team_short": "CRY",
-      "pos": "DEF",
-      "minutes": 2825,
-      "dc": 311,
-      "dc90": 9.91,
+      "name": "Bentancur",
+      "team_short": "TOT",
+      "pos": "MID",
+      "minutes": 1880,
+      "dc": 278,
+      "dc90": 13.31,
       "dc_matches": 13,
       "defcon_points": 26,
-      "cost": 4.4,
-      "pts_per_m": 5.91,
-      "apps": 33,
-      "hit_rate": 0.39,
-      "hit_rate_ci_lo": 0.25,
-      "hit_rate_ci_hi": 0.56
+      "cost": 5.2,
+      "pts_per_m": 5.0,
+      "apps": 26,
+      "hit_rate": 0.5,
+      "hit_rate_ci_lo": 0.32,
+      "hit_rate_ci_hi": 0.68
     }
   ],
   "position_summary": [
@@ -1280,7 +1281,9 @@
       "cbit": 209,
       "rec": 306,
       "dc": 515,
-      "dc90": 13.91
+      "dc90": 13.91,
+      "thr": 12,
+      "thr_pct": 115.9
     },
     {
       "name": "Garner",
@@ -1290,7 +1293,9 @@
       "cbit": 273,
       "rec": 185,
       "dc": 458,
-      "dc90": 12.08
+      "dc90": 12.08,
+      "thr": 12,
+      "thr_pct": 100.7
     },
     {
       "name": "Senesi",
@@ -1300,7 +1305,9 @@
       "cbit": 419,
       "rec": 155,
       "dc": 419,
-      "dc90": 11.47
+      "dc90": 11.47,
+      "thr": 10,
+      "thr_pct": 114.7
     },
     {
       "name": "Ampadu",
@@ -1310,7 +1317,9 @@
       "cbit": 232,
       "rec": 184,
       "dc": 416,
-      "dc90": 12.0
+      "dc90": 12.0,
+      "thr": 12,
+      "thr_pct": 100.0
     },
     {
       "name": "J.Gomes",
@@ -1320,7 +1329,9 @@
       "cbit": 194,
       "rec": 193,
       "dc": 387,
-      "dc90": 12.31
+      "dc90": 12.31,
+      "thr": 12,
+      "thr_pct": 102.6
     },
     {
       "name": "Scott",
@@ -1330,7 +1341,9 @@
       "cbit": 193,
       "rec": 193,
       "dc": 386,
-      "dc90": 12.2
+      "dc90": 12.2,
+      "thr": 12,
+      "thr_pct": 101.7
     },
     {
       "name": "Andr\u00e9",
@@ -1340,7 +1353,9 @@
       "cbit": 171,
       "rec": 212,
       "dc": 383,
-      "dc90": 12.49
+      "dc90": 12.49,
+      "thr": 12,
+      "thr_pct": 104.1
     },
     {
       "name": "Tarkowski",
@@ -1350,7 +1365,9 @@
       "cbit": 376,
       "rec": 90,
       "dc": 376,
-      "dc90": 10.16
+      "dc90": 10.16,
+      "thr": 10,
+      "thr_pct": 101.6
     },
     {
       "name": "Rice",
@@ -1360,7 +1377,9 @@
       "cbit": 196,
       "rec": 180,
       "dc": 376,
-      "dc90": 10.94
+      "dc90": 10.94,
+      "thr": 12,
+      "thr_pct": 91.2
     },
     {
       "name": "Lacroix",
@@ -1370,7 +1389,9 @@
       "cbit": 370,
       "rec": 96,
       "dc": 370,
-      "dc90": 10.79
+      "dc90": 10.79,
+      "thr": 10,
+      "thr_pct": 107.9
     },
     {
       "name": "M.Fernandes",
@@ -1380,7 +1401,9 @@
       "cbit": 187,
       "rec": 182,
       "dc": 369,
-      "dc90": 11.01
+      "dc90": 11.01,
+      "thr": 12,
+      "thr_pct": 91.8
     },
     {
       "name": "Caicedo",
@@ -1390,7 +1413,9 @@
       "cbit": 189,
       "rec": 177,
       "dc": 366,
-      "dc90": 11.78
+      "dc90": 11.78,
+      "thr": 12,
+      "thr_pct": 98.2
     },
     {
       "name": "Xhaka",
@@ -1400,7 +1425,9 @@
       "cbit": 184,
       "rec": 178,
       "dc": 362,
-      "dc90": 11.23
+      "dc90": 11.23,
+      "thr": 12,
+      "thr_pct": 93.6
     },
     {
       "name": "Casemiro",
@@ -1410,7 +1437,9 @@
       "cbit": 220,
       "rec": 135,
       "dc": 355,
-      "dc90": 12.41
+      "dc90": 12.41,
+      "thr": 12,
+      "thr_pct": 103.4
     },
     {
       "name": "Virgil",
@@ -1420,7 +1449,9 @@
       "cbit": 352,
       "rec": 87,
       "dc": 352,
-      "dc90": 9.26
+      "dc90": 9.26,
+      "thr": 10,
+      "thr_pct": 92.6
     }
   ],
   "top_cbit90": [
@@ -1432,7 +1463,21 @@
       "cbit": 209,
       "rec": 306,
       "dc": 515,
-      "dc90": 13.91
+      "dc90": 13.91,
+      "thr": 12,
+      "thr_pct": 115.9
+    },
+    {
+      "name": "Senesi",
+      "team_short": "BOU",
+      "pos": "DEF",
+      "minutes": 3288,
+      "cbit": 419,
+      "rec": 155,
+      "dc": 419,
+      "dc90": 11.47,
+      "thr": 10,
+      "thr_pct": 114.7
     },
     {
       "name": "Florentino",
@@ -1442,7 +1487,33 @@
       "cbit": 200,
       "rec": 113,
       "dc": 313,
-      "dc90": 13.41
+      "dc90": 13.41,
+      "thr": 12,
+      "thr_pct": 111.8
+    },
+    {
+      "name": "Mavropanos",
+      "team_short": "WHU",
+      "pos": "DEF",
+      "minutes": 2532,
+      "cbit": 313,
+      "rec": 103,
+      "dc": 313,
+      "dc90": 11.13,
+      "thr": 10,
+      "thr_pct": 111.3
+    },
+    {
+      "name": "Hill",
+      "team_short": "BOU",
+      "pos": "DEF",
+      "minutes": 2102,
+      "cbit": 260,
+      "rec": 74,
+      "dc": 260,
+      "dc90": 11.13,
+      "thr": 10,
+      "thr_pct": 111.3
     },
     {
       "name": "Bentancur",
@@ -1452,7 +1523,45 @@
       "cbit": 147,
       "rec": 131,
       "dc": 278,
-      "dc90": 13.31
+      "dc90": 13.31,
+      "thr": 12,
+      "thr_pct": 110.9
+    },
+    {
+      "name": "Ballard",
+      "team_short": "SUN",
+      "pos": "DEF",
+      "minutes": 2144,
+      "cbit": 264,
+      "rec": 69,
+      "dc": 264,
+      "dc90": 11.08,
+      "thr": 10,
+      "thr_pct": 110.8
+    },
+    {
+      "name": "Fofana",
+      "team_short": "CHE",
+      "pos": "DEF",
+      "minutes": 1718,
+      "cbit": 206,
+      "rec": 81,
+      "dc": 206,
+      "dc90": 10.79,
+      "thr": 10,
+      "thr_pct": 107.9
+    },
+    {
+      "name": "Lacroix",
+      "team_short": "CRY",
+      "pos": "DEF",
+      "minutes": 3085,
+      "cbit": 370,
+      "rec": 96,
+      "dc": 370,
+      "dc90": 10.79,
+      "thr": 10,
+      "thr_pct": 107.9
     },
     {
       "name": "Wieffer",
@@ -1462,149 +1571,91 @@
       "cbit": 167,
       "rec": 102,
       "dc": 269,
-      "dc90": 12.74
-    },
-    {
-      "name": "Andr\u00e9",
-      "team_short": "WOL",
-      "pos": "MID",
-      "minutes": 2760,
-      "cbit": 171,
-      "rec": 212,
-      "dc": 383,
-      "dc90": 12.49
-    },
-    {
-      "name": "Casemiro",
-      "team_short": "MUN",
-      "pos": "MID",
-      "minutes": 2575,
-      "cbit": 220,
-      "rec": 135,
-      "dc": 355,
-      "dc90": 12.41
-    },
-    {
-      "name": "J.Palhinha",
-      "team_short": "TOT",
-      "pos": "MID",
-      "minutes": 2192,
-      "cbit": 210,
-      "rec": 92,
-      "dc": 302,
-      "dc90": 12.4
-    },
-    {
-      "name": "J.Gomes",
-      "team_short": "WOL",
-      "pos": "MID",
-      "minutes": 2829,
-      "cbit": 194,
-      "rec": 193,
-      "dc": 387,
-      "dc90": 12.31
-    },
-    {
-      "name": "Rodrigo",
-      "team_short": "MCI",
-      "pos": "MID",
-      "minutes": 1510,
-      "cbit": 99,
-      "rec": 107,
-      "dc": 206,
-      "dc90": 12.28
-    },
-    {
-      "name": "Scott",
-      "team_short": "BOU",
-      "pos": "MID",
-      "minutes": 2848,
-      "cbit": 193,
-      "rec": 193,
-      "dc": 386,
-      "dc90": 12.2
+      "dc90": 12.74,
+      "thr": 12,
+      "thr_pct": 106.2
     }
   ],
   "team_cbit": [
     {
       "team": "CRY",
-      "cbit": 2262
+      "cbit": 2319
     },
     {
       "team": "BUR",
-      "cbit": 2251
-    },
-    {
-      "team": "LEE",
-      "cbit": 2251
+      "cbit": 2315
     },
     {
       "team": "EVE",
-      "cbit": 2246
+      "cbit": 2300
+    },
+    {
+      "team": "LEE",
+      "cbit": 2298
     },
     {
       "team": "BOU",
-      "cbit": 2225
+      "cbit": 2287
     },
     {
       "team": "WHU",
-      "cbit": 2215
+      "cbit": 2265
     },
     {
       "team": "WOL",
-      "cbit": 2155
+      "cbit": 2233
     },
     {
       "team": "SUN",
-      "cbit": 2153
-    },
-    {
-      "team": "TOT",
-      "cbit": 2111
+      "cbit": 2196
     },
     {
       "team": "BRE",
-      "cbit": 2110
+      "cbit": 2159
+    },
+    {
+      "team": "TOT",
+      "cbit": 2157
     },
     {
       "team": "FUL",
-      "cbit": 2075
+      "cbit": 2125
     },
     {
       "team": "MUN",
-      "cbit": 2055
+      "cbit": 2089
     },
     {
       "team": "NFO",
-      "cbit": 2030
+      "cbit": 2063
     },
     {
       "team": "BHA",
-      "cbit": 1971
+      "cbit": 2004
     },
     {
       "team": "MCI",
-      "cbit": 1926
+      "cbit": 1976
     },
     {
       "team": "NEW",
-      "cbit": 1913
+      "cbit": 1959
     },
     {
       "team": "CHE",
-      "cbit": 1865
+      "cbit": 1897
     },
     {
       "team": "ARS",
-      "cbit": 1838
+      "cbit": 1879
     },
     {
       "team": "LIV",
-      "cbit": 1774
+      "cbit": 1826
     },
     {
       "team": "AVL",
-      "cbit": 1724
+      "cbit": 1761
     }
   ]
 }

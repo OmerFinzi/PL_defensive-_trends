@@ -641,9 +641,10 @@ function renderDefcon(){
     `<b>${ocTop.team}</b> concede <b>${ocTop.cbit.toFixed(2)}</b> CBIT per qualifying defender against `+
     `<b>${ocBot.cbit.toFixed(2)}</b> for ${ocBot.team}. Note the spread is much tighter than the bonus-count `+
     `version (${(ocTop.cbit/ocBot.cbit).toFixed(2)}&times; rather than 1.7&times;) &mdash; averaging compresses what a `+
-    `threshold amplifies, and both are true descriptions of the same thing. Venue matters more than most of `+
-    `this table: facing a club at <i>their</i> ground is worth about `+
-    `<b>+${venue.toFixed(2)}</b> CBIT on average, so hover for each club's home/away split.`;
+    `threshold amplifies, and both are true descriptions of the same thing. There is a league-wide venue `+
+    `effect &mdash; about <b>${venue.toFixed(2)}</b> more CBIT away at a club than hosting it &mdash; but it is `+
+    `deliberately not split out: every club plays 19 home and 19 away, so it cancels in each average, and the `+
+    `club-by-club splits (in the tooltip) are indistinguishable from sampling noise.`;
   hbars("#c_oppcbit",oc,{value:r=>r.cbit,label:r=>r.team,color:cv('--s1'),
     valfmt:v=>v.toFixed(2),rowH:24,mL:104,mR:82,ci:r=>[r.ci_lo,r.ci_hi],
     title:"CBIT conceded to an opposing defender — 2025/26",

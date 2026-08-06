@@ -1415,5 +1415,212 @@
       "team": "AVL",
       "cbit": 1761
     }
+  ],
+  "opp_defcon": [
+    {
+      "team": "Liverpool",
+      "team_short": "LIV",
+      "hits": 91,
+      "matches": 38,
+      "per_match": 2.39,
+      "ci_lo": 1.93,
+      "ci_hi": 2.94,
+      "stays_up": true
+    },
+    {
+      "team": "Everton",
+      "team_short": "EVE",
+      "hits": 89,
+      "matches": 38,
+      "per_match": 2.34,
+      "ci_lo": 1.88,
+      "ci_hi": 2.88,
+      "stays_up": true
+    },
+    {
+      "team": "Newcastle",
+      "team_short": "NEW",
+      "hits": 84,
+      "matches": 38,
+      "per_match": 2.21,
+      "ci_lo": 1.76,
+      "ci_hi": 2.74,
+      "stays_up": true
+    },
+    {
+      "team": "Crystal Palace",
+      "team_short": "CRY",
+      "hits": 83,
+      "matches": 38,
+      "per_match": 2.18,
+      "ci_lo": 1.74,
+      "ci_hi": 2.71,
+      "stays_up": true
+    },
+    {
+      "team": "Aston Villa",
+      "team_short": "AVL",
+      "hits": 82,
+      "matches": 38,
+      "per_match": 2.16,
+      "ci_lo": 1.72,
+      "ci_hi": 2.68,
+      "stays_up": true
+    },
+    {
+      "team": "Spurs",
+      "team_short": "TOT",
+      "hits": 80,
+      "matches": 38,
+      "per_match": 2.11,
+      "ci_lo": 1.67,
+      "ci_hi": 2.62,
+      "stays_up": true
+    },
+    {
+      "team": "Brentford",
+      "team_short": "BRE",
+      "hits": 80,
+      "matches": 38,
+      "per_match": 2.11,
+      "ci_lo": 1.67,
+      "ci_hi": 2.62,
+      "stays_up": true
+    },
+    {
+      "team": "Leeds",
+      "team_short": "LEE",
+      "hits": 73,
+      "matches": 38,
+      "per_match": 1.92,
+      "ci_lo": 1.51,
+      "ci_hi": 2.42,
+      "stays_up": true
+    },
+    {
+      "team": "Man City",
+      "team_short": "MCI",
+      "hits": 72,
+      "matches": 38,
+      "per_match": 1.89,
+      "ci_lo": 1.48,
+      "ci_hi": 2.39,
+      "stays_up": true
+    },
+    {
+      "team": "Man Utd",
+      "team_short": "MUN",
+      "hits": 72,
+      "matches": 38,
+      "per_match": 1.89,
+      "ci_lo": 1.48,
+      "ci_hi": 2.39,
+      "stays_up": true
+    },
+    {
+      "team": "Bournemouth",
+      "team_short": "BOU",
+      "hits": 70,
+      "matches": 38,
+      "per_match": 1.84,
+      "ci_lo": 1.44,
+      "ci_hi": 2.33,
+      "stays_up": true
+    },
+    {
+      "team": "Brighton",
+      "team_short": "BHA",
+      "hits": 69,
+      "matches": 38,
+      "per_match": 1.82,
+      "ci_lo": 1.41,
+      "ci_hi": 2.3,
+      "stays_up": true
+    },
+    {
+      "team": "Burnley",
+      "team_short": "BUR",
+      "hits": 68,
+      "matches": 38,
+      "per_match": 1.79,
+      "ci_lo": 1.39,
+      "ci_hi": 2.27,
+      "stays_up": false
+    },
+    {
+      "team": "Arsenal",
+      "team_short": "ARS",
+      "hits": 67,
+      "matches": 38,
+      "per_match": 1.76,
+      "ci_lo": 1.37,
+      "ci_hi": 2.24,
+      "stays_up": true
+    },
+    {
+      "team": "Nott'm Forest",
+      "team_short": "NFO",
+      "hits": 63,
+      "matches": 38,
+      "per_match": 1.66,
+      "ci_lo": 1.27,
+      "ci_hi": 2.12,
+      "stays_up": true
+    },
+    {
+      "team": "Sunderland",
+      "team_short": "SUN",
+      "hits": 62,
+      "matches": 38,
+      "per_match": 1.63,
+      "ci_lo": 1.25,
+      "ci_hi": 2.09,
+      "stays_up": true
+    },
+    {
+      "team": "Chelsea",
+      "team_short": "CHE",
+      "hits": 59,
+      "matches": 38,
+      "per_match": 1.55,
+      "ci_lo": 1.18,
+      "ci_hi": 2.0,
+      "stays_up": true
+    },
+    {
+      "team": "Wolves",
+      "team_short": "WOL",
+      "hits": 56,
+      "matches": 38,
+      "per_match": 1.47,
+      "ci_lo": 1.11,
+      "ci_hi": 1.91,
+      "stays_up": false
+    },
+    {
+      "team": "Fulham",
+      "team_short": "FUL",
+      "hits": 52,
+      "matches": 38,
+      "per_match": 1.37,
+      "ci_lo": 1.02,
+      "ci_hi": 1.79,
+      "stays_up": true
+    },
+    {
+      "team": "West Ham",
+      "team_short": "WHU",
+      "hits": 45,
+      "matches": 38,
+      "per_match": 1.18,
+      "ci_lo": 0.86,
+      "ci_hi": 1.58,
+      "stays_up": false
+    }
+  ],
+  "relegated": [
+    "Burnley",
+    "West Ham",
+    "Wolves"
   ]
 }

@@ -142,6 +142,22 @@ Averaging clean sheets per game by third of the season (Early GW1–12, Mid GW13
 
 **Best budget value** (DefCon points per £m, enablers ≤ £5.5m): **Maxime Estève (BUR, £3.8m)** and **Senesi** lead at ~10 points/£m, with **Andersen (FUL, £4.4m)** close behind — cheap, nailed defensive-contribution sources.
 
+### Which fixtures hand out DefCon
+
+The club a player *faces* matters as much as the club he plays for. Counting how many **opposing** players reached their threshold in each match gives a fixture-difficulty table for DefCon — how much defensive work facing a given side forces on the other team. Restricted to the **17 clubs staying up**, since a fixture against a relegated side is not one you can plan around (Burnley, West Ham and Wolves are excluded; West Ham were in fact the single least generous opponent in the league at 1.18):
+
+| Most generous fixtures | Per match | | Least generous | Per match |
+|---|:---:|---|---|:---:|
+| Liverpool | **2.39** | | Fulham | **1.37** |
+| Everton | 2.34 | | Chelsea | 1.55 |
+| Newcastle | 2.21 | | Sunderland | 1.63 |
+| Crystal Palace | 2.18 | | Nott'm Forest | 1.66 |
+| Aston Villa | 2.16 | | Arsenal | 1.76 |
+
+The spread is real and worth acting on: **1.7× more threshold-hitters against Liverpool than against Fulham**, and those two ends do not overlap even at 95% confidence (Liverpool 1.93–2.94, Fulham 1.02–1.79). The usual caveat applies in the middle — with 52–91 hits per club the intervals are wide, so neighbouring rows are tied rather than ranked, and only the tiers are meaningful.
+
+The interesting part is what *doesn't* explain it. The obvious guess — that dominant possession sides pin opponents back and force defensive actions — does not survive: **Man City rank 9th of 17 and Arsenal 13th**, and the correlation with goals scored is only +0.26 (with corners won, +0.21). Facing Liverpool or Everton generated far more opposition DefCon than facing Arsenal did. Whatever drives this is closer to game *openness* and transition volume than to territorial dominance, and this dataset cannot separate those — it has no possession or pressing data. Worth flagging as an observation with a real effect size but no established mechanism.
+
 **FPL takeaway:** DefCon rewards a distinct player profile from clean sheets. The elite-defence pick (Arsenal/City assets) chases clean-sheet points; the DefCon pick chases *volume of defensive actions*, which favours ball-winning defenders and holding midfielders at busy, deeper-defending clubs — often much cheaper. A balanced squad can target both.
 
 ## 9. Set pieces — corners & free kicks (penalties excluded)

@@ -29,6 +29,7 @@ const CHARTS = [
   { sel: '#c_ha',      name: 'home-advantage' },
   { sel: '#c_dcpts',   name: 'defcon-top15' },
   { sel: '#c_cbittop', name: 'defensive-actions-top15' },
+  { sel: '#c_oppdc',   name: 'defcon-fixtures' },
   { sel: '#c_spteams', name: 'set-pieces-corners' },
   { sel: '#c_spgfor',  name: 'set-piece-goals-scored' },
   { sel: '#c_spgeff',  name: 'set-piece-efficiency' },

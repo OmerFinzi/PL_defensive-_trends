@@ -244,6 +244,10 @@ footer a{color:var(--accent)}
       </div>
     </div>
 
+    <h3 class="sec-h" style="margin-top:34px">Which fixtures hand out DefCon?</h3>
+    <p class="sec-sub" id="oppDcIntro"></p>
+    <div class="card" style="max-width:620px"><div id="c_oppdc"></div></div>
+
     <h3 class="sec-h" style="margin-top:34px">Best budget DefCon value</h3>
     <p class="sec-sub">DefCon points per &pound;m of season-end price, for enablers priced &pound;5.5m or under. These are the cheap defenders and midfielders who quietly banked points all season.</p>
     <div class="card" style="max-width:620px"><div id="c_dcvalue"></div></div>
@@ -549,10 +553,14 @@ renderTable();
 
 // ---------- DefCon (player-level, 2025/26) ----------
 const POSCOL={DEF:'--s1',MID:'--s2',FWD:'--s3'};
-function hbars(sel,rows,{value,label,color,valfmt=(v)=>v,rowH=26,mL=118,mR=48,tip,title,sub,legend}){
+// `ci` is optional: pass r => [lo, hi] to draw a 95% interval whisker over each
+// bar. The axis then has to make room for the interval, not just the point
+// estimate, or every whisker would render clipped.
+function hbars(sel,rows,{value,label,color,valfmt=(v)=>v,rowH=26,mL=118,mR=48,tip,title,sub,legend,ci}){
   const W=560,mT=legend?74:56,H=mT+rows.length*rowH+22;
   const svg=el("svg",{viewBox:`0 0 ${W} ${H}`});
-  const max=Math.max(...rows.map(r=>value(r)))*1.06||1;
+  const his=ci?rows.map(r=>(ci(r)||[])[1]).filter(v=>v!=null):[];
+  const max=Math.max(...rows.map(r=>value(r)),...his)*1.06||1;
   const X=v=>mL+(W-mL-mR)*v/max;
   rows.forEach((r,i)=>{
     const y=mT+i*rowH, v=value(r);
@@ -562,6 +570,7 @@ function hbars(sel,rows,{value,label,color,valfmt=(v)=>v,rowH=26,mL=118,mR=48,ti
     if(tip){rc.addEventListener("mousemove",e=>showTip(tip(r),e));rc.addEventListener("mouseleave",hideTip);}
     svg.appendChild(rc);
     const vl=el("text",{x:mL+w+6,y:y+rowH/2+1,class:"axis-lbl"});vl.textContent=valfmt(v);svg.appendChild(vl);
+    if(ci){const c=ci(r); if(c&&c[0]!=null)whisker(svg,X,c[0],c[1],max,y+rowH/2,cv('--ink-2'));}
   });
   banner(svg,W,H,title,sub,legend);
   $(sel).appendChild(svg);
@@ -589,6 +598,25 @@ function renderDefcon(){
   hbars("#c_dcteam",DEFCON.team_defcon.slice(0,12),{value:r=>r.points,label:r=>r.team,
     color:cv('--s1'),rowH:22,mL:56,title:"Hardest-working defensive clubs",sub:"Total DefCon points across each squad",
     tip:r=>`<b>${r.team}</b><div class="row"><span>DefCon points</span><b>${r.points}</b></div>`});
+  // Only the clubs still in the league — a fixture against a relegated side is
+  // not one you can plan around next season.
+  const oppUp=DEFCON.opp_defcon.filter(r=>r.stays_up), oppTop=oppUp[0], oppBot=oppUp[oppUp.length-1];
+  const gone=(DEFCON.relegated||[]).join(", ");
+  $("#oppDcIntro").innerHTML=`Not every fixture is equally generous. This is the average number of `+
+    `<b>opposing</b> players who reached their DefCon threshold in a match against each club &mdash; in other `+
+    `words, how much defensive work facing them forces on the other team. Facing <b>${oppTop.team}</b> produced `+
+    `<b>${oppTop.per_match.toFixed(2)}</b> threshold-hitters per match against <b>${oppBot.per_match.toFixed(2)}</b> `+
+    `for ${oppBot.team}, so the best fixtures are worth roughly `+
+    `<b>${(oppTop.per_match/oppBot.per_match).toFixed(1)}&times;</b> the worst. Only the ${oppUp.length} clubs `+
+    `staying up are shown, since a fixture against a relegated side is not one you can plan around `+
+    `(${gone} are excluded). Whiskers are 95% intervals: the two ends of this table are genuinely `+
+    `different, but neighbouring clubs overlap and should be read as tied.`;
+  hbars("#c_oppdc",oppUp,{value:r=>r.per_match,label:r=>r.team,color:cv('--s2'),
+    valfmt:v=>v.toFixed(2),rowH:24,mL:104,mR:58,ci:r=>[r.ci_lo,r.ci_hi],
+    title:"Easiest fixtures to bank DefCon in — 2025/26",
+    sub:"Opposing players hitting their threshold, per match · whiskers = 95% CI",
+    legend:[{label:'Per match',color:cv('--s2')},{label:'95% CI',color:cv('--ink-2')}],
+    tip:r=>`<b>Facing ${r.team}</b><div class="row"><span>Opponents hitting threshold</span><b>${r.per_match.toFixed(2)} / match</b></div><div class="row"><span>95% CI</span><b>${r.ci_lo.toFixed(2)}&ndash;${r.ci_hi.toFixed(2)}</b></div><div class="row"><span>Total</span><b>${r.hits} in ${r.matches} matches</b></div>`});
   hbars("#c_dcvalue",DEFCON.best_value,{value:r=>r.pts_per_m,label:r=>`${r.name} (${r.team_short})`,
     color:cv('--s3'),valfmt:v=>v.toFixed(2),
     title:"Best budget DefCon value",sub:"DefCon points per £m · enablers ≤ £5.5m",

@@ -149,11 +149,69 @@ team_cbit_tot = (pd.concat([p[["team_short", "cbit"]], gk_cbit[["team_short", "c
 team_cbit = [{"team": r.team_short, "cbit": int(r.cbit)}
              for r in team_cbit_tot.itertuples()]
 
+# --- Who is it easiest to bank DefCon AGAINST? -------------------------------
+# For every club, the average number of OPPOSING players who reached their
+# threshold in a match against them. High = facing this club drags opponents into
+# a lot of defensive work, so their fixtures are the ones to target when picking a
+# cheap DefCon source. Note this is a property of the club being FACED, and the
+# schedule is balanced (everyone plays everyone home and away), so no opponent
+# adjustment is needed.
+opp = gw.copy()
+opp["opp_name"] = opp["opponent_team"].map(teams["name"])
+_o = opp.groupby("opp_name").agg(hits=("hit", "sum"),
+                                 matches=("fixture", "nunique")).reset_index()
+
+def byar_ci(k, z=1.96):
+    """95% Poisson interval on a count — same approximation used for set-piece
+    ratios. With ~45-90 hits per club these intervals are wide, and saying so is
+    the point: neighbouring clubs here are tied, not ranked."""
+    if k <= 0:
+        return 0.0, (1 - 1 / 9 + z / 3) ** 3
+    lo = k * (1 - 1 / (9 * k) - z / (3 * np.sqrt(k))) ** 3
+    hi = (k + 1) * (1 - 1 / (9 * (k + 1)) + z / (3 * np.sqrt(k + 1))) ** 3
+    return max(0.0, lo), hi
+
+# "Teams that stayed in the league" = everyone bar the bottom three. That has to
+# come from the results feed, since the FPL snapshot's points/played columns are
+# zeroed out (the API had already rolled over to the next pre-season).
+_res = pd.read_csv(os.path.join(ROOT, "data", "epl-2025.csv"))
+_res = _res[_res["Result"].notna()]
+_g = _res["Result"].str.split(" - ", expand=True).astype(int)
+_pts = []
+for h, a, hg, ag in zip(_res["Home Team"], _res["Away Team"], _g[0], _g[1]):
+    _pts.append((h, 3 if hg > ag else (1 if hg == ag else 0), hg - ag))
+    _pts.append((a, 3 if ag > hg else (1 if hg == ag else 0), ag - hg))
+_tbl = (pd.DataFrame(_pts, columns=["team", "pts", "gd"]).groupby("team").sum()
+        .sort_values(["pts", "gd"], ascending=False).reset_index())
+assert set(_tbl["team"]) == set(teams["name"]), (
+    "club names differ between data/epl-2025.csv and fpl_2025_26/teams.csv — "
+    "the relegation split below would silently drop or keep the wrong clubs")
+relegated = set(_tbl.tail(3)["team"])
+
+_o["per_match"] = _o["hits"] / _o["matches"]
+_o["stays_up"] = ~_o["opp_name"].isin(relegated)
+_o = _o.sort_values("per_match", ascending=False)
+opp_defcon = []
+for r in _o.itertuples():
+    lo, hi = byar_ci(int(r.hits))
+    opp_defcon.append({
+        "team": r.opp_name,
+        "team_short": str(teams.set_index("name").loc[r.opp_name, "short_name"]),
+        "hits": int(r.hits), "matches": int(r.matches),
+        "per_match": round(float(r.per_match), 2),
+        "ci_lo": round(lo / r.matches, 2), "ci_hi": round(hi / r.matches, 2),
+        "stays_up": bool(r.stays_up),
+    })
+
 # Pipeline safety net: a silent team-name mismatch in a merge/groupby would
 # quietly shrink a "per club" table instead of erroring. The Premier League
 # always has exactly 20 clubs, so fail loudly if any per-team table doesn't.
-for _name, _tbl in [("team_defcon", team_defcon), ("team_cbit", team_cbit)]:
-    assert len(_tbl) == 20, f"{_name} has {len(_tbl)} teams, expected 20 — check team_short mapping"
+for _name, _tbl2 in [("team_defcon", team_defcon), ("team_cbit", team_cbit),
+                     ("opp_defcon", opp_defcon)]:
+    assert len(_tbl2) == 20, f"{_name} has {len(_tbl2)} teams, expected 20 — check team_short mapping"
+assert sum(r["stays_up"] for r in opp_defcon) == 17, (
+    f"expected 17 clubs staying up, got {sum(r['stays_up'] for r in opp_defcon)}")
+assert all(r["matches"] == 38 for r in opp_defcon), "a club has != 38 fixtures in merged_gw"
 
 payload = {
     "meta": {
@@ -174,6 +232,8 @@ payload = {
     "top_cbit": rows(top_cbit, CBIT_COLS),
     "top_cbit90": rows(top_cbit90, CBIT_COLS),
     "team_cbit": team_cbit,
+    "opp_defcon": opp_defcon,
+    "relegated": sorted(relegated),
 }
 with open(os.path.join(DOCS, "defcon.json"), "w", encoding="utf-8") as f:
     json.dump(payload, f, indent=2)
@@ -199,4 +259,13 @@ print("\nTop 5 closest to their own threshold per 90 (min 1500 minutes):")
 for r in payload["top_cbit90"][:5]:
     print(f"  {r['name']:<14} {r['team_short']} {r['pos']}  {r['thr_pct']}% of threshold "
           f"({r['dc90']}/90 vs {r['thr']} needed)")
+_up = [r for r in opp_defcon if r["stays_up"]]
+print(f"\nEasiest to bank DefCon against (opposing players hitting the threshold per match)")
+print(f"  {len(_up)} clubs staying up; relegated and excluded: {', '.join(sorted(relegated))}")
+for r in _up[:5]:
+    print(f"  {r['team']:<16}{r['per_match']:.2f}/match  95% CI [{r['ci_lo']}, {r['ci_hi']}]  ({r['hits']} in 38)")
+print("  ...")
+for r in _up[-3:]:
+    print(f"  {r['team']:<16}{r['per_match']:.2f}/match  95% CI [{r['ci_lo']}, {r['ci_hi']}]  ({r['hits']} in 38)")
+
 print("\nWrote docs/defcon.json")

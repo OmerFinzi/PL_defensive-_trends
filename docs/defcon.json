@@ -1618,6 +1618,234 @@
       "stays_up": false
     }
   ],
+  "opp_cbit": [
+    {
+      "team": "Liverpool",
+      "team_short": "LIV",
+      "cbit": 8.91,
+      "ci_lo": 8.26,
+      "ci_hi": 9.56,
+      "n": 124,
+      "at_home": 8.81,
+      "at_away": 9.02,
+      "stays_up": true
+    },
+    {
+      "team": "Bournemouth",
+      "team_short": "BOU",
+      "cbit": 8.91,
+      "ci_lo": 8.16,
+      "ci_hi": 9.65,
+      "n": 116,
+      "at_home": 9.31,
+      "at_away": 8.5,
+      "stays_up": true
+    },
+    {
+      "team": "Crystal Palace",
+      "team_short": "CRY",
+      "cbit": 8.87,
+      "ci_lo": 8.11,
+      "ci_hi": 9.63,
+      "n": 113,
+      "at_home": 9.19,
+      "at_away": 8.54,
+      "stays_up": true
+    },
+    {
+      "team": "Brentford",
+      "team_short": "BRE",
+      "cbit": 8.8,
+      "ci_lo": 8.13,
+      "ci_hi": 9.46,
+      "n": 119,
+      "at_home": 8.66,
+      "at_away": 8.95,
+      "stays_up": true
+    },
+    {
+      "team": "Leeds",
+      "team_short": "LEE",
+      "cbit": 8.72,
+      "ci_lo": 7.95,
+      "ci_hi": 9.48,
+      "n": 121,
+      "at_home": 9.21,
+      "at_away": 8.19,
+      "stays_up": true
+    },
+    {
+      "team": "Everton",
+      "team_short": "EVE",
+      "cbit": 8.67,
+      "ci_lo": 8.02,
+      "ci_hi": 9.32,
+      "n": 119,
+      "at_home": 9.28,
+      "at_away": 8.1,
+      "stays_up": true
+    },
+    {
+      "team": "Arsenal",
+      "team_short": "ARS",
+      "cbit": 8.47,
+      "ci_lo": 7.75,
+      "ci_hi": 9.18,
+      "n": 122,
+      "at_home": 8.48,
+      "at_away": 8.45,
+      "stays_up": true
+    },
+    {
+      "team": "Newcastle",
+      "team_short": "NEW",
+      "cbit": 8.42,
+      "ci_lo": 7.8,
+      "ci_hi": 9.03,
+      "n": 122,
+      "at_home": 8.38,
+      "at_away": 8.45,
+      "stays_up": true
+    },
+    {
+      "team": "Spurs",
+      "team_short": "TOT",
+      "cbit": 8.32,
+      "ci_lo": 7.7,
+      "ci_hi": 8.94,
+      "n": 120,
+      "at_home": 8.88,
+      "at_away": 7.75,
+      "stays_up": true
+    },
+    {
+      "team": "Sunderland",
+      "team_short": "SUN",
+      "cbit": 8.04,
+      "ci_lo": 7.31,
+      "ci_hi": 8.76,
+      "n": 112,
+      "at_home": 8.92,
+      "at_away": 7.24,
+      "stays_up": true
+    },
+    {
+      "team": "Man Utd",
+      "team_short": "MUN",
+      "cbit": 8.03,
+      "ci_lo": 7.38,
+      "ci_hi": 8.67,
+      "n": 117,
+      "at_home": 8.42,
+      "at_away": 7.65,
+      "stays_up": true
+    },
+    {
+      "team": "Burnley",
+      "team_short": "BUR",
+      "cbit": 7.97,
+      "ci_lo": 7.25,
+      "ci_hi": 8.68,
+      "n": 120,
+      "at_home": 9.1,
+      "at_away": 6.83,
+      "stays_up": false
+    },
+    {
+      "team": "Aston Villa",
+      "team_short": "AVL",
+      "cbit": 7.93,
+      "ci_lo": 7.26,
+      "ci_hi": 8.6,
+      "n": 118,
+      "at_home": 8.14,
+      "at_away": 7.73,
+      "stays_up": true
+    },
+    {
+      "team": "Brighton",
+      "team_short": "BHA",
+      "cbit": 7.92,
+      "ci_lo": 7.25,
+      "ci_hi": 8.59,
+      "n": 121,
+      "at_home": 8.02,
+      "at_away": 7.81,
+      "stays_up": true
+    },
+    {
+      "team": "Man City",
+      "team_short": "MCI",
+      "cbit": 7.88,
+      "ci_lo": 7.3,
+      "ci_hi": 8.47,
+      "n": 128,
+      "at_home": 8.13,
+      "at_away": 7.65,
+      "stays_up": true
+    },
+    {
+      "team": "Nott'm Forest",
+      "team_short": "NFO",
+      "cbit": 7.83,
+      "ci_lo": 7.16,
+      "ci_hi": 8.5,
+      "n": 116,
+      "at_home": 8.2,
+      "at_away": 7.44,
+      "stays_up": true
+    },
+    {
+      "team": "West Ham",
+      "team_short": "WHU",
+      "cbit": 7.42,
+      "ci_lo": 6.83,
+      "ci_hi": 8.01,
+      "n": 112,
+      "at_home": 7.52,
+      "at_away": 7.31,
+      "stays_up": false
+    },
+    {
+      "team": "Chelsea",
+      "team_short": "CHE",
+      "cbit": 7.27,
+      "ci_lo": 6.69,
+      "ci_hi": 7.84,
+      "n": 120,
+      "at_home": 7.66,
+      "at_away": 6.89,
+      "stays_up": true
+    },
+    {
+      "team": "Wolves",
+      "team_short": "WOL",
+      "cbit": 7.24,
+      "ci_lo": 6.62,
+      "ci_hi": 7.85,
+      "n": 118,
+      "at_home": 8.02,
+      "at_away": 6.46,
+      "stays_up": false
+    },
+    {
+      "team": "Fulham",
+      "team_short": "FUL",
+      "cbit": 7.19,
+      "ci_lo": 6.68,
+      "ci_hi": 7.7,
+      "n": 121,
+      "at_home": 7.43,
+      "at_away": 6.93,
+      "stays_up": true
+    }
+  ],
+  "opp_cbit_filter": {
+    "cbit_per90_min": 6.0,
+    "match_min_minutes": 70,
+    "qualified_defenders": 145,
+    "defender_matches": 2379
+  },
   "relegated": [
     "Burnley",
     "West Ham",

@@ -158,6 +158,34 @@ The spread is real and worth acting on: **1.7× more threshold-hitters against L
 
 The interesting part is what *doesn't* explain it. The obvious guess — that dominant possession sides pin opponents back and force defensive actions — does not survive: **Man City rank 9th of 17 and Arsenal 13th**, and the correlation with goals scored is only +0.26 (with corners won, +0.21). Facing Liverpool or Everton generated far more opposition DefCon than facing Arsenal did. Whatever drives this is closer to game *openness* and transition volume than to territorial dominance, and this dataset cannot separate those — it has no possession or pressing data. Worth flagging as an observation with a real effect size but no established mechanism.
 
+### The same question at CBIT level
+
+The table above counts *whether* an opponent crossed the bonus line. That throws information away — a defender on 9 CBIT and one on 2 are identical to a threshold count. Measuring **how much** instead gives a finer-grained view:
+
+| Most CBIT conceded to a defender | Per match | | Fewest | Per match |
+|---|:---:|---|---|:---:|
+| Liverpool | **8.91** | | Fulham | **7.19** |
+| Bournemouth | 8.91 | | Chelsea | 7.27 |
+| Crystal Palace | 8.87 | | Nott'm Forest | 7.83 |
+| Brentford | 8.80 | | Man City | 7.88 |
+| Leeds | 8.72 | | Brighton | 7.92 |
+
+Two filters, and both are load-bearing rather than decorative:
+
+- **70+ minutes in the match.** A threshold count is naturally immune to substitutes — 32% of appearances are under 60 minutes but they produce just **0.5%** of all threshold hits, so short cameos simply never register. An *average* has no such protection: a ten-minute appearance with one CBIT would enter at full weight. Testing the cutoff, split-half stability runs 0.30 (any minutes), 0.35 (60), **0.36 (70)**, 0.29 (80) — stricter than 70 starts starving the sample.
+- **Regular defensive contributors only** (6+ CBIT per 90 across the season, 145 of 183 defenders). This does more work than the minutes filter, lifting stability from 0.19 to **0.40**. The mechanism is real rather than an artefact: for count data relative noise scales as roughly 1/√mean, so low-volume defenders are individually much noisier and add variance without adding signal.
+
+Together they roughly **double** the metric's reliability against the naive version. Note the spread is tighter than the bonus count — **1.24×** rather than 1.7× — because averaging compresses what a threshold amplifies. Both are true; they answer different questions.
+
+**Caveats, in order of how much they should change your reading:**
+
+1. **Venue outweighs most of the table.** Facing a club at *their* ground is worth about **+0.58 CBIT**, and a club's home and away figures correlate only +0.53. Burnley conceded 9.10 at home against 6.83 away — a bigger swing than the entire league spread. Treat "Liverpool home" and "Liverpool away" as different fixtures; the per-club split is in the chart tooltip.
+2. **Neighbouring clubs are tied, not ranked.** Empirical-Bayes shrinkage puts between-club variance at 0.38 against within-club variance of 14.0, implying roughly **29% of the visible spread is noise**. Only the ends separate cleanly (Liverpool 8.26–9.56 versus Fulham 6.68–7.70). Read tiers.
+3. **The qualifying list is fitted on the same season it is measured on.** Selecting the players out-of-sample drops measured stability from 0.41 to 0.40 here, so the leak is small — but in production the list should come from the previous season.
+4. **The cutoff was not tuned, on purpose.** Sweeping it, 7+ CBIT/90 scores better than 6+. With only 20 clubs the standard error on these correlations is around 0.24, so that gap is inside the noise and picking the winner would be fitting to it.
+5. **Part of this is just team quality** — the metric correlates +0.34 with the faced club's points. Not the whole story, but not a pure style signal either.
+6. **Game state is invisible here.** Sides that lead sit deeper and their opponents chase, so the measure partly encodes how often a club was ahead. This dataset has no possession or game-state data to separate that from playing style.
+
 **FPL takeaway:** DefCon rewards a distinct player profile from clean sheets. The elite-defence pick (Arsenal/City assets) chases clean-sheet points; the DefCon pick chases *volume of defensive actions*, which favours ball-winning defenders and holding midfielders at busy, deeper-defending clubs — often much cheaper. A balanced squad can target both.
 
 ## 9. Set pieces — corners & free kicks (penalties excluded)

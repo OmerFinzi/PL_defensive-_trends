@@ -248,6 +248,10 @@ footer a{color:var(--accent)}
     <p class="sec-sub" id="oppDcIntro"></p>
     <div class="card" style="max-width:620px"><div id="c_oppdc"></div></div>
 
+    <h3 class="sec-h" style="margin-top:34px">The same question at CBIT level</h3>
+    <p class="sec-sub" id="oppCbitIntro"></p>
+    <div class="card" style="max-width:620px"><div id="c_oppcbit"></div></div>
+
     <h3 class="sec-h" style="margin-top:34px">Best budget DefCon value</h3>
     <p class="sec-sub">DefCon points per &pound;m of season-end price, for enablers priced &pound;5.5m or under. These are the cheap defenders and midfielders who quietly banked points all season.</p>
     <div class="card" style="max-width:620px"><div id="c_dcvalue"></div></div>
@@ -569,8 +573,12 @@ function hbars(sel,rows,{value,label,color,valfmt=(v)=>v,rowH=26,mL=118,mR=48,ti
     const rc=el("rect",{x:mL,y:y+rowH/2-5,width:w,height:10,rx:3,fill:col});
     if(tip){rc.addEventListener("mousemove",e=>showTip(tip(r),e));rc.addEventListener("mouseleave",hideTip);}
     svg.appendChild(rc);
-    const vl=el("text",{x:mL+w+6,y:y+rowH/2+1,class:"axis-lbl"});vl.textContent=valfmt(v);svg.appendChild(vl);
-    if(ci){const c=ci(r); if(c&&c[0]!=null)whisker(svg,X,c[0],c[1],max,y+rowH/2,cv('--ink-2'));}
+    const c=ci?ci(r):null, hasCI=c&&c[0]!=null;
+    if(hasCI)whisker(svg,X,c[0],c[1],max,y+rowH/2,cv('--ink-2'));
+    // With a whisker the number has to clear the interval's upper cap, otherwise it
+    // is drawn straight through the line and neither reads.
+    const lx=hasCI?X(c[1])+6:mL+w+6;
+    const vl=el("text",{x:lx,y:y+rowH/2+1,class:"axis-lbl"});vl.textContent=valfmt(v);svg.appendChild(vl);
   });
   banner(svg,W,H,title,sub,legend);
   $(sel).appendChild(svg);
@@ -612,11 +620,36 @@ function renderDefcon(){
     `(${gone} are excluded). Whiskers are 95% intervals: the two ends of this table are genuinely `+
     `different, but neighbouring clubs overlap and should be read as tied.`;
   hbars("#c_oppdc",oppUp,{value:r=>r.per_match,label:r=>r.team,color:cv('--s2'),
-    valfmt:v=>v.toFixed(2),rowH:24,mL:104,mR:58,ci:r=>[r.ci_lo,r.ci_hi],
+    valfmt:v=>v.toFixed(2),rowH:24,mL:104,mR:82,ci:r=>[r.ci_lo,r.ci_hi],
     title:"Easiest fixtures to bank DefCon in — 2025/26",
     sub:"Opposing players hitting their threshold, per match · whiskers = 95% CI",
     legend:[{label:'Per match',color:cv('--s2')},{label:'95% CI',color:cv('--ink-2')}],
     tip:r=>`<b>Facing ${r.team}</b><div class="row"><span>Opponents hitting threshold</span><b>${r.per_match.toFixed(2)} / match</b></div><div class="row"><span>95% CI</span><b>${r.ci_lo.toFixed(2)}&ndash;${r.ci_hi.toFixed(2)}</b></div><div class="row"><span>Total</span><b>${r.hits} in ${r.matches} matches</b></div>`});
+  // Same fixture question, but measuring HOW MUCH defensive work rather than
+  // whether it crossed the bonus line — a defender on 9 CBIT and one on 2 are
+  // identical to the threshold count above, and are not identical here.
+  const oc=DEFCON.opp_cbit.filter(r=>r.stays_up), f=DEFCON.opp_cbit_filter;
+  const ocTop=oc[0], ocBot=oc[oc.length-1];
+  const venue=oc.map(r=>r.at_home-r.at_away).reduce((a,b)=>a+b,0)/oc.length;
+  $("#oppCbitIntro").innerHTML=`The chart above counts <i>whether</i> an opponent crossed the bonus line. `+
+    `This one measures <b>how much</b>: the average CBIT a qualifying opposing defender racks up against each `+
+    `club. Two filters keep it from being swamped by noise &mdash; only defenders who are regular defensive `+
+    `contributors (<b>${f.cbit_per90_min}+ CBIT per 90</b> across the season, ${f.qualified_defenders} of them) `+
+    `and only appearances of <b>${f.match_min_minutes}+ minutes</b>, giving ${f.defender_matches.toLocaleString()} `+
+    `defender-matches. Both matter: a threshold count is immune to substitutes, but an average is not, and `+
+    `low-volume defenders are individually far noisier without adding signal. `+
+    `<b>${ocTop.team}</b> concede <b>${ocTop.cbit.toFixed(2)}</b> CBIT per qualifying defender against `+
+    `<b>${ocBot.cbit.toFixed(2)}</b> for ${ocBot.team}. Note the spread is much tighter than the bonus-count `+
+    `version (${(ocTop.cbit/ocBot.cbit).toFixed(2)}&times; rather than 1.7&times;) &mdash; averaging compresses what a `+
+    `threshold amplifies, and both are true descriptions of the same thing. Venue matters more than most of `+
+    `this table: facing a club at <i>their</i> ground is worth about `+
+    `<b>+${venue.toFixed(2)}</b> CBIT on average, so hover for each club's home/away split.`;
+  hbars("#c_oppcbit",oc,{value:r=>r.cbit,label:r=>r.team,color:cv('--s1'),
+    valfmt:v=>v.toFixed(2),rowH:24,mL:104,mR:82,ci:r=>[r.ci_lo,r.ci_hi],
+    title:"CBIT conceded to an opposing defender — 2025/26",
+    sub:`Mean CBIT per qualifying defender-match · ${f.cbit_per90_min}+ CBIT/90, ${f.match_min_minutes}+ min · whiskers = 95% CI`,
+    legend:[{label:'CBIT per defender',color:cv('--s1')},{label:'95% CI',color:cv('--ink-2')}],
+    tip:r=>`<b>Facing ${r.team}</b><div class="row"><span>CBIT per qualifying defender</span><b>${r.cbit.toFixed(2)}</b></div><div class="row"><span>95% CI</span><b>${r.ci_lo.toFixed(2)}&ndash;${r.ci_hi.toFixed(2)}</b></div><div class="row"><span>At their ground</span><b>${r.at_home.toFixed(2)}</b></div><div class="row"><span>Away from home</span><b>${r.at_away.toFixed(2)}</b></div><div class="row"><span>Sample</span><b>${r.n} defender-matches</b></div>`});
   hbars("#c_dcvalue",DEFCON.best_value,{value:r=>r.pts_per_m,label:r=>`${r.name} (${r.team_short})`,
     color:cv('--s3'),valfmt:v=>v.toFixed(2),
     title:"Best budget DefCon value",sub:"DefCon points per £m · enablers ≤ £5.5m",

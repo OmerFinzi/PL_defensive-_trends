@@ -39,6 +39,9 @@ gw = gw.drop_duplicates(subset=["element", "GW", "fixture"])
 gw = gw[gw["minutes"] > 0].copy()
 thr = gw["position"].map(THRESH)
 gw["hit"] = (thr.notna()) & (gw["defensive_contribution"] >= thr)
+# Per-match CBIT and the club faced, both needed by the opponent tables further down.
+gw["cbit_m"] = gw["clearances_blocks_interceptions"] + gw["tackles"]
+gw["opp_name"] = gw["opponent_team"].map(teams["name"])
 banked = gw.groupby("element").agg(
     dc_matches=("hit", "sum"),                  # matches reaching the threshold
     apps=("minutes", "size"),
@@ -156,10 +159,8 @@ team_cbit = [{"team": r.team_short, "cbit": int(r.cbit)}
 # cheap DefCon source. Note this is a property of the club being FACED, and the
 # schedule is balanced (everyone plays everyone home and away), so no opponent
 # adjustment is needed.
-opp = gw.copy()
-opp["opp_name"] = opp["opponent_team"].map(teams["name"])
-_o = opp.groupby("opp_name").agg(hits=("hit", "sum"),
-                                 matches=("fixture", "nunique")).reset_index()
+_o = gw.groupby("opp_name").agg(hits=("hit", "sum"),
+                                matches=("fixture", "nunique")).reset_index()
 
 def byar_ci(k, z=1.96):
     """95% Poisson interval on a count — same approximation used for set-piece
@@ -203,11 +204,60 @@ for r in _o.itertuples():
         "stays_up": bool(r.stays_up),
     })
 
+# --- The same question at CBIT level rather than bonus level -----------------
+# opp_defcon above asks "did an opponent cross the bonus line". This asks HOW MUCH
+# defensive work an opposing defender actually does, which is the finer-grained
+# question: a defender on 9 CBIT and one on 2 are identical to a threshold count.
+#
+# Two filters, both load-bearing, both measured rather than assumed:
+#   * >= 70 minutes. A threshold count is immune to substitutes (they produce 0.5%
+#     of all hits), but a MEAN is not — a 10-minute cameo with one CBIT would enter
+#     the average at full weight. 70 tested best: split-half r runs 0.30 (any
+#     minutes) / 0.35 (60) / 0.36 (70) / 0.29 (80), i.e. stricter starves the sample.
+#   * Regular defensive contributors only, >= 6 CBIT per 90 across the season.
+#     This does more work than the minutes filter (r 0.19 -> 0.40): for count data
+#     the relative noise is ~1/sqrt(mean), so low-volume defenders are individually
+#     far noisier and add variance without adding signal.
+CBIT_PER90_MIN = 6.0      # qualifying defender: regular defensive contributor
+MATCH_MIN_MINUTES = 70    # qualifying appearance: played most of the match
+
+_def = gw[gw["position"] == "DEF"]
+_rate = _def.groupby("element").apply(
+    lambda d: d["cbit_m"].sum() / d["minutes"].sum() * 90, include_groups=False)
+qualified = set(_rate[_rate >= CBIT_PER90_MIN].index)
+
+_q = gw[(gw["position"] == "DEF") & (gw["minutes"] >= MATCH_MIN_MINUTES)
+        & (gw["element"].isin(qualified))].copy()
+_venue = _q.groupby(["opp_name", "was_home"])["cbit_m"].mean().unstack()
+_agg = _q.groupby("opp_name")["cbit_m"].agg(["mean", "std", "count"])
+
+opp_cbit = []
+for team, r in _agg.iterrows():
+    se = r["std"] / np.sqrt(r["count"])          # n is 110+ per club, so a normal
+    opp_cbit.append({                            # interval on the mean is fine here
+        "team": team,
+        # Sort key: the unrounded mean. Ordering on the published 2dp value would
+        # have put Bournemouth (8.9052) above Liverpool (8.9113) on a display tie.
+        "_sort": float(r["mean"]),
+        "team_short": str(teams.set_index("name").loc[team, "short_name"]),
+        "cbit": round(float(r["mean"]), 2),
+        "ci_lo": round(float(r["mean"] - 1.96 * se), 2),
+        "ci_hi": round(float(r["mean"] + 1.96 * se), 2),
+        "n": int(r["count"]),
+        # was_home is the PLAYER's venue, so the faced club is at home when False.
+        "at_home": round(float(_venue.loc[team, False]), 2),
+        "at_away": round(float(_venue.loc[team, True]), 2),
+        "stays_up": team not in relegated,
+    })
+opp_cbit.sort(key=lambda r: (-r["_sort"], r["team"]))   # name breaks a genuine tie
+for r in opp_cbit:
+    del r["_sort"]
+
 # Pipeline safety net: a silent team-name mismatch in a merge/groupby would
 # quietly shrink a "per club" table instead of erroring. The Premier League
 # always has exactly 20 clubs, so fail loudly if any per-team table doesn't.
 for _name, _tbl2 in [("team_defcon", team_defcon), ("team_cbit", team_cbit),
-                     ("opp_defcon", opp_defcon)]:
+                     ("opp_defcon", opp_defcon), ("opp_cbit", opp_cbit)]:
     assert len(_tbl2) == 20, f"{_name} has {len(_tbl2)} teams, expected 20 — check team_short mapping"
 assert sum(r["stays_up"] for r in opp_defcon) == 17, (
     f"expected 17 clubs staying up, got {sum(r['stays_up'] for r in opp_defcon)}")
@@ -233,6 +283,11 @@ payload = {
     "top_cbit90": rows(top_cbit90, CBIT_COLS),
     "team_cbit": team_cbit,
     "opp_defcon": opp_defcon,
+    "opp_cbit": opp_cbit,
+    "opp_cbit_filter": {"cbit_per90_min": CBIT_PER90_MIN,
+                        "match_min_minutes": MATCH_MIN_MINUTES,
+                        "qualified_defenders": len(qualified),
+                        "defender_matches": int(len(_q))},
     "relegated": sorted(relegated),
 }
 with open(os.path.join(DOCS, "defcon.json"), "w", encoding="utf-8") as f:
@@ -267,5 +322,16 @@ for r in _up[:5]:
 print("  ...")
 for r in _up[-3:]:
     print(f"  {r['team']:<16}{r['per_match']:.2f}/match  95% CI [{r['ci_lo']}, {r['ci_hi']}]  ({r['hits']} in 38)")
+
+_qc = [r for r in opp_cbit if r["stays_up"]]
+print(f"\nCBIT conceded to a qualifying opposing defender "
+      f"(>={CBIT_PER90_MIN:g} CBIT/90 on the season, {MATCH_MIN_MINUTES}+ min in the match)")
+print(f"  {len(qualified)} qualifying defenders, {len(_q)} defender-matches")
+for r in _qc[:4] + [None] + _qc[-3:]:
+    if r is None:
+        print("  ...")
+        continue
+    print(f"  {r['team']:<16}{r['cbit']:.2f}  95% CI [{r['ci_lo']}, {r['ci_hi']}]  "
+          f"(vs them at home {r['at_home']:.2f} / away {r['at_away']:.2f}, n={r['n']})")
 
 print("\nWrote docs/defcon.json")
